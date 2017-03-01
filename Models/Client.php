@@ -14,14 +14,12 @@
  * @link       http://orange-management.com
  */
 declare(strict_types=1);
-namespace Modules\ClientManagement\Admin;
+namespace Modules\Profile\Models;
 
-use phpOMS\DataStorage\Database\DatabasePool;
-use phpOMS\Module\ActivateAbstract;
-use phpOMS\Module\InfoManager;
+use Modules\Profile\Models\Account;
 
 /**
- * Navigation class.
+ * Account class.
  *
  * @category   Modules
  * @package    Modules\Admin
@@ -31,14 +29,10 @@ use phpOMS\Module\InfoManager;
  * @link       http://orange-management.com
  * @since      1.0.0
  */
-class Activate extends ActivateAbstract
+class Client extends Account
 {
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function activate(DatabasePool $dbPool, InfoManager $info)
-    {
-        parent::activate($dbPool, $info);
-    }
+	public function __construct(int $id = 0) 
+	{
+		parent::__construct($id);
+	}
 }
