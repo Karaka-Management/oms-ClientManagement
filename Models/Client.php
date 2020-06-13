@@ -27,7 +27,7 @@ use Modules\Profile\Models\Profile;
  */
 class Client
 {
-    private int $id = 0;
+    protected int $id = 0;
 
     private string $number = '';
 
