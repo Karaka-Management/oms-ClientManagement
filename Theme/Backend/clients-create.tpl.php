@@ -20,7 +20,7 @@ echo $this->getData('nav')->render(); ?>
 <div class="tabview tab-2">
     <div class="box">
         <ul class="tab-links">
-            <li><label for="c-tab-1"><?= $this->getHtml('Master'); ?></label></li>
+            <li><label for="c-tab-1"><?= $this->getHtml('Profile'); ?></label></li>
             <li><label for="c-tab-2"><?= $this->getHtml('Contact'); ?></label></li>
             <li><label for="c-tab-3"><?= $this->getHtml('Addresses'); ?></label></li>
             <li><label for="c-tab-4"><?= $this->getHtml('PaymentTerm'); ?></label></li>
