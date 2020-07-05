@@ -35,7 +35,11 @@ echo $this->getData('nav')->render();
             <li><label for="c-tab-10">Articles</label>
             <li><label for="c-tab-10">Messages</label>
             <li><label for="c-tab-10">Support</label>
+            <li><label for="c-tab-10">Modules</label>
             <li><label for="c-tab-10">Accounting</label>
+            <li><label for="c-tab-10">Notes</label>
+            <li><label for="c-tab-10">Tags</label>
+            <li><label for="c-tab-10">Calendar</label>
             <li><label for="c-tab-10">Permission</label>
             <li><label for="c-tab-9"><?= $this->getHtml('Logs'); ?></label>
         </ul>
@@ -44,6 +48,54 @@ echo $this->getData('nav')->render();
         <input type="radio" id="c-tab-1" name="tabular-2" checked>
         <div class="tab">
             <div class="row">
+                <div class="col-xs-12 col-lg-3 last-lg">
+                    <section class="portlet">
+                        <form>
+                            <div class="portlet-body">
+                                <table class="layout wf-100">
+                                    <tr><td><label for="iId"><?= $this->getHtml('ID', '0', '0'); ?></label>
+                                    <tr><td><span class="input"><button type="button" formaction=""><i class="fa fa-book"></i></button><input type="number" id="iId" min="1" name="id" value="<?= $this->printHtml($client->getNumber()); ?>" disabled></span>
+                                    <tr><td><label for="iName1"><?= $this->getHtml('Name1') ?></label>
+                                    <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->getProfile()->getAccount()->getName1()); ?>" required>
+                                    <tr><td><label for="iName2"><?= $this->getHtml('Name2') ?></label>
+                                    <tr><td><input type="text" id="iName2" name="name2" value="<?= $this->printHtml($client->getProfile()->getAccount()->getName2()); ?>">
+                                    <tr><td><label for="iName3"><?= $this->getHtml('Name3') ?></label>
+                                    <tr><td><input type="text" id="iName3" name="name3" value="<?= $this->printHtml($client->getProfile()->getAccount()->getName3()); ?>">
+                                    <tr><td>Address
+                                    <tr><td>
+                                    <tr><td>
+                                    <tr><td>
+                                    <tr><td>
+                                </table>
+                            </div>
+                            <div class="portlet-foot">
+                                <input type="submit" value="<?= $this->getHtml('Save', '0', '0'); ?>"> <input type="submit" value="<?= $this->getHtml('Delete', '0', '0'); ?>">
+                            </div>
+                        </form>
+                    </section>
+
+                    <section class="portlet highlight-4">
+                        <div class="portlet-body"></div>
+                    </section>
+
+                    <section class="portlet">
+                        <div class="portlet-head">Contact</div>
+                        <div class="portlet-body">
+                            <table>
+                                <tr><td>Main:
+                                <tr><td>Phone:
+                                    <td>
+                                <tr><td>Email:
+                                    <td>
+                                <tr><td>Accounting:
+                                <tr><td>Phone:
+                                    <td>
+                                <tr><td>Email:
+                                    <td>
+                            </table>
+                        </div>
+                    </section>
+                </div>
                 <div class="col-xs-12 col-lg-9 plain-grid">
                     <div class="row">
                         <div class="col-xs-12 col-lg-4">
@@ -138,54 +190,6 @@ echo $this->getData('nav')->render();
                             </section>
                         </div>
                     </div>
-                </div>
-                <div class="col-xs-12 col-lg-3">
-                    <section class="portlet">
-                        <form>
-                            <div class="portlet-body">
-                                <table class="layout wf-100">
-                                    <tr><td><label for="iId"><?= $this->getHtml('ID', '0', '0'); ?></label>
-                                    <tr><td><span class="input"><button type="button" formaction=""><i class="fa fa-book"></i></button><input type="number" id="iId" min="1" name="id" value="<?= $this->printHtml($client->getNumber()); ?>" disabled></span>
-                                    <tr><td><label for="iName1"><?= $this->getHtml('Name1') ?></label>
-                                    <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->getProfile()->getAccount()->getName1()); ?>" required>
-                                    <tr><td><label for="iName2"><?= $this->getHtml('Name2') ?></label>
-                                    <tr><td><input type="text" id="iName2" name="name2" value="<?= $this->printHtml($client->getProfile()->getAccount()->getName2()); ?>">
-                                    <tr><td><label for="iName3"><?= $this->getHtml('Name3') ?></label>
-                                    <tr><td><input type="text" id="iName3" name="name3" value="<?= $this->printHtml($client->getProfile()->getAccount()->getName3()); ?>">
-                                    <tr><td>Address
-                                    <tr><td>
-                                    <tr><td>
-                                    <tr><td>
-                                    <tr><td>
-                                </table>
-                            </div>
-                            <div class="portlet-foot">
-                                <input type="submit" value="<?= $this->getHtml('Save', '0', '0'); ?>"> <input type="submit" value="<?= $this->getHtml('Delete', '0', '0'); ?>">
-                            </div>
-                        </form>
-                    </section>
-
-                    <section class="portlet highlight-4">
-                        <div class="portlet-body"></div>
-                    </section>
-
-                    <section class="portlet">
-                        <div class="portlet-head">Contact</div>
-                        <div class="portlet-body">
-                            <table>
-                                <tr><td>Main:
-                                <tr><td>Phone:
-                                    <td>
-                                <tr><td>Email:
-                                    <td>
-                                <tr><td>Accounting:
-                                <tr><td>Phone:
-                                    <td>
-                                <tr><td>Email:
-                                    <td>
-                            </table>
-                        </div>
-                    </section>
                 </div>
             </div>
         </div>
