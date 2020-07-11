@@ -12,7 +12,8 @@
             "clientmgmt_client_no": {
                 "name": "clientmgmt_client_no",
                 "type": "VARCHAR(255)",
-                "null": false
+                "null": false,
+                "unique": true
             },
             "clientmgmt_client_no_reverse": {
                 "name": "clientmgmt_client_no_reverse",
@@ -39,8 +40,8 @@
                 "type": "DATETIME",
                 "null": false
             },
-            "clientmgmt_client_account": {
-                "name": "clientmgmt_client_account",
+            "clientmgmt_client_profile": {
+                "name": "clientmgmt_client_profile",
                 "type": "INT",
                 "null": false,
                 "foreignTable": "profile_account",

@@ -43,7 +43,7 @@ class Client
 
     private \DateTime $createdAt;
 
-    private $profile = null;
+    private Profile $profile;
 
     private array $files = [];
 

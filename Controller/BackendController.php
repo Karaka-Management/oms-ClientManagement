@@ -49,7 +49,7 @@ final class BackendController extends Controller
         $view->setTemplate('/Modules/ClientManagement/Theme/Backend/clients-list');
         $view->addData('nav', $this->app->moduleManager->get('Navigation')->createNavigationMid(1003102001, $request, $response));
 
-        $client = ClientMapper::getNewest(50);
+        $client = ClientMapper::getAll();
         $view->addData('client', $client);
 
         return $view;

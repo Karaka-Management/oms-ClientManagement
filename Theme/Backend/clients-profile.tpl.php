@@ -75,7 +75,9 @@ echo $this->getData('nav')->render();
                     </section>
 
                     <section class="portlet highlight-4">
-                        <div class="portlet-body"></div>
+                        <div class="portlet-body">
+                            <textarea class="undecorated"></textarea>
+                        </div>
                     </section>
 
                     <section class="portlet">
