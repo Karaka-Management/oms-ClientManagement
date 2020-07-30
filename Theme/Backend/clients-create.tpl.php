@@ -32,7 +32,7 @@ echo $this->getData('nav')->render(); ?>
         </ul>
     </div>
     <div class="tab-content">
-        <input type="radio" id="c-tab-1" name="tabular-2" checked>
+        <input type="radio" id="c-tab-1" name="tabular-2"<?= $this->request->getUri()->getFragment() === 'c-tab-1' ? ' checked' : '' ?>>
         <div class="tab">
             <div class="row">
                 <div class="col-xs-12 col-md-6 col-lg-4">
@@ -57,7 +57,7 @@ echo $this->getData('nav')->render(); ?>
                 </div>
             </div>
         </div>
-        <input type="radio" id="c-tab-2" name="tabular-2">
+        <input type="radio" id="c-tab-2" name="tabular-2"<?= $this->request->getUri()->getFragment() === 'c-tab-2' ? ' checked' : '' ?>>
         <div class="tab">
             <div class="row">
                 <div class="col-xs-12 col-md-6 col-lg-4">
@@ -92,7 +92,7 @@ echo $this->getData('nav')->render(); ?>
                 </div>
             </div>
         </div>
-        <input type="radio" id="c-tab-3" name="tabular-2">
+        <input type="radio" id="c-tab-3" name="tabular-2"<?= $this->request->getUri()->getFragment() === 'c-tab-3' ? ' checked' : '' ?>>
         <div class="tab">
             <div class="row">
                 <div class="col-xs-12 col-md-6 col-lg-4">
@@ -124,7 +124,7 @@ echo $this->getData('nav')->render(); ?>
                 </div>
             </div>
         </div>
-        <input type="radio" id="c-tab-4" name="tabular-2">
+        <input type="radio" id="c-tab-4" name="tabular-2"<?= $this->request->getUri()->getFragment() === 'c-tab-4' ? ' checked' : '' ?>>
         <div class="tab">
             <div class="row">
                 <div class="col-xs-12 col-md-6 col-lg-4">
@@ -156,7 +156,7 @@ echo $this->getData('nav')->render(); ?>
                 </div>
             </div>
         </div>
-        <input type="radio" id="c-tab-5" name="tabular-2">
+        <input type="radio" id="c-tab-5" name="tabular-2"<?= $this->request->getUri()->getFragment() === 'c-tab-5' ? ' checked' : '' ?>>
         <div class="tab">
             <div class="row">
                 <div class="col-xs-12 col-md-6 col-lg-4">
@@ -178,7 +178,7 @@ echo $this->getData('nav')->render(); ?>
                 </div>
             </div>
         </div>
-        <input type="radio" id="c-tab-6" name="tabular-2">
+        <input type="radio" id="c-tab-6" name="tabular-2"<?= $this->request->getUri()->getFragment() === 'c-tab-6' ? ' checked' : '' ?>>
         <div class="tab">
             <div class="row">
                 <div class="col-xs-12 col-md-6 col-lg-4">
@@ -220,7 +220,7 @@ echo $this->getData('nav')->render(); ?>
                 </div>
             </div>
         </div>
-        <input type="radio" id="c-tab-7" name="tabular-2">
+        <input type="radio" id="c-tab-7" name="tabular-2"<?= $this->request->getUri()->getFragment() === 'c-tab-7' ? ' checked' : '' ?>>
         <div class="tab">
             <div class="row">
                 <div class="col-xs-12 col-md-6 col-lg-4">
@@ -250,10 +250,10 @@ echo $this->getData('nav')->render(); ?>
                 </div>
             </div>
         </div>
-        <input type="radio" id="c-tab-8" name="tabular-2">
+        <input type="radio" id="c-tab-8" name="tabular-2"<?= $this->request->getUri()->getFragment() === 'c-tab-8' ? ' checked' : '' ?>>
         <div class="tab">
         </div>
-        <input type="radio" id="c-tab-9" name="tabular-2">
+        <input type="radio" id="c-tab-9" name="tabular-2"<?= $this->request->getUri()->getFragment() === 'c-tab-9' ? ' checked' : '' ?>>
         <div class="tab">
             <div class="row">
                 <div class="col-xs-12">
