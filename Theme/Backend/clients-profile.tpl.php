@@ -12,7 +12,9 @@
  */
 declare(strict_types=1);
 
-
+/**
+ * @var \Modules\ClientManagement\Models\Client $client
+ */
 $client = $this->getData('client');
 
 /**
