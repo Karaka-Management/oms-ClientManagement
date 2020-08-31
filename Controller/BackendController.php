@@ -15,7 +15,6 @@ declare(strict_types=1);
 namespace Modules\ClientManagement\Controller;
 
 use Modules\ClientManagement\Models\ClientMapper;
-
 use phpOMS\Contract\RenderableInterface;
 use phpOMS\Message\RequestAbstract;
 use phpOMS\Message\ResponseAbstract;
