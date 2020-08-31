@@ -91,16 +91,16 @@ final class ClientMapper extends DataMapperAbstract
      */
     protected static array $hasMany = [
         'files'           => [
-            'mapper' => MediaMapper::class, /* mapper of the related object */
-            'table'  => 'clientmgmt_client_media', /* table of the related object, null if no relation table is used (many->1) */
+            'mapper'   => MediaMapper::class, /* mapper of the related object */
+            'table'    => 'clientmgmt_client_media', /* table of the related object, null if no relation table is used (many->1) */
             'external' => 'clientmgmt_client_media_dst',
-            'self'   => 'clientmgmt_client_media_src',
+            'self'     => 'clientmgmt_client_media_src',
         ],
         'contactElements' => [
-            'mapper' => ContactElementMapper::class,
-            'table'  => 'clientmgmt_client_contactelement',
+            'mapper'   => ContactElementMapper::class,
+            'table'    => 'clientmgmt_client_contactelement',
             'external' => 'clientmgmt_client_contactelement_dst',
-            'self'   => 'clientmgmt_client_contactelement_src',
+            'self'     => 'clientmgmt_client_contactelement_src',
         ],
     ];
 }

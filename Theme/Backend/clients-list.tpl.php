@@ -36,7 +36,7 @@ echo $this->getData('nav')->render(); ?>
                     <td><?= $this->getHtml('Country'); ?>
                 <tbody>
                 <?php $count = 0; foreach ($clients as $key => $value) : ++$count;
-                 $url = UriFactory::build('{/prefix}sales/client/profile?{?}&id=' . $value->getId()); ?>
+                 $url        = UriFactory::build('{/prefix}sales/client/profile?{?}&id=' . $value->getId()); ?>
                 <tr data-href="<?= $url; ?>">
                     <td data-label="<?= $this->getHtml('ID', '0', '0'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->getNumber()); ?></a>
                     <td data-label="<?= $this->getHtml('Name1'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->getProfile()->getAccount()->getName1()); ?></a>
