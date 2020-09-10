@@ -41,7 +41,7 @@ class Client
 
     private string $info = '';
 
-    private \DateTime $createdAt;
+    private \DateTimeImmutable $createdAt;
 
     private Profile $profile;
 
@@ -68,7 +68,7 @@ class Client
      */
     public function __construct()
     {
-        $this->createdAt = new \DateTime('now');
+        $this->createdAt = new \DateTimeImmutable('now');
         $this->profile   = new Profile();
     }
 
@@ -303,7 +303,7 @@ class Client
      *
      * @since 1.0.0
      */
-    public function getCreatedAt() : \DateTime
+    public function getCreatedAt() : \DateTimeInterface
     {
         return $this->createdAt;
     }

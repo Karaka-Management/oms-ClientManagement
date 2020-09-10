@@ -42,7 +42,7 @@ final class ClientMapper extends DataMapperAbstract
         'clientmgmt_client_status'     => ['name' => 'clientmgmt_client_status',     'type' => 'int',      'internal' => 'status'],
         'clientmgmt_client_type'       => ['name' => 'clientmgmt_client_type',       'type' => 'int',      'internal' => 'type'],
         'clientmgmt_client_info'       => ['name' => 'clientmgmt_client_info',       'type' => 'string',   'internal' => 'info'],
-        'clientmgmt_client_created_at' => ['name' => 'clientmgmt_client_created_at', 'type' => 'DateTime', 'internal' => 'createdAt', 'readonly' => true],
+        'clientmgmt_client_created_at' => ['name' => 'clientmgmt_client_created_at', 'type' => 'DateTimeImmutable', 'internal' => 'createdAt', 'readonly' => true],
         'clientmgmt_client_profile'    => ['name' => 'clientmgmt_client_profile',    'type' => 'int',      'internal' => 'profile'],
     ];
 
