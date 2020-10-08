@@ -26,6 +26,10 @@ use Modules\Profile\Models\ProfileMapper;
  */
 class ClientMapperTest extends \PHPUnit\Framework\TestCase
 {
+    /**
+     * @covers Modules\ClientManagement\Models\ClientMapper
+     * @group module
+     */
     public function testCR() : void
     {
         $client = new Client();
