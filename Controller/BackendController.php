@@ -15,11 +15,11 @@ declare(strict_types=1);
 namespace Modules\ClientManagement\Controller;
 
 use Modules\ClientManagement\Models\ClientMapper;
+use phpOMS\Asset\AssetType;
 use phpOMS\Contract\RenderableInterface;
 use phpOMS\Message\RequestAbstract;
 use phpOMS\Message\ResponseAbstract;
 use phpOMS\Views\View;
-use phpOMS\Asset\AssetType;
 
 /**
  * ClientManagement class.
