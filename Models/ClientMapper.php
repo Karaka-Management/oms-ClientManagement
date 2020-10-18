@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace Modules\ClientManagement\Models;
 
+use Modules\Admin\Models\AddressMapper;
 use Modules\Media\Models\MediaMapper;
 use Modules\Profile\Models\ContactElementMapper;
 use Modules\Profile\Models\ProfileMapper;
@@ -44,6 +45,7 @@ final class ClientMapper extends DataMapperAbstract
         'clientmgmt_client_info'       => ['name' => 'clientmgmt_client_info',       'type' => 'string',   'internal' => 'info'],
         'clientmgmt_client_created_at' => ['name' => 'clientmgmt_client_created_at', 'type' => 'DateTimeImmutable', 'internal' => 'createdAt', 'readonly' => true],
         'clientmgmt_client_profile'    => ['name' => 'clientmgmt_client_profile',    'type' => 'int',      'internal' => 'profile'],
+        'clientmgmt_client_address'    => ['name' => 'clientmgmt_client_address',    'type' => 'int',      'internal' => 'mainAddress'],
     ];
 
     /**
@@ -81,6 +83,10 @@ final class ClientMapper extends DataMapperAbstract
             'mapper' => ProfileMapper::class,
             'self'   => 'clientmgmt_client_profile',
         ],
+        'mainAddress' => [
+            'mapper' => AddressMapper::class,
+            'self'   => 'clientmgmt_client_address',
+        ],
     ];
 
     /**
@@ -99,8 +105,8 @@ final class ClientMapper extends DataMapperAbstract
         'contactElements' => [
             'mapper'   => ContactElementMapper::class,
             'table'    => 'clientmgmt_client_contactelement',
-            'external' => 'clientmgmt_client_contactelement_dst',
-            'self'     => 'clientmgmt_client_contactelement_src',
+            'external' => 'clientmgmt_client_contactelement_src',
+            'self'     => 'clientmgmt_client_contactelement_dst',
         ],
     ];
 }

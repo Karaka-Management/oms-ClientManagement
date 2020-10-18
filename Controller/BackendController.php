@@ -19,6 +19,7 @@ use phpOMS\Contract\RenderableInterface;
 use phpOMS\Message\RequestAbstract;
 use phpOMS\Message\ResponseAbstract;
 use phpOMS\Views\View;
+use phpOMS\Asset\AssetType;
 
 /**
  * ClientManagement class.
@@ -45,7 +46,7 @@ final class BackendController extends Controller
     public function viewClientManagementClientList(RequestAbstract $request, ResponseAbstract $response, $data = null) : RenderableInterface
     {
         $view = new View($this->app->l11nManager, $request, $response);
-        $view->setTemplate('/Modules/ClientManagement/Theme/Backend/clients-list');
+        $view->setTemplate('/Modules/ClientManagement/Theme/Backend/client-list');
         $view->addData('nav', $this->app->moduleManager->get('Navigation')->createNavigationMid(1003102001, $request, $response));
 
         $client = ClientMapper::getAll();
@@ -69,7 +70,7 @@ final class BackendController extends Controller
     public function viewClientManagementClientCreate(RequestAbstract $request, ResponseAbstract $response, $data = null) : RenderableInterface
     {
         $view = new View($this->app->l11nManager, $request, $response);
-        $view->setTemplate('/Modules/ClientManagement/Theme/Backend/clients-create');
+        $view->setTemplate('/Modules/ClientManagement/Theme/Backend/client-create');
         $view->addData('nav', $this->app->moduleManager->get('Navigation')->createNavigationMid(1003102001, $request, $response));
 
         return $view;
@@ -89,8 +90,11 @@ final class BackendController extends Controller
      */
     public function viewClientManagementClientProfile(RequestAbstract $request, ResponseAbstract $response, $data = null) : RenderableInterface
     {
+        $head = $response->get('Content')->getData('head');
+        $head->addAsset(AssetType::JSLATE, 'Modules/ClientManagement/Controller.js', ['type' => 'module']);
+
         $view = new View($this->app->l11nManager, $request, $response);
-        $view->setTemplate('/Modules/ClientManagement/Theme/Backend/clients-profile');
+        $view->setTemplate('/Modules/ClientManagement/Theme/Backend/client-profile');
         $view->addData('nav', $this->app->moduleManager->get('Navigation')->createNavigationMid(1003102001, $request, $response));
 
         $client = ClientMapper::get((int) $request->getData('id'));

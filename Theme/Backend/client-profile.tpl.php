@@ -12,6 +12,12 @@
  */
 declare(strict_types=1);
 
+use Modules\Profile\Models\ContactType;
+use phpOMS\Uri\UriFactory;
+
+$countryCodes = \phpOMS\Localization\ISO3166TwoEnum::getConstants();
+$countries    = \phpOMS\Localization\ISO3166NameEnum::getConstants();
+
 /**
  * @var \Modules\ClientManagement\Models\Client $client
  */
@@ -63,11 +69,6 @@ echo $this->getData('nav')->render();
                                     <tr><td><input type="text" id="iName2" name="name2" value="<?= $this->printHtml($client->getProfile()->getAccount()->getName2()); ?>">
                                     <tr><td><label for="iName3"><?= $this->getHtml('Name3'); ?></label>
                                     <tr><td><input type="text" id="iName3" name="name3" value="<?= $this->printHtml($client->getProfile()->getAccount()->getName3()); ?>">
-                                    <tr><td>Address
-                                    <tr><td>
-                                    <tr><td>
-                                    <tr><td>
-                                    <tr><td>
                                 </table>
                             </div>
                             <div class="portlet-foot">
@@ -76,27 +77,48 @@ echo $this->getData('nav')->render();
                         </form>
                     </section>
 
-                    <section class="portlet highlight-4">
+                    <section class="portlet">
+                        <div class="portlet-head">Contact</div>
                         <div class="portlet-body">
-                            <textarea class="undecorated"></textarea>
+                            <table class="layout wf-100">
+                                <tr><td><label for="iName1"><?= $this->getHtml('Phone'); ?></label>
+                                <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->getMainContactElement(ContactType::PHONE)->getContent()); ?>">
+                                <tr><td><label for="iName1"><?= $this->getHtml('Email'); ?></label>
+                                <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->getMainContactElement(ContactType::EMAIL)->getContent()); ?>">
+                                <tr><td><label for="iName1"><?= $this->getHtml('Website'); ?></label>
+                                <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->getMainContactElement(ContactType::WEBSITE)->getContent()); ?>">
+                            </table>
                         </div>
                     </section>
 
                     <section class="portlet">
-                        <div class="portlet-head">Contact</div>
+                            <div class="portlet-head"><?= $this->getHtml('Address'); ?></div>
+                            <div class="portlet-body">
+                                <table class="layout wf-100">
+                                    <?php if (!empty($client->getMainAddress()->getAddition())) : ?>
+                                        <tr><td><label for="iName1"><?= $this->getHtml('Addition'); ?></label>
+                                    <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->getMainAddress()->getAddition()); ?>">
+                                    <?php endif; ?>
+                                    <tr><td><label for="iName1"><?= $this->getHtml('Address'); ?></label>
+                                    <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->getMainAddress()->getAddress()); ?>" required>
+                                    <tr><td><label for="iName1"><?= $this->getHtml('Postal'); ?></label>
+                                    <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->getMainAddress()->getPostal()); ?>" required>
+                                    <tr><td><label for="iName1"><?= $this->getHtml('City'); ?></label>
+                                    <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->getMainAddress()->getCity()); ?>" required>
+                                    <tr><td><label for="iName1"><?= $this->getHtml('Country'); ?></label>
+                                    <tr><td><select>
+                                        <?php foreach ($countryCodes as $code3 => $code2) : ?>
+                                            <option value="<?= $this->printHtml($code2); ?>"<?= $this->printHtml($code2 === $client->getMainAddress()->getCountry() ? ' selected' : ''); ?>><?= $this->printHtml($countries[$code3]); ?>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    <tr><td><img id="iMap" style="width: 100%;" src="<?= UriFactory::build('phpOMS/Localization/Maps/svg/' . \strtolower($client->getMainAddress()->getCountry()) . '.svg'); ?>">
+                                </table>
+                            </div>
+                    </section>
+
+                    <section class="portlet highlight-4">
                         <div class="portlet-body">
-                            <table>
-                                <tr><td>Main:
-                                <tr><td>Phone:
-                                    <td>
-                                <tr><td>Email:
-                                    <td>
-                                <tr><td>Accounting:
-                                <tr><td>Phone:
-                                    <td>
-                                <tr><td>Email:
-                                    <td>
-                            </table>
+                            <textarea class="undecorated"><?= $this->printHtml($client->getInfo()); ?></textarea>
                         </div>
                     </section>
                 </div>
@@ -325,7 +347,7 @@ echo $this->getData('nav')->render();
                     <section class="box wf-100">
                         <header><h1><?= $this->getHtml('Price'); ?></h1></header>
                         <div class="inner">
-                            <form action="<?= \phpOMS\Uri\UriFactory::build('{/api}...'); ?>" method="post">
+                            <form action="<?= UriFactory::build('{/api}...'); ?>" method="post">
                                 <table class="layout wf-100">
                                     <tbody>
                                     <tr><td colspan="2"><label for="iPType"><?= $this->getHtml('Type'); ?></label>
@@ -367,7 +389,7 @@ echo $this->getData('nav')->render();
                     <section class="box wf-100">
                         <header><h1><?= $this->getHtml('AreaManager'); ?></h1></header>
                         <div class="inner">
-                            <form action="<?= \phpOMS\Uri\UriFactory::build('{/api}...'); ?>" method="post">
+                            <form action="<?= UriFactory::build('{/api}...'); ?>" method="post">
                                 <table class="layout wf-100">
                                     <tbody>
                                     <tr><td><label for="iManager"><?= $this->getHtml('AreaManager'); ?></label>
