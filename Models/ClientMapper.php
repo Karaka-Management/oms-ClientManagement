@@ -80,11 +80,11 @@ final class ClientMapper extends DataMapperAbstract
      */
     protected static array $ownsOne = [
         'profile' => [
-            'mapper' => ProfileMapper::class,
+            'mapper'     => ProfileMapper::class,
             'external'   => 'clientmgmt_client_profile',
         ],
         'mainAddress' => [
-            'mapper' => AddressMapper::class,
+            'mapper'     => AddressMapper::class,
             'external'   => 'clientmgmt_client_address',
         ],
     ];
