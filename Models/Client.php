@@ -19,6 +19,7 @@ use Modules\Media\Models\Media;
 use Modules\Profile\Models\ContactElement;
 use Modules\Profile\Models\NullContactElement;
 use Modules\Profile\Models\Profile;
+use Modules\Admin\Models\Address;
 
 /**
  * Account class.
@@ -340,11 +341,27 @@ class Client
         $this->profile = $profile;
     }
 
+    /**
+     * Set main address
+     *
+     * @param int|Address $address Address
+     *
+     * @return void
+     *
+     * @since 1.0.0
+     */
     public function setMainAddress($address) : void
     {
         $this->mainAddress = $address;
     }
 
+    /**
+     * Get main address
+     *
+     * @return int|Address
+     *
+     * @since 1.0.0
+     */
     public function getMainAddress()
     {
         return $this->mainAddress;
@@ -400,11 +417,30 @@ class Client
         return $this->contactElements;
     }
 
+    /**
+     * Order contact elements
+     *
+     * @param ContactElement $a Element
+     * @param ContactElement $b Element
+     *
+     * @return int
+     *
+     * @since 1.0.0
+     */
     private function orderContactElements(ContactElement $a, ContactElement $b) : int
     {
         return $a->getOrder() <=> $b->getOrder();
     }
 
+    /**
+     * Get the main contact element by type
+     *
+     * @param int $type Contact element type
+     *
+     * @return ContactElement
+     *
+     * @since 1.0.0
+     */
     public function getMainContactElement(int $type) : ContactElement
     {
         \uasort($this->contactElements, [$this, 'orderContactElements']);
@@ -418,6 +454,15 @@ class Client
         return new NullContactElement();
     }
 
+    /**
+     * Add contact element
+     *
+     * @param int|ContactElement $element Contact element
+     *
+     * @return void
+     *
+     * @since 1.0.0
+     */
     public function addContactElement($element) : void
     {
         $this->contactElements[] = $element;

@@ -75,17 +75,17 @@ final class ClientMapper extends DataMapperAbstract
     /**
      * Has one relation.
      *
-     * @var array<string, array{mapper:string, self:string, by?:string, column?:string}>
+     * @var array<string, array{mapper:string, external:string, by?:string, column?:string, conditional?:bool}>
      * @since 1.0.0
      */
     protected static array $ownsOne = [
         'profile' => [
-            'mapper'     => ProfileMapper::class,
-            'external'   => 'clientmgmt_client_profile',
+            'mapper'   => ProfileMapper::class,
+            'external' => 'clientmgmt_client_profile',
         ],
         'mainAddress' => [
-            'mapper'     => AddressMapper::class,
-            'external'   => 'clientmgmt_client_address',
+            'mapper'   => AddressMapper::class,
+            'external' => 'clientmgmt_client_address',
         ],
     ];
 
@@ -97,8 +97,8 @@ final class ClientMapper extends DataMapperAbstract
      */
     protected static array $hasMany = [
         'files'           => [
-            'mapper'   => MediaMapper::class, /* mapper of the related object */
-            'table'    => 'clientmgmt_client_media', /* table of the related object, null if no relation table is used (many->1) */
+            'mapper'   => MediaMapper::class,              /* mapper of the related object */
+            'table'    => 'clientmgmt_client_media',       /* table of the related object, null if no relation table is used (many->1) */
             'external' => 'clientmgmt_client_media_src',
             'self'     => 'clientmgmt_client_media_dst',
         ],
