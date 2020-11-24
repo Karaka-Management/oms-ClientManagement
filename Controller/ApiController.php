@@ -14,16 +14,16 @@ declare(strict_types=1);
 
 namespace Modules\ClientManagement\Controller;
 
+use Modules\Admin\Models\Account;
+use Modules\Admin\Models\Address;
+use Modules\ClientManagement\Models\Client;
 use Modules\ClientManagement\Models\ClientMapper;
+use Modules\Profile\Models\Profile;
+use phpOMS\Message\Http\RequestStatusCode;
+use phpOMS\Message\NotificationLevel;
 use phpOMS\Message\RequestAbstract;
 use phpOMS\Message\ResponseAbstract;
 use phpOMS\Model\Message\FormValidation;
-use phpOMS\Message\Http\RequestStatusCode;
-use phpOMS\Message\NotificationLevel;
-use Modules\ClientManagement\Models\Client;
-use Modules\Admin\Models\Account;
-use Modules\Profile\Models\Profile;
-use Modules\Admin\Models\Address;
 
 /**
  * ClientManagement class.
@@ -73,20 +73,20 @@ final class ApiController extends Controller
      */
     private function createClientFromRequest(RequestAbstract $request) : Client
     {
-        $account = new Account();
+        $account        = new Account();
         $account->name1 = $request->getData('name1') ?? '';
         $account->name2 = $request->getData('name2') ?? '';
 
         $profile = new Profile($account);
 
-        $client = new Client();
-        $client->number = $request->getData('number') ?? '';
+        $client          = new Client();
+        $client->number  = $request->getData('number') ?? '';
         $client->profile = $profile;
 
-        $addr = new Address();
+        $addr          = new Address();
         $addr->address = $request->getData('address') ?? '';
-        $addr->postal = $request->getData('postal') ?? '';
-        $addr->city = $request->getData('city') ?? '';
+        $addr->postal  = $request->getData('postal') ?? '';
+        $addr->city    = $request->getData('city') ?? '';
         $addr->setCountry($request->getData('country') ?? '');
         $addr->state = $request->getData('state') ?? '';
         $client->setMainAddress($addr);

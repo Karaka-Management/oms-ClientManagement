@@ -32,7 +32,7 @@ class ClientMapperTest extends \PHPUnit\Framework\TestCase
      */
     public function testCR() : void
     {
-        $client = new Client();
+        $client         = new Client();
         $client->number = '123456789';
 
         // This is required because by default a NullAccount without an ID is created in the Profile model
@@ -64,7 +64,7 @@ class ClientMapperTest extends \PHPUnit\Framework\TestCase
         }
 
         for ($i = 0; $i < 100; ++$i) {
-            $client = new Client();
+            $client         = new Client();
             $client->number = (string) \mt_rand(100000, 999999);
 
             $client->profile = $profile;
