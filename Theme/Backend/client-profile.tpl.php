@@ -53,7 +53,7 @@ echo $this->getData('nav')->render();
         </ul>
     </div>
     <div class="tab-content">
-        <input type="radio" id="c-tab-1" name="tabular-2"<?= $this->request->getUri()->getFragment() === 'c-tab-1' ? ' checked' : ''; ?>>
+        <input type="radio" id="c-tab-1" name="tabular-2"<?= $this->request->uri->fragment === 'c-tab-1' ? ' checked' : ''; ?>>
         <div class="tab">
             <div class="row">
                 <div class="col-xs-12 col-lg-3 last-lg">
@@ -62,13 +62,13 @@ echo $this->getData('nav')->render();
                             <div class="portlet-body">
                                 <table class="layout wf-100">
                                     <tr><td><label for="iId"><?= $this->getHtml('ID', '0', '0'); ?></label>
-                                    <tr><td><span class="input"><button type="button" formaction=""><i class="fa fa-book"></i></button><input type="number" id="iId" min="1" name="id" value="<?= $this->printHtml($client->getNumber()); ?>" disabled></span>
+                                    <tr><td><span class="input"><button type="button" formaction=""><i class="fa fa-book"></i></button><input type="number" id="iId" min="1" name="id" value="<?= $this->printHtml($client->number); ?>" disabled></span>
                                     <tr><td><label for="iName1"><?= $this->getHtml('Name1'); ?></label>
-                                    <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->getProfile()->getAccount()->getName1()); ?>" required>
+                                    <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->profile->account->name1); ?>" required>
                                     <tr><td><label for="iName2"><?= $this->getHtml('Name2'); ?></label>
-                                    <tr><td><input type="text" id="iName2" name="name2" value="<?= $this->printHtml($client->getProfile()->getAccount()->getName2()); ?>">
+                                    <tr><td><input type="text" id="iName2" name="name2" value="<?= $this->printHtml($client->profile->account->name2); ?>">
                                     <tr><td><label for="iName3"><?= $this->getHtml('Name3'); ?></label>
-                                    <tr><td><input type="text" id="iName3" name="name3" value="<?= $this->printHtml($client->getProfile()->getAccount()->getName3()); ?>">
+                                    <tr><td><input type="text" id="iName3" name="name3" value="<?= $this->printHtml($client->profile->account->name3); ?>">
                                 </table>
                             </div>
                             <div class="portlet-foot">
@@ -95,16 +95,16 @@ echo $this->getData('nav')->render();
                             <div class="portlet-head"><?= $this->getHtml('Address'); ?></div>
                             <div class="portlet-body">
                                 <table class="layout wf-100">
-                                    <?php if (!empty($client->getMainAddress()->getAddition())) : ?>
+                                    <?php if (!empty($client->getMainAddress()->addition)) : ?>
                                         <tr><td><label for="iName1"><?= $this->getHtml('Addition'); ?></label>
-                                    <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->getMainAddress()->getAddition()); ?>">
+                                    <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->getMainAddress()->addition); ?>">
                                     <?php endif; ?>
                                     <tr><td><label for="iName1"><?= $this->getHtml('Address'); ?></label>
-                                    <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->getMainAddress()->getAddress()); ?>" required>
+                                    <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->getMainAddress()->address); ?>" required>
                                     <tr><td><label for="iName1"><?= $this->getHtml('Postal'); ?></label>
-                                    <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->getMainAddress()->getPostal()); ?>" required>
+                                    <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->getMainAddress()->postal); ?>" required>
                                     <tr><td><label for="iName1"><?= $this->getHtml('City'); ?></label>
-                                    <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->getMainAddress()->getCity()); ?>" required>
+                                    <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->getMainAddress()->city); ?>" required>
                                     <tr><td><label for="iName1"><?= $this->getHtml('Country'); ?></label>
                                     <tr><td><select>
                                         <?php foreach ($countryCodes as $code3 => $code2) : ?>
@@ -219,7 +219,7 @@ echo $this->getData('nav')->render();
                 </div>
             </div>
         </div>
-        <input type="radio" id="c-tab-2" name="tabular-2"<?= $this->request->getUri()->getFragment() === 'c-tab-2' ? ' checked' : ''; ?>>
+        <input type="radio" id="c-tab-2" name="tabular-2"<?= $this->request->uri->fragment === 'c-tab-2' ? ' checked' : ''; ?>>
         <div class="tab">
             <div class="row">
                 <div class="col-xs-12 col-md-6 col-lg-4">
@@ -254,7 +254,7 @@ echo $this->getData('nav')->render();
                 </div>
             </div>
         </div>
-        <input type="radio" id="c-tab-3" name="tabular-2"<?= $this->request->getUri()->getFragment() === 'c-tab-3' ? ' checked' : ''; ?>>
+        <input type="radio" id="c-tab-3" name="tabular-2"<?= $this->request->uri->fragment === 'c-tab-3' ? ' checked' : ''; ?>>
         <div class="tab">
             <div class="row">
                 <div class="col-xs-12 col-md-6 col-lg-4">
@@ -286,7 +286,7 @@ echo $this->getData('nav')->render();
                 </div>
             </div>
         </div>
-        <input type="radio" id="c-tab-4" name="tabular-2"<?= $this->request->getUri()->getFragment() === 'c-tab-4' ? ' checked' : ''; ?>>
+        <input type="radio" id="c-tab-4" name="tabular-2"<?= $this->request->uri->fragment === 'c-tab-4' ? ' checked' : ''; ?>>
         <div class="tab">
             <div class="row">
                 <div class="col-xs-12 col-md-6 col-lg-4">
@@ -318,7 +318,7 @@ echo $this->getData('nav')->render();
                 </div>
             </div>
         </div>
-        <input type="radio" id="c-tab-5" name="tabular-2"<?= $this->request->getUri()->getFragment() === 'c-tab-5' ? ' checked' : ''; ?>>
+        <input type="radio" id="c-tab-5" name="tabular-2"<?= $this->request->uri->fragment === 'c-tab-5' ? ' checked' : ''; ?>>
         <div class="tab">
             <div class="row">
                 <div class="col-xs-12 col-md-6 col-lg-4">
@@ -340,7 +340,7 @@ echo $this->getData('nav')->render();
                 </div>
             </div>
         </div>
-        <input type="radio" id="c-tab-6" name="tabular-2"<?= $this->request->getUri()->getFragment() === 'c-tab-6' ? ' checked' : ''; ?>>
+        <input type="radio" id="c-tab-6" name="tabular-2"<?= $this->request->uri->fragment === 'c-tab-6' ? ' checked' : ''; ?>>
         <div class="tab">
             <div class="row">
                 <div class="col-xs-12 col-md-6 col-lg-4">
@@ -382,7 +382,7 @@ echo $this->getData('nav')->render();
                 </div>
             </div>
         </div>
-        <input type="radio" id="c-tab-7" name="tabular-2"<?= $this->request->getUri()->getFragment() === 'c-tab-7' ? ' checked' : ''; ?>>
+        <input type="radio" id="c-tab-7" name="tabular-2"<?= $this->request->uri->fragment === 'c-tab-7' ? ' checked' : ''; ?>>
         <div class="tab">
             <div class="row">
                 <div class="col-xs-12 col-md-6 col-lg-4">
@@ -412,10 +412,10 @@ echo $this->getData('nav')->render();
                 </div>
             </div>
         </div>
-        <input type="radio" id="c-tab-8" name="tabular-2"<?= $this->request->getUri()->getFragment() === 'c-tab-8' ? ' checked' : ''; ?>>
+        <input type="radio" id="c-tab-8" name="tabular-2"<?= $this->request->uri->fragment === 'c-tab-8' ? ' checked' : ''; ?>>
         <div class="tab">
         </div>
-        <input type="radio" id="c-tab-9" name="tabular-2"<?= $this->request->getUri()->getFragment() === 'c-tab-9' ? ' checked' : ''; ?>>
+        <input type="radio" id="c-tab-9" name="tabular-2"<?= $this->request->uri->fragment === 'c-tab-9' ? ' checked' : ''; ?>>
         <div class="tab">
             <div class="row">
                 <div class="col-xs-12">
@@ -441,8 +441,8 @@ echo $this->getData('nav')->render();
                             <tbody>
                             <tr>
                                 <td><?= $this->printHtml($this->request->getOrigin()); ?>
-                                <td><?= $this->printHtml($this->request->getHeader()->getAccount()); ?>
-                                <td><?= $this->printHtml($this->request->getHeader()->getAccount()); ?>
+                                <td><?= $this->printHtml($this->request->header->account); ?>
+                                <td><?= $this->printHtml($this->request->header->account); ?>
                                 <td>Creating customer
                                 <td><?= $this->printHtml((new \DateTime('now'))->format('Y-m-d H:i:s')); ?>
                         </table>

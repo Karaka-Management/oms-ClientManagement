@@ -33,17 +33,17 @@ class ClientMapperTest extends \PHPUnit\Framework\TestCase
     public function testCR() : void
     {
         $client = new Client();
-        $client->setNumber('123456789');
+        $client->number = '123456789';
 
         // This is required because by default a NullAccount without an ID is created in the Profile model
         // but NullModels without ids are handled like "null" values which are not allowed for Accounts.
         $profile = ProfileMapper::getFor(1, 'account');
         $profile = $profile instanceof NullProfile ? new Profile() : $profile;
-        if ($profile->getAccount()->getId() === 0) {
-            $profile->setAccount(new NullAccount(1));
+        if ($profile->account->getId() === 0) {
+            $profile->account = new NullAccount(1);
         }
 
-        $client->setProfile($profile);
+        $client->profile = $profile;
 
         $id = ClientMapper::create($client);
         self::assertGreaterThan(0, $client->getId());
@@ -59,15 +59,15 @@ class ClientMapperTest extends \PHPUnit\Framework\TestCase
     {
         $profile = ProfileMapper::getFor(1, 'account');
         $profile = $profile instanceof NullProfile ? new Profile() : $profile;
-        if ($profile->getAccount()->getId() === 0) {
-            $profile->setAccount(new NullAccount(1));
+        if ($profile->account->getId() === 0) {
+            $profile->account = new NullAccount(1);
         }
 
         for ($i = 0; $i < 100; ++$i) {
             $client = new Client();
-            $client->setNumber((string) \mt_rand(100000, 999999));
+            $client->number = (string) \mt_rand(100000, 999999);
 
-            $client->setProfile($profile);
+            $client->profile = $profile;
             ClientMapper::create($client);
         }
     }

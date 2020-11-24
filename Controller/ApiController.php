@@ -52,13 +52,13 @@ final class ApiController extends Controller
     {
         if (!empty($val = $this->validateClientCreate($request))) {
             $response->set('client_create', new FormValidation($val));
-            $response->getHeader()->setStatusCode(RequestStatusCode::R_400);
+            $response->header->status = RequestStatusCode::R_400;
 
             return;
         }
 
         $client = $this->createClientFromRequest($request);
-        $this->createModel($request->getHeader()->getAccount(), $client, ClientMapper::class, 'client', $request->getOrigin());
+        $this->createModel($request->header->account, $client, ClientMapper::class, 'client', $request->getOrigin());
         $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Client', 'Client successfully created', $client);
     }
 
@@ -74,21 +74,21 @@ final class ApiController extends Controller
     private function createClientFromRequest(RequestAbstract $request) : Client
     {
         $account = new Account();
-        $account->setName1($request->getData('name1') ?? '');
-        $account->setName2($request->getData('name2') ?? '');
+        $account->name1 = $request->getData('name1') ?? '';
+        $account->name2 = $request->getData('name2') ?? '';
 
         $profile = new Profile($account);
 
         $client = new Client();
-        $client->setNumber($request->getData('number') ?? '');
-        $client->setProfile($profile);
+        $client->number = $request->getData('number') ?? '';
+        $client->profile = $profile;
 
         $addr = new Address();
-        $addr->setAddress($request->getData('address') ?? '');
-        $addr->setPostal($request->getData('postal') ?? '');
-        $addr->setCity($request->getData('city') ?? '');
+        $addr->address = $request->getData('address') ?? '';
+        $addr->postal = $request->getData('postal') ?? '';
+        $addr->city = $request->getData('city') ?? '';
         $addr->setCountry($request->getData('country') ?? '');
-        $addr->setState($request->getData('state') ?? '');
+        $addr->state = $request->getData('state') ?? '';
         $client->setMainAddress($addr);
 
         return $client;
@@ -134,16 +134,16 @@ final class ApiController extends Controller
 
         if (!empty($val = $profileModule->validateContactElementCreate($request))) {
             $response->set('contact_element_create', new FormValidation($val));
-            $response->getHeader()->setStatusCode(RequestStatusCode::R_400);
+            $response->header->status = RequestStatusCode::R_400;
 
             return;
         }
 
         $contactElement = $profileModule->createContactElementFromRequest($request);
 
-        $this->createModel($request->getHeader()->getAccount(), $contactElement, ContactElementMapper::class, 'client-contactElement', $request->getOrigin());
+        $this->createModel($request->header->account, $contactElement, ContactElementMapper::class, 'client-contactElement', $request->getOrigin());
         $this->createModelRelation(
-            $request->getHeader()->getAccount(),
+            $request->header->account,
             (int) $request->getData('client'),
             $contactElement->getId(),
             ClientMapper::class, 'contactElements', '', $request->getOrigin()
