@@ -18,8 +18,8 @@ use Modules\Admin\Models\Account;
 use Modules\Admin\Models\Address;
 use Modules\ClientManagement\Models\Client;
 use Modules\ClientManagement\Models\ClientMapper;
-use Modules\Profile\Models\Profile;
 use Modules\Profile\Models\ContactElementMapper;
+use Modules\Profile\Models\Profile;
 use phpOMS\Message\Http\RequestStatusCode;
 use phpOMS\Message\NotificationLevel;
 use phpOMS\Message\RequestAbstract;
@@ -89,7 +89,7 @@ final class ApiController extends Controller
         $addr->postal  = $request->getData('postal') ?? '';
         $addr->city    = $request->getData('city') ?? '';
         $addr->setCountry($request->getData('country') ?? '');
-        $addr->state = $request->getData('state') ?? '';
+        $addr->state         = $request->getData('state') ?? '';
         $client->mainAddress = $addr;
 
         return $client;
@@ -131,7 +131,7 @@ final class ApiController extends Controller
      */
     public function apiContactElementCreate(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
     {
-        $profileModule  = $this->app->moduleManager->get('Profile');
+        $profileModule = $this->app->moduleManager->get('Profile');
 
         if (!empty($val = $profileModule->validateContactElementCreate($request))) {
             $response->set('contact_element_create', new FormValidation($val));
