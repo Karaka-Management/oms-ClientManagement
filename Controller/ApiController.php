@@ -19,6 +19,7 @@ use Modules\Admin\Models\Address;
 use Modules\ClientManagement\Models\Client;
 use Modules\ClientManagement\Models\ClientMapper;
 use Modules\Profile\Models\Profile;
+use Modules\Profile\Models\ContactElementMapper;
 use phpOMS\Message\Http\RequestStatusCode;
 use phpOMS\Message\NotificationLevel;
 use phpOMS\Message\RequestAbstract;
@@ -89,7 +90,7 @@ final class ApiController extends Controller
         $addr->city    = $request->getData('city') ?? '';
         $addr->setCountry($request->getData('country') ?? '');
         $addr->state = $request->getData('state') ?? '';
-        $client->setMainAddress($addr);
+        $client->mainAddress = $addr;
 
         return $client;
     }

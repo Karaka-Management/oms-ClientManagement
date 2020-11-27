@@ -53,19 +53,19 @@ class Client
 
     private array $contactElements = [];
 
-    private $mainAddress = null;
+    public Address $mainAddress;
 
     private array $address = [];
 
     private array $partners = [];
 
-    private $salesRep = null;
+    private ?Profile $salesRep = null;
 
     private int $advertisementMaterial = 0;
 
-    private $defaultDeliveryAddress = null;
+    public ?Address $defaultDeliveryAddress = null;
 
-    private $defaultInvoiceAddress = null;
+    public ?Address $defaultInvoiceAddress = null;
 
     /**
      * Constructor.
@@ -174,84 +174,6 @@ class Client
     }
 
     /**
-     * Get tax id.
-     *
-     * @return int
-     *
-     * @since 1.0.0
-     */
-    public function getTaxId() : int
-    {
-        return $this->taxId;
-    }
-
-    /**
-     * Set tax id.
-     *
-     * @param int $taxId Tax id
-     *
-     * @return void
-     *
-     * @since 1.0.0
-     */
-    public function setTaxId(int $taxId) : void
-    {
-        $this->taxId = $taxId;
-    }
-
-    /**
-     * Set default delivery address.
-     *
-     * @param mixed $deliveryAddress Delivery address
-     *
-     * @return void
-     *
-     * @since 1.0.0
-     */
-    public function setDefaultDeliveryAddress($deliveryAddress) : void
-    {
-        $this->defaultDeliveryAddress = $deliveryAddress;
-    }
-
-    /**
-     * Get default delivery address.
-     *
-     * @return mixed
-     *
-     * @since 1.0.0
-     */
-    public function getDefaultDeliveryAddress()
-    {
-        return $this->defaultDeliveryAddress;
-    }
-
-    /**
-     * Set default invoice address.
-     *
-     * @param mixed $invoiceAddress Invoice address
-     *
-     * @return void
-     *
-     * @since 1.0.0
-     */
-    public function setDefaultInvoiceAddress($invoiceAddress) : void
-    {
-        $this->defaultTnvoiceAddress = $invoiceAddress;
-    }
-
-    /**
-     * Get default invoice address.
-     *
-     * @return mixed
-     *
-     * @since 1.0.0
-     */
-    public function getDefaultInvoiceAddress()
-    {
-        return $this->defaultInvoiceAddress;
-    }
-
-    /**
      * Get info.
      *
      * @return string
@@ -275,32 +197,6 @@ class Client
     public function setInfo(string $info) : void
     {
         $this->info = $info;
-    }
-
-    /**
-     * Set main address
-     *
-     * @param int|Address $address Address
-     *
-     * @return void
-     *
-     * @since 1.0.0
-     */
-    public function setMainAddress($address) : void
-    {
-        $this->mainAddress = $address;
-    }
-
-    /**
-     * Get main address
-     *
-     * @return int|Address
-     *
-     * @since 1.0.0
-     */
-    public function getMainAddress()
-    {
-        return $this->mainAddress;
     }
 
     /**
