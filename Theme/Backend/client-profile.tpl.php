@@ -95,23 +95,23 @@ echo $this->getData('nav')->render();
                             <div class="portlet-head"><?= $this->getHtml('Address'); ?></div>
                             <div class="portlet-body">
                                 <table class="layout wf-100">
-                                    <?php if (!empty($client->getMainAddress()->addition)) : ?>
+                                    <?php if (!empty($client->mainAddress->addition)) : ?>
                                         <tr><td><label for="iName1"><?= $this->getHtml('Addition'); ?></label>
-                                    <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->getMainAddress()->addition); ?>">
+                                    <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->mainAddress->addition); ?>">
                                     <?php endif; ?>
                                     <tr><td><label for="iName1"><?= $this->getHtml('Address'); ?></label>
-                                    <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->getMainAddress()->address); ?>" required>
+                                    <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->mainAddress->address); ?>" required>
                                     <tr><td><label for="iName1"><?= $this->getHtml('Postal'); ?></label>
-                                    <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->getMainAddress()->postal); ?>" required>
+                                    <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->mainAddress->postal); ?>" required>
                                     <tr><td><label for="iName1"><?= $this->getHtml('City'); ?></label>
-                                    <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->getMainAddress()->city); ?>" required>
+                                    <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->mainAddress->city); ?>" required>
                                     <tr><td><label for="iName1"><?= $this->getHtml('Country'); ?></label>
                                     <tr><td><select>
                                         <?php foreach ($countryCodes as $code3 => $code2) : ?>
-                                            <option value="<?= $this->printHtml($code2); ?>"<?= $this->printHtml($code2 === $client->getMainAddress()->getCountry() ? ' selected' : ''); ?>><?= $this->printHtml($countries[$code3]); ?>
+                                            <option value="<?= $this->printHtml($code2); ?>"<?= $this->printHtml($code2 === $client->mainAddress->getCountry() ? ' selected' : ''); ?>><?= $this->printHtml($countries[$code3]); ?>
                                         <?php endforeach; ?>
                                     </select>
-                                    <tr><td><img id="iMap" style="width: 100%;" src="<?= UriFactory::build('phpOMS/Localization/Maps/svg/' . \strtolower($client->getMainAddress()->getCountry()) . '.svg'); ?>">
+                                    <tr><td><img id="iMap" style="width: 100%;" src="<?= UriFactory::build('phpOMS/Localization/Maps/svg/' . \strtolower($client->mainAddress->getCountry()) . '.svg'); ?>">
                                 </table>
                             </div>
                     </section>
@@ -441,8 +441,8 @@ echo $this->getData('nav')->render();
                             <tbody>
                             <tr>
                                 <td><?= $this->printHtml($this->request->getOrigin()); ?>
-                                <td><?= $this->printHtml($this->request->header->account); ?>
-                                <td><?= $this->printHtml($this->request->header->account); ?>
+                                <td><?= $this->printHtml((string) $this->request->header->account); ?>
+                                <td><?= $this->printHtml((string) $this->request->header->account); ?>
                                 <td>Creating customer
                                 <td><?= $this->printHtml((new \DateTime('now'))->format('Y-m-d H:i:s')); ?>
                         </table>
