@@ -106,11 +106,6 @@
                 "null": false,
                 "foreignTable": "clientmgmt_client",
                 "foreignKey": "clientmgmt_client_id"
-            },
-            "clientmgmt_client_media_type": {
-                "name": "clientmgmt_client_media_type",
-                "type": "TINYINT",
-                "null": false
             }
         }
     }
