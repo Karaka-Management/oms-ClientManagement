@@ -23,6 +23,9 @@ $countries    = \phpOMS\Localization\ISO3166NameEnum::getConstants();
  */
 $client = $this->getData('client');
 
+$newestInvoices = $this->getData('newestInvoices') ?? [];
+$monthlySalesCosts = $this->getData('monthlySalesCosts') ?? [];
+
 /**
  * @var \phpOMS\Views\View $this
  */
@@ -195,8 +198,25 @@ echo $this->getData('nav')->render();
                     <div class="row">
                         <div class="col-xs-12">
                             <section class="portlet">
-                                <div class="portlet-head">Invoices</div>
-                                <div class="portlet-body"></div>
+                                <div class="portlet-head">Recent Invoices</div>
+                                <table id="iSalesItemList" class="default">
+                                    <thead>
+                                    <tr>
+                                        <td>Number
+                                        <td class="wf-100">Name
+                                        <td>Net
+                                        <td>Date
+                                    <tbody>
+                                    <?php foreach ($newestInvoices as $invoice) :
+                                        $url = UriFactory::build('{/prefix}sales/invoice?{?}&id=' . $invoice->getId());
+                                        ?>
+                                    <tr data-href="<?= $url; ?>">
+                                        <td><a href="<?= $url; ?>"><?= $invoice->getNumber(); ?></a>
+                                        <td><a href="<?= $url; ?>"><?= $invoice->billTo; ?></a>
+                                        <td><a href="<?= $url; ?>"><?= $invoice->net->getCurrency(); ?></a>
+                                        <td><a href="<?= $url; ?>"><?= $invoice->createdAt->format('Y-m-d'); ?></a>
+                                    <?php endforeach; ?>
+                                </table>
                             </section>
                         </div>
                     </div>
@@ -209,10 +229,88 @@ echo $this->getData('nav')->render();
                             </section>
                         </div>
 
-                        <div class="col-xs-12 col-md-6">
+                        <div class="col-xs-12 col-lg-6">
                             <section class="portlet">
                                 <div class="portlet-head">Sales</div>
-                                <div class="portlet-body"></div>
+                                <div class="portlet-body">
+                                    <canvas id="sales-region" data-chart='{
+                                            "type": "bar",
+                                            "data": {
+                                                "labels": [
+                                                    <?php
+                                                        $temp = [];
+                                                        foreach ($monthlySalesCosts as $monthly) {
+                                                            $temp[] = $monthly['month'] . '/' . \substr((string) $monthly['year'], -2);
+                                                        }
+                                                    ?>
+                                                    <?= '"' . \implode('", "', $temp) . '"'; ?>
+                                                ],
+                                                "datasets": [
+                                                    {
+                                                        "label": "Margin",
+                                                        "type": "line",
+                                                        "data": [
+                                                            <?php
+                                                                $temp = [];
+                                                                foreach ($monthlySalesCosts as $monthly) {
+                                                                    $temp[] = \round(((((int) $monthly['net_sales']) - ((int) $monthly['net_costs'])) / ((int) $monthly['net_sales'])) * 100, 2);
+                                                                }
+                                                            ?>
+                                                            <?= \implode(',', $temp); ?>
+                                                        ],
+                                                        "yAxisID": "axis-2",
+                                                        "fill": false,
+                                                        "borderColor": "rgb(255, 99, 132)",
+                                                        "backgroundColor": "rgb(255, 99, 132)"
+                                                    },
+                                                    {
+                                                        "label": "Sales",
+                                                        "type": "bar",
+                                                        "data": [
+                                                            <?php
+                                                                $temp = [];
+                                                                foreach ($monthlySalesCosts as $monthly) {
+                                                                    $temp[] = ((int) $monthly['net_sales']) / 1000;
+                                                                }
+                                                            ?>
+                                                            <?= \implode(',', $temp); ?>
+                                                        ],
+                                                        "yAxisID": "axis-1",
+                                                        "backgroundColor": "rgb(54, 162, 235)"
+                                                    }
+                                                ]
+                                            },
+                                            "options": {
+                                                "scales": {
+                                                    "yAxes": [
+                                                        {
+                                                            "id": "axis-1",
+                                                            "display": true,
+                                                            "position": "left"
+                                                        },
+                                                        {
+                                                            "id": "axis-2",
+                                                            "display": true,
+                                                            "position": "right",
+                                                            "scaleLabel": {
+                                                                "display": true,
+                                                                "labelString": "Margin %"
+                                                            },
+                                                            "gridLines": {
+                                                                "display": false
+                                                            },
+                                                            "beginAtZero": true,
+                                                            "ticks": {
+                                                                "min": 0,
+                                                                "max": 100,
+                                                                "stepSize": 10
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                    }'></canvas>
+                                </div>
                             </section>
                         </div>
                     </div>

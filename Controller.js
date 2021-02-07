@@ -17,26 +17,32 @@ jsOMS.Modules.ClientManager = class {
 
     bind (id)
     {
-        /*
-        const map = document.getElementById('iMap');
-        fetch(map.src).then(res => res.text()).then(data => {
-            const parser = new DOMParser();
-            const svg = parser.parseFromString(data, 'image/svg+xml').querySelector('svg');
+        const e    = typeof id === 'undefined' ? document.getElementsByTagName('canvas') : [document.getElementById(id)],
+            length = e.length;
 
-            if (map.id) svg.id = map.id;
-            if (map.className) svg.classList = map.classList;
+        for (let i = 0; i < length; ++i) {
+            if (e[i].getAttribute('data-chart') === null
+                && e[i].getAttribute('data-chart') !== 'undefined'
+            ) {
+                continue;
+            }
 
-            map.parentNode.replaceChild(svg, map);
+            this.bindElement(e[i]);
+        }
+    };
 
-            return svg;
-        })
-        .then(svg => {
-            //svg.setAttribute('width', 100);
-            //svg.setAttribute('height', 136);
-            //svg.setAttribute('viewbox', '0 0 1000 1360');
-            //svg.style.width = '100%';
-        });
-        */
+    bindElement (chart)
+    {
+        if (typeof chart === 'undefined' || !chart) {
+            jsOMS.Log.Logger.instance.error('Invalid chart: ' + chart, 'ClientManagementController');
+
+            return;
+        }
+
+        const self = this;
+        const data = JSON.parse(chart.getAttribute('data-chart'));
+
+        const myChart = new Chart(chart.getContext('2d'), data);
     };
 };
 

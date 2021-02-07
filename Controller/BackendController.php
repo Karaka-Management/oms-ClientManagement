@@ -20,6 +20,10 @@ use phpOMS\Contract\RenderableInterface;
 use phpOMS\Message\RequestAbstract;
 use phpOMS\Message\ResponseAbstract;
 use phpOMS\Views\View;
+use Modules\Billing\Models\BillMapper;
+use phpOMS\Stdlib\Base\SmartDateTime;
+use phpOMS\Localization\Money;
+use Modules\Billing\Models\BillTypeL11n;
 
 /**
  * ClientManagement class.
@@ -91,6 +95,8 @@ final class BackendController extends Controller
     public function viewClientManagementClientProfile(RequestAbstract $request, ResponseAbstract $response, $data = null) : RenderableInterface
     {
         $head = $response->get('Content')->getData('head');
+        $head->addAsset(AssetType::CSS, 'Resources/chartjs/Chartjs/chart.css');
+        $head->addAsset(AssetType::JSLATE, 'Resources/chartjs/Chartjs/chart.js');
         $head->addAsset(AssetType::JSLATE, 'Modules/ClientManagement/Controller.js', ['type' => 'module']);
 
         $view = new View($this->app->l11nManager, $request, $response);
@@ -99,6 +105,27 @@ final class BackendController extends Controller
 
         $client = ClientMapper::get((int) $request->getData('id'));
         $view->setData('client', $client);
+
+        // stats
+        if ($this->app->moduleManager->isActive('Billing')) {
+            $ytd = BillMapper::getSalesByClientId($client->getId(), new SmartDateTime('Y-01-01'), new SmartDateTime('now'));
+            $mtd = BillMapper::getSalesByClientId($client->getId(), new SmartDateTime('Y-m-01'), new SmartDateTime('now'));
+            $lastOrder = BillMapper::getLastOrderDateByClientId($client->getId());
+            $newestInvoices = BillMapper::withConditional('language', $response->getLanguage(), [BillTypeL11n::class])::getNewestClientInvoices($client->getId(), 5);
+            $monthlySalesCosts = BillMapper::getClientMonthlySalesCosts($client->getId(), (new SmartDateTime('now'))->createModify(-1), new SmartDateTime('now'));
+        } else {
+            $ytd = new Money();
+            $mtd = new Money();
+            $lastOrder = null;
+            $newestInvoices = [];
+            $monthlySalesCosts = [];
+        }
+
+        $view->addData('ytd', $ytd);
+        $view->addData('mtd', $mtd);
+        $view->addData('lastOrder', $lastOrder);
+        $view->addData('newestInvoices', $newestInvoices);
+        $view->addData('monthlySalesCosts', $monthlySalesCosts);
 
         return $view;
     }
