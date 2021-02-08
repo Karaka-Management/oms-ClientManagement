@@ -23,7 +23,7 @@ $countries    = \phpOMS\Localization\ISO3166NameEnum::getConstants();
  */
 $client = $this->getData('client');
 
-$newestInvoices = $this->getData('newestInvoices') ?? [];
+$newestInvoices    = $this->getData('newestInvoices') ?? [];
 $monthlySalesCosts = $this->getData('monthlySalesCosts') ?? [];
 
 /**
