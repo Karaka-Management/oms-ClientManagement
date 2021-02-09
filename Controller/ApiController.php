@@ -181,7 +181,7 @@ final class ApiController extends Controller
             $request->getData('name') ?? '',
             $uploadedFiles,
             $request->header->account,
-            'Modules/Media/Files/Modules/ClientManagement/' . ($request->getData('client') ?? '0'),
+            __DIR__ . '/../../../Modules/Media/Files/Modules/ClientManagement/' . ($request->getData('client') ?? '0'),
             '/Modules/ClientManagement/' . ($request->getData('client') ?? '0'),
             $request->getData('type') ?? '',
             '',
