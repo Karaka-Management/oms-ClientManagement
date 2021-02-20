@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace Modules\ClientManagement\Controller;
 
-use Modules\Billing\Models\BillMapper;
+use Modules\Billing\Models\SalesBillMapper;
 use Modules\Billing\Models\BillTypeL11n;
 use Modules\ClientManagement\Models\ClientMapper;
 use phpOMS\Asset\AssetType;
@@ -108,11 +108,11 @@ final class BackendController extends Controller
 
         // stats
         if ($this->app->moduleManager->isActive('Billing')) {
-            $ytd               = BillMapper::getSalesByClientId($client->getId(), new SmartDateTime('Y-01-01'), new SmartDateTime('now'));
-            $mtd               = BillMapper::getSalesByClientId($client->getId(), new SmartDateTime('Y-m-01'), new SmartDateTime('now'));
-            $lastOrder         = BillMapper::getLastOrderDateByClientId($client->getId());
-            $newestInvoices    = BillMapper::withConditional('language', $response->getLanguage(), [BillTypeL11n::class])::getNewestClientInvoices($client->getId(), 5);
-            $monthlySalesCosts = BillMapper::getClientMonthlySalesCosts($client->getId(), (new SmartDateTime('now'))->createModify(-1), new SmartDateTime('now'));
+            $ytd               = SalesBillMapper::getSalesByClientId($client->getId(), new SmartDateTime('Y-01-01'), new SmartDateTime('now'));
+            $mtd               = SalesBillMapper::getSalesByClientId($client->getId(), new SmartDateTime('Y-m-01'), new SmartDateTime('now'));
+            $lastOrder         = SalesBillMapper::getLastOrderDateByClientId($client->getId());
+            $newestInvoices    = SalesBillMapper::withConditional('language', $response->getLanguage(), [BillTypeL11n::class])::getNewestClientInvoices($client->getId(), 5);
+            $monthlySalesCosts = SalesBillMapper::getClientMonthlySalesCosts($client->getId(), (new SmartDateTime('now'))->createModify(-1), new SmartDateTime('now'));
         } else {
             $ytd               = new Money();
             $mtd               = new Money();

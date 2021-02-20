@@ -208,7 +208,7 @@ echo $this->getData('nav')->render();
                                         <td><?= $this->getHtml('Date'); ?>
                                     <tbody>
                                     <?php foreach ($newestInvoices as $invoice) :
-                                        $url = UriFactory::build('{/prefix}sales/invoice?{?}&id=' . $invoice->getId());
+                                        $url = UriFactory::build('{/prefix}sales/bill?{?}&id=' . $invoice->getId());
                                         ?>
                                     <tr data-href="<?= $url; ?>">
                                         <td><a href="<?= $url; ?>"><?= $invoice->getNumber(); ?></a>
