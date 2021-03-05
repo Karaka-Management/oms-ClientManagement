@@ -19,10 +19,12 @@
     "dependencies": {
         "Admin": "1.0.0",
         "Profile": "1.0.0",
-        "Media": "1.0.0"
+        "Media": "1.0.0",
+        "Editor": "1.0.0"
     },
     "providing": {
-        "Navigation": "*"
+        "Navigation": "*",
+        "Media": "*"
     },
     "load": [
         {

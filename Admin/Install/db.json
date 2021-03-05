@@ -108,5 +108,31 @@
                 "foreignKey": "clientmgmt_client_id"
             }
         }
+    },
+    "clientmgmt_client_note": {
+        "name": "clientmgmt_client_note",
+        "fields": {
+            "clientmgmt_client_note_id": {
+                "name": "clientmgmt_client_note_id",
+                "type": "INT",
+                "null": false,
+                "primary": true,
+                "autoincrement": true
+            },
+            "clientmgmt_client_note_dst": {
+                "name": "clientmgmt_client_note_dst",
+                "type": "INT",
+                "null": false,
+                "foreignTable": "editor_doc",
+                "foreignKey": "editor_doc_id"
+            },
+            "clientmgmt_client_note_src": {
+                "name": "clientmgmt_client_note_src",
+                "type": "INT",
+                "null": false,
+                "foreignTable": "clientmgmt_client",
+                "foreignKey": "clientmgmt_client_id"
+            }
+        }
     }
 }

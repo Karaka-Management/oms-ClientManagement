@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace Modules\ClientManagement\Models;
 
 use Modules\Admin\Models\AddressMapper;
+use Modules\Editor\Models\EditorDocMapper;
 use Modules\Media\Models\MediaMapper;
 use Modules\Profile\Models\ContactElementMapper;
 use Modules\Profile\Models\ProfileMapper;
@@ -101,6 +102,12 @@ final class ClientMapper extends DataMapperAbstract
             'table'    => 'clientmgmt_client_media',       /* table of the related object, null if no relation table is used (many->1) */
             'external' => 'clientmgmt_client_media_dst',
             'self'     => 'clientmgmt_client_media_src',
+        ],
+        'notes'           => [
+            'mapper'   => EditorDocMapper::class,              /* mapper of the related object */
+            'table'    => 'clientmgmt_client_note',       /* table of the related object, null if no relation table is used (many->1) */
+            'external' => 'clientmgmt_client_note_dst',
+            'self'     => 'clientmgmt_client_note_src',
         ],
         'contactElements' => [
             'mapper'   => ContactElementMapper::class,

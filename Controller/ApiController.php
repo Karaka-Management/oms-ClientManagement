@@ -198,4 +198,26 @@ final class ApiController extends Controller
 
         $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Image', 'Image successfully updated', $uploaded);
     }
+
+    /**
+     * Api method to create item files
+     *
+     * @param RequestAbstract  $request  Request
+     * @param ResponseAbstract $response Response
+     * @param mixed            $data     Generic data
+     *
+     * @return void
+     *
+     * @api
+     *
+     * @since 1.0.0
+     */
+    public function apiNoteCreate(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
+    {
+        $request->setData('virtualpath', '/Modules/ClientManagement/' . $request->getData('id'), true);
+        $this->app->moduleManager->get('Editor')->apiEditorCreate($request, $response, $data);
+
+        $model = $response->get($request->uri->__toString())['response'];
+        $this->createModelRelation($request->header->account, $request->getData('id'), $model->getId(), ClientMapper::class, 'notes', '', $request->getOrigin());
+    }
 }
