@@ -14,8 +14,8 @@ declare(strict_types=1);
 
 namespace Modules\ClientManagement\Controller;
 
-use Modules\Billing\Models\SalesBillMapper;
 use Modules\Billing\Models\BillTypeL11n;
+use Modules\Billing\Models\SalesBillMapper;
 use Modules\ClientManagement\Models\ClientMapper;
 use phpOMS\Asset\AssetType;
 use phpOMS\Contract\RenderableInterface;
