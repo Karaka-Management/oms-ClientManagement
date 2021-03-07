@@ -28,23 +28,77 @@ echo $this->getData('nav')->render(); ?>
                 <tr>
                     <td>
                     <td><?= $this->getHtml('ID', '0', '0'); ?>
-                        <input id="clientList-r1-asc" name="clientList-sort" type="radio"><label for="clientList-r1-asc"><i class="sort-asc fa fa-chevron-up"></i></label>
-                        <input id="clientList-r1-desc" name="clientList-sort" type="radio"><label for="clientList-r1-desc"><i class="sort-desc fa fa-chevron-down"></i></label>
+                        <label for="iSalesClientList-sort-1">
+                            <input type="radio" name="iSalesClientList-sort" id="iSalesClientList-sort-1">
+                            <i class="sort-asc fa fa-chevron-up"></i>
+                        </label>
+                        <label for="iSalesClientList-sort-2">
+                            <input type="radio" name="iSalesClientList-sort" id="iSalesClientList-sort-2">
+                             <i class="sort-desc fa fa-chevron-down"></i>
+                        </label>
+                        <label>
+                            <i class="filter fa fa-filter"></i>
+                        </label>
                     <td class="wf-100"><?= $this->getHtml('Name'); ?>
-                        <input id="clientList-r2-asc" name="clientList-sort" type="radio"><label for="clientList-r2-asc"><i class="sort-asc fa fa-chevron-up"></i></label>
-                        <input id="clientList-r2-desc" name="clientList-sort" type="radio"><label for="clientList-r2-desc"><i class="sort-desc fa fa-chevron-down"></i></label>
+                        <label for="iSalesClientList-sort-3">
+                            <input type="radio" name="iSalesClientList-sort" id="iSalesClientList-sort-3">
+                            <i class="sort-asc fa fa-chevron-up"></i>
+                        </label>
+                        <label for="iSalesClientList-sort-4">
+                            <input type="radio" name="iSalesClientList-sort" id="iSalesClientList-sort-4">
+                             <i class="sort-desc fa fa-chevron-down"></i>
+                        </label>
+                        <label>
+                            <i class="filter fa fa-filter"></i>
+                        </label>
                     <td><?= $this->getHtml('City'); ?>
-                        <input id="clientList-r5-asc" name="clientList-sort" type="radio"><label for="clientList-r5-asc"><i class="sort-asc fa fa-chevron-up"></i></label>
-                        <input id="clientList-r5-desc" name="clientList-sort" type="radio"><label for="clientList-r5-desc"><i class="sort-desc fa fa-chevron-down"></i></label>
+                        <label for="iSalesClientList-sort-5">
+                            <input type="radio" name="iSalesClientList-sort" id="iSalesClientList-sort-5">
+                            <i class="sort-asc fa fa-chevron-up"></i>
+                        </label>
+                        <label for="iSalesClientList-sort-6">
+                            <input type="radio" name="iSalesClientList-sort" id="iSalesClientList-sort-6">
+                             <i class="sort-desc fa fa-chevron-down"></i>
+                        </label>
+                        <label>
+                            <i class="filter fa fa-filter"></i>
+                        </label>
                     <td><?= $this->getHtml('Zip'); ?>
-                        <input id="clientList-r6-asc" name="clientList-sort" type="radio"><label for="clientList-r6-asc"><i class="sort-asc fa fa-chevron-up"></i></label>
-                        <input id="clientList-r6-desc" name="clientList-sort" type="radio"><label for="clientList-r6-desc"><i class="sort-desc fa fa-chevron-down"></i></label>
+                        <label for="iSalesClientList-sort-7">
+                            <input type="radio" name="iSalesClientList-sort" id="iSalesClientList-sort-7">
+                            <i class="sort-asc fa fa-chevron-up"></i>
+                        </label>
+                        <label for="iSalesClientList-sort-8">
+                            <input type="radio" name="iSalesClientList-sort" id="iSalesClientList-sort-8">
+                             <i class="sort-desc fa fa-chevron-down"></i>
+                        </label>
+                        <label>
+                            <i class="filter fa fa-filter"></i>
+                        </label>
                     <td><?= $this->getHtml('Address'); ?>
-                        <input id="clientList-r7-asc" name="clientList-sort" type="radio"><label for="clientList-r7-asc"><i class="sort-asc fa fa-chevron-up"></i></label>
-                        <input id="clientList-r7-desc" name="clientList-sort" type="radio"><label for="clientList-r7-desc"><i class="sort-desc fa fa-chevron-down"></i></label>
+                        <label for="iSalesClientList-sort-9">
+                            <input type="radio" name="iSalesClientList-sort" id="iSalesClientList-sort-9">
+                            <i class="sort-asc fa fa-chevron-up"></i>
+                        </label>
+                        <label for="iSalesClientList-sort-10">
+                            <input type="radio" name="iSalesClientList-sort" id="iSalesClientList-sort-10">
+                             <i class="sort-desc fa fa-chevron-down"></i>
+                        </label>
+                        <label>
+                            <i class="filter fa fa-filter"></i>
+                        </label>
                     <td><?= $this->getHtml('Country'); ?>
-                        <input id="clientList-r8-asc" name="clientList-sort" type="radio"><label for="clientList-r8-asc"><i class="sort-asc fa fa-chevron-up"></i></label>
-                        <input id="clientList-r8-desc" name="clientList-sort" type="radio"><label for="clientList-r8-desc"><i class="sort-desc fa fa-chevron-down"></i></label>
+                        <label for="iSalesClientList-sort-11">
+                            <input type="radio" name="iSalesClientList-sort" id="iSalesClientList-sort-11">
+                            <i class="sort-asc fa fa-chevron-up"></i>
+                        </label>
+                        <label for="iSalesClientList-sort-12">
+                            <input type="radio" name="iSalesClientList-sort" id="iSalesClientList-sort-12">
+                             <i class="sort-desc fa fa-chevron-down"></i>
+                        </label>
+                        <label>
+                            <i class="filter fa fa-filter"></i>
+                        </label>
                 <tbody>
                 <?php $count = 0; foreach ($clients as $key => $value) : ++$count;
                  $url        = UriFactory::build('{/prefix}sales/client/profile?{?}&id=' . $value->getId());
