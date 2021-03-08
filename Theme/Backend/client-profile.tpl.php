@@ -22,8 +22,8 @@ $countries    = \phpOMS\Localization\ISO3166NameEnum::getConstants();
  * @var \Modules\ClientManagement\Models\Client $client
  */
 $client = $this->getData('client');
-$notes = $client->getNotes();
-$files = $client->getFiles();
+$notes  = $client->getNotes();
+$files  = $client->getFiles();
 
 $newestInvoices    = $this->getData('newestInvoices') ?? [];
 $monthlySalesCosts = $this->getData('monthlySalesCosts') ?? [];
