@@ -111,7 +111,7 @@ final class BackendController extends Controller
             $ytd               = SalesBillMapper::getSalesByClientId($client->getId(), new SmartDateTime('Y-01-01'), new SmartDateTime('now'));
             $mtd               = SalesBillMapper::getSalesByClientId($client->getId(), new SmartDateTime('Y-m-01'), new SmartDateTime('now'));
             $lastOrder         = SalesBillMapper::getLastOrderDateByClientId($client->getId());
-            $newestInvoices    = SalesBillMapper::withConditional('language', $response->getLanguage(), [BillTypeL11n::class])::getNewestClientInvoices($client->getId(), 5);
+            $newestInvoices    = SalesBillMapper::with('language', $response->getLanguage(), [BillTypeL11n::class])::getNewestClientInvoices($client->getId(), 5);
             $monthlySalesCosts = SalesBillMapper::getClientMonthlySalesCosts($client->getId(), (new SmartDateTime('now'))->createModify(-1), new SmartDateTime('now'));
         } else {
             $ytd               = new Money();
