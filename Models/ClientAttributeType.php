@@ -115,12 +115,12 @@ class ClientAttributeType implements \JsonSerializable, ArrayableInterface
     {
         if ($l11n instanceof ClientAttributeTypeL11n) {
             $this->l11n = $l11n;
-        } elseif ($this->l11n instanceof ClientAttributeTypeL11n && \is_string($l11n)) {
-            $this->l11n->title = $l11n;
         } elseif (\is_string($l11n)) {
             $this->l11n        = new ClientAttributeTypeL11n();
             $this->l11n->title = $l11n;
             $this->l11n->setLanguage($lang);
+        } elseif ($this->l11n instanceof ClientAttributeTypeL11n && \is_string($l11n)) {
+            $this->l11n->title = $l11n;
         }
     }
 
