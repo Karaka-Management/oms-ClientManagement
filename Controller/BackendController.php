@@ -24,6 +24,7 @@ use phpOMS\Message\RequestAbstract;
 use phpOMS\Message\ResponseAbstract;
 use phpOMS\Stdlib\Base\SmartDateTime;
 use phpOMS\Views\View;
+use Modules\Media\Models\Media;
 
 /**
  * ClientManagement class.
@@ -53,7 +54,12 @@ final class BackendController extends Controller
         $view->setTemplate('/Modules/ClientManagement/Theme/Backend/client-list');
         $view->addData('nav', $this->app->moduleManager->get('Navigation')->createNavigationMid(1003102001, $request, $response));
 
-        $client = ClientMapper::getAfterPivot(0, null, 25);
+        $client = ClientMapper
+            ::with('notes', models: null)
+            ::with('contactElements', models: null)
+            ::with('type', 'backend_image', models: [Media::class]) // @todo: it would be nicer if I coult say files:type or files/type and remove the models parameter?
+            ::getAfterPivot(0, null, 25);
+
         $view->addData('client', $client);
 
         return $view;
@@ -103,7 +109,11 @@ final class BackendController extends Controller
         $view->setTemplate('/Modules/ClientManagement/Theme/Backend/client-profile');
         $view->addData('nav', $this->app->moduleManager->get('Navigation')->createNavigationMid(1003102001, $request, $response));
 
-        $client = ClientMapper::get((int) $request->getData('id'));
+        $client = ClientMapper
+            ::with('files', limit: 5, orderBy: 'createdAt', sortOrder: 'ASC')
+            ::with('notes', limit: 5, orderBy: 'id', sortOrder: 'ASC')
+            ::get((int) $request->getData('id'));
+
         $view->setData('client', $client);
 
         // stats
@@ -111,14 +121,18 @@ final class BackendController extends Controller
             $ytd               = SalesBillMapper::getSalesByClientId($client->getId(), new SmartDateTime('Y-01-01'), new SmartDateTime('now'));
             $mtd               = SalesBillMapper::getSalesByClientId($client->getId(), new SmartDateTime('Y-m-01'), new SmartDateTime('now'));
             $lastOrder         = SalesBillMapper::getLastOrderDateByClientId($client->getId());
-            $newestInvoices    = SalesBillMapper::with('language', $response->getLanguage(), [BillTypeL11n::class])::getNewestClientInvoices($client->getId(), 5);
+            $newestInvoices    = SalesBillMapper
+                ::with('language', $response->getLanguage(), [BillTypeL11n::class])
+                ::getNewestClientInvoices($client->getId(), 5);
             $monthlySalesCosts = SalesBillMapper::getClientMonthlySalesCosts($client->getId(), (new SmartDateTime('now'))->createModify(-1), new SmartDateTime('now'));
+            $items = SalesBillMapper::getClientItem($client->getId(), (new SmartDateTime('now'))->createModify(-1), new SmartDateTime('now'));
         } else {
             $ytd               = new Money();
             $mtd               = new Money();
             $lastOrder         = null;
             $newestInvoices    = [];
             $monthlySalesCosts = [];
+            $items             = [];
         }
 
         $view->addData('ytd', $ytd);
@@ -126,6 +140,7 @@ final class BackendController extends Controller
         $view->addData('lastOrder', $lastOrder);
         $view->addData('newestInvoices', $newestInvoices);
         $view->addData('monthlySalesCosts', $monthlySalesCosts);
+        $view->addData('items', $items);
 
         return $view;
     }

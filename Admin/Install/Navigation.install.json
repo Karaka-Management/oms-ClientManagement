@@ -44,5 +44,50 @@
                 "children": []
             }
         ]
+    },
+    {
+        "id": 1003103001,
+        "pid": "/sales/analysis",
+        "type": 3,
+        "subtype": 1,
+        "name": "Client",
+        "uri": "{/prefix}sales/analysis/client?{?}",
+        "target": "self",
+        "icon": null,
+        "order": 1,
+        "from": "ClientManagement",
+        "permission": { "permission": 2, "type": null, "element": null },
+        "parent": 1001602001,
+        "children": []
+    },
+    {
+        "id": 1003103002,
+        "pid": "/sales/analysis",
+        "type": 3,
+        "subtype": 1,
+        "name": "Region",
+        "uri": "{/prefix}sales/analysis/region?{?}",
+        "target": "self",
+        "icon": null,
+        "order": 2,
+        "from": "ClientManagement",
+        "permission": { "permission": 2, "type": null, "element": null },
+        "parent": 1001602001,
+        "children": []
+    },
+    {
+        "id": 1003103003,
+        "pid": "/sales/analysis",
+        "type": 3,
+        "subtype": 1,
+        "name": "SalesRep",
+        "uri": "{/prefix}sales/analysis/rep?{?}",
+        "target": "self",
+        "icon": null,
+        "order": 3,
+        "from": "ClientManagement",
+        "permission": { "permission": 2, "type": null, "element": null },
+        "parent": 1001602001,
+        "children": []
     }
 ]

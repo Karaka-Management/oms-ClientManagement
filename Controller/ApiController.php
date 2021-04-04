@@ -26,6 +26,18 @@ use phpOMS\Message\NotificationLevel;
 use phpOMS\Message\RequestAbstract;
 use phpOMS\Message\ResponseAbstract;
 use phpOMS\Model\Message\FormValidation;
+use Modules\ClientManagement\Models\ClientAttribute;
+use Modules\ClientManagement\Models\NullClientAttributeType;
+use Modules\ClientManagement\Models\NullClientAttributeValue;
+use Modules\ClientManagement\Models\ClientAttributeTypeL11n;
+use phpOMS\Message\Http\HttpRequest;
+use Modules\ClientManagement\Models\ClientAttributeType;
+use Modules\ClientManagement\Models\ClientAttributeValue;
+use Modules\ClientManagement\Models\AttributeValueType;
+use Modules\ClientManagement\Models\ClientAttributeTypeMapper;
+use Modules\ClientManagement\Models\ClientAttributeTypeL11nMapper;
+use Modules\ClientManagement\Models\ClientAttributeValueMapper;
+use Modules\ClientManagement\Models\ClientAttributeMapper;
 
 /**
  * ClientManagement class.
@@ -154,7 +166,318 @@ final class ApiController extends Controller
     }
 
     /**
-     * Api method to create item files
+     * Api method to create client attribute
+     *
+     * @param RequestAbstract  $request  Request
+     * @param ResponseAbstract $response Response
+     * @param mixed            $data     Generic data
+     *
+     * @return void
+     *
+     * @api
+     *
+     * @since 1.0.0
+     */
+    public function apiClientAttributeCreate(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
+    {
+        if (!empty($val = $this->validateClientAttributeCreate($request))) {
+            $response->set('attribute_create', new FormValidation($val));
+            $response->header->status = RequestStatusCode::R_400;
+
+            return;
+        }
+
+        $attribute = $this->createClientAttributeFromRequest($request);
+        $this->createModel($request->header->account, $attribute, ClientAttributeMapper::class, 'attribute', $request->getOrigin());
+        $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Attribute', 'Attribute successfully created', $attribute);
+    }
+
+    /**
+     * Method to create client attribute from request.
+     *
+     * @param RequestAbstract $request Request
+     *
+     * @return ClientAttribute
+     *
+     * @since 1.0.0
+     */
+    private function createClientAttributeFromRequest(RequestAbstract $request) : ClientAttribute
+    {
+        $attribute        = new ClientAttribute();
+        $attribute->client  = (int) $request->getData('client');
+        $attribute->type  = new NullClientAttributeType((int) $request->getData('type'));
+        $attribute->value = new NullClientAttributeValue((int) $request->getData('value'));
+
+        return $attribute;
+    }
+
+    /**
+     * Validate client attribute create request
+     *
+     * @param RequestAbstract $request Request
+     *
+     * @return array<string, bool>
+     *
+     * @since 1.0.0
+     */
+    private function validateClientAttributeCreate(RequestAbstract $request) : array
+    {
+        $val = [];
+        if (($val['type'] = empty($request->getData('type')))
+            || ($val['value'] = empty($request->getData('value')))
+            || ($val['client'] = empty($request->getData('client')))
+        ) {
+            return $val;
+        }
+
+        return [];
+    }
+
+    /**
+     * Api method to create client attribute l11n
+     *
+     * @param RequestAbstract  $request  Request
+     * @param ResponseAbstract $response Response
+     * @param mixed            $data     Generic data
+     *
+     * @return void
+     *
+     * @api
+     *
+     * @since 1.0.0
+     */
+    public function apiClientAttributeTypeL11nCreate(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
+    {
+        if (!empty($val = $this->validateClientAttributeTypeL11nCreate($request))) {
+            $response->set('attr_type_l11n_create', new FormValidation($val));
+            $response->header->status = RequestStatusCode::R_400;
+
+            return;
+        }
+
+        $attrL11n = $this->createClientAttributeTypeL11nFromRequest($request);
+        $this->createModel($request->header->account, $attrL11n, ClientAttributeTypeL11nMapper::class, 'attr_type_l11n', $request->getOrigin());
+        $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Attribute type localization', 'Attribute type localization successfully created', $attrL11n);
+    }
+
+    /**
+     * Method to create client attribute l11n from request.
+     *
+     * @param RequestAbstract $request Request
+     *
+     * @return ClientAttributeTypeL11n
+     *
+     * @since 1.0.0
+     */
+    private function createClientAttributeTypeL11nFromRequest(RequestAbstract $request) : ClientAttributeTypeL11n
+    {
+        $attrL11n = new ClientAttributeTypeL11n();
+        $attrL11n->setType((int) ($request->getData('type') ?? 0));
+        $attrL11n->setLanguage((string) (
+            $request->getData('language') ?? $request->getLanguage()
+        ));
+        $attrL11n->title = (string) ($request->getData('title') ?? '');
+
+        return $attrL11n;
+    }
+
+    /**
+     * Validate client attribute l11n create request
+     *
+     * @param RequestAbstract $request Request
+     *
+     * @return array<string, bool>
+     *
+     * @since 1.0.0
+     */
+    private function validateClientAttributeTypeL11nCreate(RequestAbstract $request) : array
+    {
+        $val = [];
+        if (($val['title'] = empty($request->getData('title')))
+            || ($val['type'] = empty($request->getData('type')))
+        ) {
+            return $val;
+        }
+
+        return [];
+    }
+
+    /**
+     * Api method to create client attribute type
+     *
+     * @param RequestAbstract  $request  Request
+     * @param ResponseAbstract $response Response
+     * @param mixed            $data     Generic data
+     *
+     * @return void
+     *
+     * @api
+     *
+     * @since 1.0.0
+     */
+    public function apiClientAttributeTypeCreate(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
+    {
+        if (!empty($val = $this->validateClientAttributeTypeCreate($request))) {
+            $response->set('attr_type_create', new FormValidation($val));
+            $response->header->status = RequestStatusCode::R_400;
+
+            return;
+        }
+
+        $attrType = $this->createClientAttributeTypeFromRequest($request);
+        $this->createModel($request->header->account, $attrType, ClientAttributeTypeMapper::class, 'attr_type', $request->getOrigin());
+
+        $l11nRequest = new HttpRequest($request->uri);
+        $l11nRequest->setData('type', $attrType->getId());
+        $l11nRequest->setData('title', $request->getData('title'));
+        $l11nRequest->setData('language', $request->getData('language'));
+
+        $l11nAttributeType = $this->createClientAttributeTypeL11nFromRequest($l11nRequest);
+        $this->createModel($request->header->account, $l11nAttributeType, ClientAttributeTypeL11nMapper::class, 'attr_type_l11n_create', $request->getOrigin());
+
+        $attrType->setL11n($l11nAttributeType);
+
+        $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Attribute type', 'Attribute type successfully created', $attrType);
+    }
+
+    /**
+     * Method to create client attribute from request.
+     *
+     * @param RequestAbstract $request Request
+     *
+     * @return ClientAttributeType
+     *
+     * @since 1.0.0
+     */
+    private function createClientAttributeTypeFromRequest(RequestAbstract $request) : ClientAttributeType
+    {
+        $attrType = new ClientAttributeType();
+        $attrType->setL11n((string) ($request->getData('name') ?? ''));
+        $attrType->setFields((int) ($request->getData('fields') ?? 0));
+        $attrType->setCustom((bool) ($request->getData('custom') ?? false));
+
+        return $attrType;
+    }
+
+    /**
+     * Validate client attribute create request
+     *
+     * @param RequestAbstract $request Request
+     *
+     * @return array<string, bool>
+     *
+     * @since 1.0.0
+     */
+    private function validateClientAttributeTypeCreate(RequestAbstract $request) : array
+    {
+        $val = [];
+        if (($val['name'] = empty($request->getData('name')))
+            || ($val['title'] = empty($request->getData('title')))
+        ) {
+            return $val;
+        }
+
+        return [];
+    }
+
+    /**
+     * Api method to create client attribute value
+     *
+     * @param RequestAbstract  $request  Request
+     * @param ResponseAbstract $response Response
+     * @param mixed            $data     Generic data
+     *
+     * @return void
+     *
+     * @api
+     *
+     * @since 1.0.0
+     */
+    public function apiClientAttributeValueCreate(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
+    {
+        if (!empty($val = $this->validateClientAttributeValueCreate($request))) {
+            $response->set('attr_value_create', new FormValidation($val));
+            $response->header->status = RequestStatusCode::R_400;
+
+            return;
+        }
+
+        $attrValue = $this->createClientAttributeValueFromRequest($request);
+        $this->createModel($request->header->account, $attrValue, ClientAttributeValueMapper::class, 'attr_value', $request->getOrigin());
+
+        if ($attrValue->isDefault) {
+            $this->createModelRelation(
+                $request->header->account,
+                (int) $request->getData('attributetype'),
+                $attrValue->getId(),
+                ClientAttributeTypeMapper::class, 'defaults', '', $request->getOrigin()
+            );
+        }
+
+        $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Attribute value', 'Attribute value successfully created', $attrValue);
+    }
+
+    /**
+     * Method to create client attribute value from request.
+     *
+     * @param RequestAbstract $request Request
+     *
+     * @return ClientAttributeValue
+     *
+     * @since 1.0.0
+     */
+    private function createClientAttributeValueFromRequest(RequestAbstract $request) : ClientAttributeValue
+    {
+        $attrValue = new ClientAttributeValue();
+
+        $type = $request->getData('type') ?? 0;
+        if ($type === AttributeValueType::_INT) {
+            $attrValue->valueInt = (int) $request->getData('value');
+        } elseif ($type === AttributeValueType::_STRING) {
+            $attrValue->valueStr = (string) $request->getData('value');
+        } elseif ($type === AttributeValueType::_FLOAT) {
+            $attrValue->valueDec = (float) $request->getData('value');
+        } elseif ($type === AttributeValueType::_DATETIME) {
+            $attrValue->valueDat = new \DateTime($request->getData('value') ?? '');
+        }
+
+        $attrValue->type      = $type;
+        $attrValue->isDefault = (bool) ($request->getData('default') ?? false);
+
+        if ($request->hasData('language')) {
+            $attrValue->setLanguage((string) ($request->getData('language') ?? $request->getLanguage()));
+        }
+
+        if ($request->hasData('country')) {
+            $attrValue->setCountry((string) ($request->getData('country') ?? $request->header->l11n->getCountry()));
+        }
+
+        return $attrValue;
+    }
+
+    /**
+     * Validate client attribute value create request
+     *
+     * @param RequestAbstract $request Request
+     *
+     * @return array<string, bool>
+     *
+     * @since 1.0.0
+     */
+    private function validateClientAttributeValueCreate(RequestAbstract $request) : array
+    {
+        $val = [];
+        if (($val['type'] = empty($request->getData('type')))
+            || ($val['value'] = empty($request->getData('value')))
+        ) {
+            return $val;
+        }
+
+        return [];
+    }
+
+    /**
+     * Api method to create client files
      *
      * @param RequestAbstract  $request  Request
      * @param ResponseAbstract $response Response
@@ -171,7 +494,7 @@ final class ApiController extends Controller
         $uploadedFiles = $request->getFiles() ?? [];
 
         if (empty($uploadedFiles)) {
-            $this->fillJsonResponse($request, $response, NotificationLevel::ERROR, 'Item', 'Invalid client image', $uploadedFiles);
+            $this->fillJsonResponse($request, $response, NotificationLevel::ERROR, 'Client', 'Invalid file', $uploadedFiles);
             $response->header->status = RequestStatusCode::R_400;
 
             return;
@@ -196,11 +519,11 @@ final class ApiController extends Controller
             ClientMapper::class, 'files', '', $request->getOrigin()
         );
 
-        $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Image', 'Image successfully updated', $uploaded);
+        $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'File', 'File successfully updated', $uploaded);
     }
 
     /**
-     * Api method to create item files
+     * Api method to create client files
      *
      * @param RequestAbstract  $request  Request
      * @param ResponseAbstract $response Response

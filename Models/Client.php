@@ -21,6 +21,7 @@ use Modules\Media\Models\Media;
 use Modules\Profile\Models\ContactElement;
 use Modules\Profile\Models\NullContactElement;
 use Modules\Profile\Models\Profile;
+use Modules\Media\Models\NullMedia;
 
 /**
  * Account class.
@@ -49,6 +50,14 @@ class Client
     public \DateTimeImmutable $createdAt;
 
     public Profile $profile;
+
+    /**
+     * Attributes.
+     *
+     * @var int[]|ClientAttribute[]
+     * @since 1.0.0
+     */
+    private array $attributes = [];
 
     /**
      * Files.

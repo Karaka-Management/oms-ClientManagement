@@ -83,6 +83,198 @@
             }
         }
     },
+    "clientmgmt_attr_type": {
+        "name": "clientmgmt_attr_type",
+        "fields": {
+            "clientmgmt_attr_type_id": {
+                "name": "clientmgmt_attr_type_id",
+                "type": "INT",
+                "null": false,
+                "primary": true,
+                "autoincrement": true
+            },
+            "clientmgmt_attr_type_name": {
+                "name": "clientmgmt_attr_type_name",
+                "type": "VARCHAR(255)",
+                "null": false
+            },
+            "clientmgmt_attr_type_fields": {
+                "name": "clientmgmt_attr_type_fields",
+                "type": "INT(11)",
+                "null": false
+            },
+            "clientmgmt_attr_type_custom": {
+                "name": "clientmgmt_attr_type_custom",
+                "type": "TINYINT(1)",
+                "null": false
+            },
+            "clientmgmt_attr_type_required": {
+                "description": "Every item must have this attribute type if set to true.",
+                "name": "clientmgmt_attr_type_required",
+                "type": "TINYINT(1)",
+                "null": false
+            },
+            "clientmgmt_attr_type_pattern": {
+                "description": "This is a regex validation pattern.",
+                "name": "clientmgmt_attr_type_pattern",
+                "type": "VARCHAR(255)",
+                "null": false
+            }
+        }
+    },
+    "clientmgmt_attr_type_l11n": {
+        "name": "clientmgmt_attr_type_l11n",
+        "fields": {
+            "clientmgmt_attr_type_l11n_id": {
+                "name": "clientmgmt_attr_type_l11n_id",
+                "type": "INT",
+                "null": false,
+                "primary": true,
+                "autoincrement": true
+            },
+            "clientmgmt_attr_type_l11n_title": {
+                "name": "clientmgmt_attr_type_l11n_title",
+                "type": "VARCHAR(255)",
+                "null": false
+            },
+            "clientmgmt_attr_type_l11n_type": {
+                "name": "clientmgmt_attr_type_l11n_type",
+                "type": "INT(11)",
+                "null": false,
+                "foreignTable": "clientmgmt_attr_type",
+                "foreignKey": "clientmgmt_attr_type_id"
+            },
+            "clientmgmt_attr_type_l11n_lang": {
+                "name": "clientmgmt_attr_type_l11n_lang",
+                "type": "VARCHAR(2)",
+                "null": false,
+                "foreignTable": "language",
+                "foreignKey": "language_639_1"
+            }
+        }
+    },
+    "clientmgmt_attr_value": {
+        "name": "clientmgmt_attr_value",
+        "fields": {
+            "clientmgmt_attr_value_id": {
+                "name": "clientmgmt_attr_value_id",
+                "type": "INT",
+                "null": false,
+                "primary": true,
+                "autoincrement": true
+            },
+            "clientmgmt_attr_value_default": {
+                "name": "clientmgmt_attr_value_default",
+                "type": "TINYINT(1)",
+                "null": false
+            },
+            "clientmgmt_attr_value_type": {
+                "name": "clientmgmt_attr_value_type",
+                "type": "INT(11)",
+                "null": false
+            },
+            "clientmgmt_attr_value_valueStr": {
+                "name": "clientmgmt_attr_value_valueStr",
+                "type": "VARCHAR(255)",
+                "null": true,
+                "default": null
+            },
+            "clientmgmt_attr_value_valueInt": {
+                "name": "clientmgmt_attr_value_valueInt",
+                "type": "INT(11)",
+                "null": true,
+                "default": null
+            },
+            "clientmgmt_attr_value_valueDec": {
+                "name": "clientmgmt_attr_value_valueDec",
+                "type": "DECIMAL(19,5)",
+                "null": true,
+                "default": null
+            },
+            "clientmgmt_attr_value_valueDat": {
+                "name": "clientmgmt_attr_value_valueDat",
+                "type": "DATETIME",
+                "null": true,
+                "default": null
+            },
+            "clientmgmt_attr_value_lang": {
+                "name": "clientmgmt_attr_value_lang",
+                "type": "VARCHAR(2)",
+                "null": true,
+                "default": null,
+                "foreignTable": "language",
+                "foreignKey": "language_639_1"
+            },
+            "clientmgmt_attr_value_country": {
+                "name": "clientmgmt_attr_value_country",
+                "type": "VARCHAR(2)",
+                "null": true,
+                "default": null,
+                "foreignTable": "country",
+                "foreignKey": "country_code2"
+            }
+        }
+    },
+    "clientmgmt_client_attr_default": {
+        "name": "clientmgmt_client_attr_default",
+        "fields": {
+            "clientmgmt_client_attr_default_id": {
+                "name": "clientmgmt_client_attr_default_id",
+                "type": "INT",
+                "null": false,
+                "primary": true,
+                "autoincrement": true
+            },
+            "clientmgmt_client_attr_default_type": {
+                "name": "clientmgmt_client_attr_default_type",
+                "type": "INT(11)",
+                "null": false,
+                "foreignTable": "clientmgmt_attr_type",
+                "foreignKey": "clientmgmt_attr_type_id"
+            },
+            "clientmgmt_client_attr_default_value": {
+                "name": "clientmgmt_client_attr_default_value",
+                "type": "INT(11)",
+                "null": false,
+                "foreignTable": "clientmgmt_attr_value",
+                "foreignKey": "clientmgmt_attr_value_id"
+            }
+        }
+    },
+    "clientmgmt_client_attr": {
+        "name": "clientmgmt_client_attr",
+        "fields": {
+            "clientmgmt_client_attr_id": {
+                "name": "clientmgmt_client_attr_id",
+                "type": "INT",
+                "null": false,
+                "primary": true,
+                "autoincrement": true
+            },
+            "clientmgmt_client_attr_client": {
+                "name": "clientmgmt_client_attr_client",
+                "type": "INT(11)",
+                "null": false,
+                "foreignTable": "clientmgmt_client",
+                "foreignKey": "clientmgmt_client_id"
+            },
+            "clientmgmt_client_attr_type": {
+                "name": "clientmgmt_client_attr_type",
+                "type": "INT(11)",
+                "null": false,
+                "foreignTable": "clientmgmt_attr_type",
+                "foreignKey": "clientmgmt_attr_type_id"
+            },
+            "clientmgmt_client_attr_value": {
+                "name": "clientmgmt_client_attr_value",
+                "type": "INT(11)",
+                "null": true,
+                "default": null,
+                "foreignTable": "clientmgmt_attr_value",
+                "foreignKey": "clientmgmt_attr_value_id"
+            }
+        }
+    },
     "clientmgmt_client_media": {
         "name": "clientmgmt_client_media",
         "fields": {
