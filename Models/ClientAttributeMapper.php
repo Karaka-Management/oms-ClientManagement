@@ -33,10 +33,10 @@ final class ClientAttributeMapper extends DataMapperAbstract
      * @since 1.0.0
      */
     protected static array $columns = [
-        'clientmgmt_client_attr_id'    => ['name' => 'clientmgmt_client_attr_id',    'type' => 'int', 'internal' => 'id'],
+        'clientmgmt_client_attr_id'      => ['name' => 'clientmgmt_client_attr_id',    'type' => 'int', 'internal' => 'id'],
         'clientmgmt_client_attr_client'  => ['name' => 'clientmgmt_client_attr_client',  'type' => 'int', 'internal' => 'client'],
-        'clientmgmt_client_attr_type'  => ['name' => 'clientmgmt_client_attr_type',  'type' => 'int', 'internal' => 'type'],
-        'clientmgmt_client_attr_value' => ['name' => 'clientmgmt_client_attr_value', 'type' => 'int', 'internal' => 'value'],
+        'clientmgmt_client_attr_type'    => ['name' => 'clientmgmt_client_attr_type',  'type' => 'int', 'internal' => 'type'],
+        'clientmgmt_client_attr_value'   => ['name' => 'clientmgmt_client_attr_value', 'type' => 'int', 'internal' => 'value'],
     ];
 
     /**
