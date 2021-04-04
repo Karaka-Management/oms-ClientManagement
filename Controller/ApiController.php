@@ -16,28 +16,28 @@ namespace Modules\ClientManagement\Controller;
 
 use Modules\Admin\Models\Account;
 use Modules\Admin\Models\Address;
+use Modules\ClientManagement\Models\AttributeValueType;
 use Modules\ClientManagement\Models\Client;
+use Modules\ClientManagement\Models\ClientAttribute;
+use Modules\ClientManagement\Models\ClientAttributeMapper;
+use Modules\ClientManagement\Models\ClientAttributeType;
+use Modules\ClientManagement\Models\ClientAttributeTypeL11n;
+use Modules\ClientManagement\Models\ClientAttributeTypeL11nMapper;
+use Modules\ClientManagement\Models\ClientAttributeTypeMapper;
+use Modules\ClientManagement\Models\ClientAttributeValue;
+use Modules\ClientManagement\Models\ClientAttributeValueMapper;
 use Modules\ClientManagement\Models\ClientMapper;
+use Modules\ClientManagement\Models\NullClientAttributeType;
+use Modules\ClientManagement\Models\NullClientAttributeValue;
 use Modules\Media\Models\PathSettings;
 use Modules\Profile\Models\ContactElementMapper;
 use Modules\Profile\Models\Profile;
+use phpOMS\Message\Http\HttpRequest;
 use phpOMS\Message\Http\RequestStatusCode;
 use phpOMS\Message\NotificationLevel;
 use phpOMS\Message\RequestAbstract;
 use phpOMS\Message\ResponseAbstract;
 use phpOMS\Model\Message\FormValidation;
-use Modules\ClientManagement\Models\ClientAttribute;
-use Modules\ClientManagement\Models\NullClientAttributeType;
-use Modules\ClientManagement\Models\NullClientAttributeValue;
-use Modules\ClientManagement\Models\ClientAttributeTypeL11n;
-use phpOMS\Message\Http\HttpRequest;
-use Modules\ClientManagement\Models\ClientAttributeType;
-use Modules\ClientManagement\Models\ClientAttributeValue;
-use Modules\ClientManagement\Models\AttributeValueType;
-use Modules\ClientManagement\Models\ClientAttributeTypeMapper;
-use Modules\ClientManagement\Models\ClientAttributeTypeL11nMapper;
-use Modules\ClientManagement\Models\ClientAttributeValueMapper;
-use Modules\ClientManagement\Models\ClientAttributeMapper;
 
 /**
  * ClientManagement class.
@@ -203,10 +203,10 @@ final class ApiController extends Controller
      */
     private function createClientAttributeFromRequest(RequestAbstract $request) : ClientAttribute
     {
-        $attribute        = new ClientAttribute();
+        $attribute          = new ClientAttribute();
         $attribute->client  = (int) $request->getData('client');
-        $attribute->type  = new NullClientAttributeType((int) $request->getData('type'));
-        $attribute->value = new NullClientAttributeValue((int) $request->getData('value'));
+        $attribute->type    = new NullClientAttributeType((int) $request->getData('type'));
+        $attribute->value   = new NullClientAttributeValue((int) $request->getData('value'));
 
         return $attribute;
     }

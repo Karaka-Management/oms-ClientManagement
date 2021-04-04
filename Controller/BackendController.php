@@ -17,6 +17,7 @@ namespace Modules\ClientManagement\Controller;
 use Modules\Billing\Models\BillTypeL11n;
 use Modules\Billing\Models\SalesBillMapper;
 use Modules\ClientManagement\Models\ClientMapper;
+use Modules\Media\Models\Media;
 use phpOMS\Asset\AssetType;
 use phpOMS\Contract\RenderableInterface;
 use phpOMS\Localization\Money;
@@ -24,7 +25,6 @@ use phpOMS\Message\RequestAbstract;
 use phpOMS\Message\ResponseAbstract;
 use phpOMS\Stdlib\Base\SmartDateTime;
 use phpOMS\Views\View;
-use Modules\Media\Models\Media;
 
 /**
  * ClientManagement class.
@@ -125,7 +125,7 @@ final class BackendController extends Controller
                 ::with('language', $response->getLanguage(), [BillTypeL11n::class])
                 ::getNewestClientInvoices($client->getId(), 5);
             $monthlySalesCosts = SalesBillMapper::getClientMonthlySalesCosts($client->getId(), (new SmartDateTime('now'))->createModify(-1), new SmartDateTime('now'));
-            $items = SalesBillMapper::getClientItem($client->getId(), (new SmartDateTime('now'))->createModify(-1), new SmartDateTime('now'));
+            $items             = SalesBillMapper::getClientItem($client->getId(), (new SmartDateTime('now'))->createModify(-1), new SmartDateTime('now'));
         } else {
             $ytd               = new Money();
             $mtd               = new Money();
