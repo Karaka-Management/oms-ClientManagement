@@ -165,7 +165,7 @@ echo $this->getData('nav')->render();
 	                            			$sum2 += ((int) $values['customers']);
 	                            		?>
 	                            			<tr>
-	                            				<td><?= $values['month'] . '/' . \substr((string) $values['year'], -2) ?>
+	                            				<td><?= $values['month'] . '/' . \substr((string) $values['year'], -2); ?>
 	                            				<td><?= (new Money(((int) $values['net_sales']) / 1000))->getCurrency(); ?>
 	                            				<td><?= ((int) $values['customers']); ?>
 	                            		<?php endforeach; ?>
@@ -246,7 +246,7 @@ echo $this->getData('nav')->render();
                             			$sum1 += ((int) $values['customers']);
                             		?>
                             			<tr>
-                            				<td><?= \substr((string) $values['year'], -2) ?>
+                            				<td><?= \substr((string) $values['year'], -2); ?>
                             				<td><?= ((int) $values['customers']); ?>
                             		<?php endforeach; ?>
                             			<tr>
