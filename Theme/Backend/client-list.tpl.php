@@ -23,7 +23,7 @@ echo $this->getData('nav')->render(); ?>
     <div class="col-xs-12">
         <section class="portlet">
             <div class="portlet-head"><?= $this->getHtml('Clients'); ?><i class="fa fa-download floatRight download btn"></i></div>
-            <table id="iSalesClientList" class="default">
+            <table id="iSalesClientList" class="default sticky">
                 <thead>
                 <tr>
                     <td>

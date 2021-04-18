@@ -25,6 +25,7 @@ use phpOMS\Message\RequestAbstract;
 use phpOMS\Message\ResponseAbstract;
 use phpOMS\Stdlib\Base\SmartDateTime;
 use phpOMS\Views\View;
+use phpOMS\Localization\ISO3166NameEnum;
 
 /**
  * ClientManagement class.
@@ -54,10 +55,9 @@ final class BackendController extends Controller
         $view->setTemplate('/Modules/ClientManagement/Theme/Backend/client-list');
         $view->addData('nav', $this->app->moduleManager->get('Navigation')->createNavigationMid(1003102001, $request, $response));
 
-        $client = ClientMapper
-            ::with('notes', models: null)
+        $client = ClientMapper::with('notes', models: null)
             ::with('contactElements', models: null)
-            ::with('type', 'backend_image', models: [Media::class]) // @todo: it would be nicer if I coult say files:type or files/type and remove the models parameter?
+            //::with('type', 'backend_image', models: [Media::class]) // @todo: it would be nicer if I coult say files:type or files/type and remove the models parameter? @todo: uncommented for now because the type is also part of client and therefore bug. that's the problem with a mix of black/whitelisting in the datamapper with the "with" feature. make it whitelist only for belongsTo, ownsMany, hasOne, ....
             ::getAfterPivot(0, null, 25);
 
         $view->addData('client', $client);
@@ -160,6 +160,163 @@ final class BackendController extends Controller
     public function viewClientManagementClientAnalysis(RequestAbstract $request, ResponseAbstract $response, $data = null) : RenderableInterface
     {
         $view = new View($this->app->l11nManager, $request, $response);
+
+        return $view;
+    }
+
+    /**
+     * Routing end-point for application behaviour.
+     *
+     * @param RequestAbstract  $request  Request
+     * @param ResponseAbstract $response Response
+     * @param mixed            $data     Generic data
+     *
+     * @return RenderableInterface
+     *
+     * @since 1.0.0
+     * @codeCoverageIgnore
+     */
+    public function viewClientAnalysis(RequestAbstract $request, ResponseAbstract $response, $data = null) : RenderableInterface
+    {
+        $head = $response->get('Content')->getData('head');
+        $head->addAsset(AssetType::CSS, 'Resources/chartjs/Chartjs/chart.css');
+        $head->addAsset(AssetType::JSLATE, 'Resources/chartjs/Chartjs/chart.js');
+        $head->addAsset(AssetType::JSLATE, 'Modules/ClientManagement/Controller.js', ['type' => 'module']);
+
+        $view = new View($this->app->l11nManager, $request, $response);
+        $view->setTemplate('/Modules/ClientManagement/Theme/Backend/client-analysis');
+        $view->addData('nav', $this->app->moduleManager->get('Navigation')->createNavigationMid(1001602001, $request, $response));
+
+        //
+        $monthlySalesCosts = [];
+        for ($i = 1; $i < 13; ++$i) {
+            $monthlySalesCosts[] = [
+                'net_sales' => $sales = \mt_rand(1200000000, 2000000000),
+                'net_costs' => (int) ($sales * \mt_rand(25, 55) / 100),
+                'year' => 2020,
+                'month' => $i,
+            ];
+        }
+
+        $view->addData('monthlySalesCosts', $monthlySalesCosts);
+
+        //
+        $salesCustomer = [];
+        for ($i = 1; $i < 13; ++$i) {
+            $salesCustomer[] = [
+                'net_sales' => $sales = \mt_rand(1200000000, 2000000000),
+                'customers' => \mt_rand(200, 400),
+                'year' => 2020,
+                'month' => $i,
+            ];
+        }
+
+        $view->addData('salesCustomer', $salesCustomer);
+
+        //
+        $customerRetention = [];
+        for ($i = 1; $i < 10; ++$i) {
+            $customerRetention[] = [
+                'customers' => \mt_rand(200, 400),
+                'year' => \date('y') - 9 + $i,
+            ];
+        }
+
+        $view->addData('customerRetention', $customerRetention);
+
+        //
+        $customerRegion = [
+            'Europe' => (int) (\mt_rand(200, 400) / 4),
+            'America' => (int) (\mt_rand(200, 400) / 4),
+            'Asia' => (int) (\mt_rand(200, 400) / 4),
+            'Africa' => (int) (\mt_rand(200, 400) / 4),
+            'CIS' => (int) (\mt_rand(200, 400) / 4),
+            'Other' => (int) (\mt_rand(200, 400) / 4),
+        ];
+
+        $view->addData('customerRegion', $customerRegion);
+
+        //
+        $customersRep = [];
+        for ($i = 1; $i < 13; ++$i) {
+            $customersRep['Rep ' . $i] = [
+                'customers' => (int) (\mt_rand(200, 400) / 12),
+            ];
+        }
+
+        \uasort($customersRep, function($a, $b) { return $b['customers'] <=> $a['customers']; });
+
+        $view->addData('customersRep', $customersRep);
+
+        //
+        $customersCountry = [];
+        for ($i = 1; $i < 13; ++$i) {
+            $country = ISO3166NameEnum::getRandom();
+            $customersCountry[\substr($country, 0, 20)] = [
+                'customers' => (int) (\mt_rand(200, 400) / 12),
+            ];
+        }
+
+        \uasort($customersCountry, function($a, $b) { return $b['customers'] <=> $a['customers']; });
+
+        $view->addData('customersCountry', $customersCountry);
+
+        //
+        $customerGroups = [];
+        for ($i = 1; $i < 7; ++$i) {
+            $customerGroups['Group ' . $i] = [
+                'customers' => (int) (\mt_rand(200, 400) / 12),
+            ];
+        }
+
+        $view->addData('customerGroups', $customerGroups);
+
+        //
+        $salesRegion = [
+            'Europe' => (int) (\mt_rand(1200000000, 2000000000) / 4),
+            'America' => (int) (\mt_rand(1200000000, 2000000000) / 4),
+            'Asia' => (int) (\mt_rand(1200000000, 2000000000) / 4),
+            'Africa' => (int) (\mt_rand(1200000000, 2000000000) / 4),
+            'CIS' => (int) (\mt_rand(1200000000, 2000000000) / 4),
+            'Other' => (int) (\mt_rand(1200000000, 2000000000) / 4),
+        ];
+
+        $view->addData('salesRegion', $salesRegion);
+
+        //
+        $salesRep = [];
+        for ($i = 1; $i < 13; ++$i) {
+            $salesRep['Rep ' . $i] = [
+                'net_sales' => (int) (\mt_rand(1200000000, 2000000000) / 12),
+            ];
+        }
+
+        \uasort($salesRep, function($a, $b) { return $b['net_sales'] <=> $a['net_sales']; });
+
+        $view->addData('salesRep', $salesRep);
+
+        //
+        $salesCountry = [];
+        for ($i = 1; $i < 13; ++$i) {
+            $country = ISO3166NameEnum::getRandom();
+            $salesCountry[\substr($country, 0, 20)] = [
+                'net_sales' => (int) (\mt_rand(1200000000, 2000000000) / 12),
+            ];
+        }
+
+        \uasort($salesCountry, function($a, $b) { return $b['net_sales'] <=> $a['net_sales']; });
+
+        $view->addData('salesCountry', $salesCountry);
+
+        //
+        $salesGroups = [];
+        for ($i = 1; $i < 7; ++$i) {
+            $salesGroups['Group ' . $i] = [
+                'net_sales' => (int) (\mt_rand(1200000000, 2000000000) / 12),
+            ];
+        }
+
+        $view->addData('salesGroups', $salesGroups);
 
         return $view;
     }
