@@ -61,26 +61,4 @@ return [
             ],
         ],
     ],
-    '^.*/sales/analysis/rep(\?.*|$)$' => [
-        [
-            'dest'       => '\Modules\ClientManagement\Controller\BackendController:viewSalesRepAnalysis',
-            'verb'       => RouteVerb::GET,
-            'permission' => [
-                'module' => BackendController::MODULE_NAME,
-                'type'   => PermissionType::READ,
-                'state'  => PermissionState::ANALYSIS,
-            ],
-        ],
-    ],
-    '^.*/sales/analysis/region(\?.*|$)$' => [
-        [
-            'dest'       => '\Modules\ClientManagement\Controller\BackendController:viewRegionAnalysis',
-            'verb'       => RouteVerb::GET,
-            'permission' => [
-                'module' => BackendController::MODULE_NAME,
-                'type'   => PermissionType::READ,
-                'state'  => PermissionState::ANALYSIS,
-            ],
-        ],
-    ],
 ];

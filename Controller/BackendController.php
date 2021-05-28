@@ -21,6 +21,7 @@ use Modules\Media\Models\Media;
 use phpOMS\Asset\AssetType;
 use phpOMS\Contract\RenderableInterface;
 use phpOMS\Localization\ISO3166NameEnum;
+use phpOMS\Localization\ISO3166CharEnum;
 use phpOMS\Localization\Money;
 use phpOMS\Message\RequestAbstract;
 use phpOMS\Message\ResponseAbstract;
@@ -199,9 +200,10 @@ final class BackendController extends Controller
 
         $view->addData('monthlySalesCosts', $monthlySalesCosts);
 
-        $salesCustomer = [];
+        /////
+        $monthlySalesCustomer = [];
         for ($i = 1; $i < 13; ++$i) {
-            $salesCustomer[] = [
+            $monthlySalesCustomer[] = [
                 'net_sales' => $sales = \mt_rand(1200000000, 2000000000),
                 'customers' => \mt_rand(200, 400),
                 'year'      => 2020,
@@ -209,19 +211,32 @@ final class BackendController extends Controller
             ];
         }
 
-        $view->addData('salesCustomer', $salesCustomer);
+        $view->addData('monthlySalesCustomer', $monthlySalesCustomer);
 
-        $customerRetention = [];
+        $annualSalesCustomer = [];
+        for ($i = 1; $i < 11; ++$i) {
+            $annualSalesCustomer[] = [
+                'net_sales' => $sales = \mt_rand(1200000000, 2000000000) * 12,
+                'customers' => \mt_rand(200, 400) * 6,
+                'year'      => 2020 - 10 + $i,
+            ];
+        }
+
+        $view->addData('annualSalesCustomer', $annualSalesCustomer);
+
+        /////
+        $monthlyCustomerRetention = [];
         for ($i = 1; $i < 10; ++$i) {
-            $customerRetention[] = [
+            $monthlyCustomerRetention[] = [
                 'customers' => \mt_rand(200, 400),
                 'year'      => \date('y') - 9 + $i,
             ];
         }
 
-        $view->addData('customerRetention', $customerRetention);
+        $view->addData('monthlyCustomerRetention', $monthlyCustomerRetention);
 
-        $customerRegion = [
+        /////
+        $currentCustomerRegion = [
             'Europe'  => (int) (\mt_rand(200, 400) / 4),
             'America' => (int) (\mt_rand(200, 400) / 4),
             'Asia'    => (int) (\mt_rand(200, 400) / 4),
@@ -230,31 +245,81 @@ final class BackendController extends Controller
             'Other'   => (int) (\mt_rand(200, 400) / 4),
         ];
 
-        $view->addData('customerRegion', $customerRegion);
+        $view->addData('currentCustomerRegion', $currentCustomerRegion);
 
-        $customersRep = [];
+        for ($i = 1; $i < 11; ++$i) {
+            $annualCustomerRegion[] = [
+                'year'    => 2020 - 10 + $i,
+                'Europe'  => $a = (int) (\mt_rand(200, 400) / 4),
+                'America' => $b = (int) (\mt_rand(200, 400) / 4),
+                'Asia'    => $c = (int) (\mt_rand(200, 400) / 4),
+                'Africa'  => $d = (int) (\mt_rand(200, 400) / 4),
+                'CIS'     => $e = (int) (\mt_rand(200, 400) / 4),
+                'Other'   => $f = (int) (\mt_rand(200, 400) / 4),
+                'Total'   => $a + $b + $c + $d + $e + $f,
+            ];
+        }
+
+        $view->addData('annualCustomerRegion', $annualCustomerRegion);
+
+        /////
+        $currentCustomersRep = [];
         for ($i = 1; $i < 13; ++$i) {
-            $customersRep['Rep ' . $i] = [
+            $currentCustomersRep['Rep ' . $i] = [
                 'customers' => (int) (\mt_rand(200, 400) / 12),
             ];
         }
 
-        \uasort($customersRep, function($a, $b) { return $b['customers'] <=> $a['customers']; });
+        \uasort($currentCustomersRep, function($a, $b) { return $b['customers'] <=> $a['customers']; });
 
-        $view->addData('customersRep', $customersRep);
+        $view->addData('currentCustomersRep', $currentCustomersRep);
 
-        $customersCountry = [];
+        $annualCustomersRep = [];
         for ($i = 1; $i < 13; ++$i) {
+            $annualCustomersRep['Rep ' . $i] = [];
+
+            for ($j = 1; $j < 11; ++$j) {
+                $annualCustomersRep['Rep ' . $i][] = [
+                    'customers' => (int) (\mt_rand(200, 400) / 12),
+                    'year'    => 2020 - 10 + $j,
+                ];
+            }
+        }
+
+        $view->addData('annualCustomersRep', $annualCustomersRep);
+
+        /////
+        $currentCustomersCountry = [];
+        for ($i = 1; $i < 51; ++$i) {
             $country                                    = ISO3166NameEnum::getRandom();
-            $customersCountry[\substr($country, 0, 20)] = [
+            $currentCustomersCountry[\substr($country, 0, 20)] = [
                 'customers' => (int) (\mt_rand(200, 400) / 12),
             ];
         }
 
-        \uasort($customersCountry, function($a, $b) { return $b['customers'] <=> $a['customers']; });
+        \uasort($currentCustomersCountry, function($a, $b) { return $b['customers'] <=> $a['customers']; });
 
-        $view->addData('customersCountry', $customersCountry);
+        $view->addData('currentCustomersCountry', $currentCustomersCountry);
 
+        $annualCustomersCountry = [];
+        for ($i = 1; $i < 51; ++$i) {
+            $countryCode                                          = ISO3166CharEnum::getRandom();
+            $countryName                                          = ISO3166NameEnum::getByName('_' . $countryCode);
+            $annualCustomersCountry[\substr($countryName, 0, 20)] = [];
+
+            for ($j = 1; $j < 11; ++$j) {
+                $annualCustomersCountry[\substr($countryName, 0, 20)][] = [
+                    'customers' => (int) (\mt_rand(200, 400) / 12),
+                    'year'    => 2020 - 10 + $j,
+                    'name'    => $countryName,
+                    'code'    => $countryCode,
+                ];
+            }
+        }
+
+        $view->addData('annualCustomersCountry', $annualCustomersCountry);
+
+        /////
         $customerGroups = [];
         for ($i = 1; $i < 7; ++$i) {
             $customerGroups['Group ' . $i] = [
@@ -263,49 +328,6 @@ final class BackendController extends Controller
         }
 
         $view->addData('customerGroups', $customerGroups);
-
-        $salesRegion = [
-            'Europe'  => (int) (\mt_rand(1200000000, 2000000000) / 4),
-            'America' => (int) (\mt_rand(1200000000, 2000000000) / 4),
-            'Asia'    => (int) (\mt_rand(1200000000, 2000000000) / 4),
-            'Africa'  => (int) (\mt_rand(1200000000, 2000000000) / 4),
-            'CIS'     => (int) (\mt_rand(1200000000, 2000000000) / 4),
-            'Other'   => (int) (\mt_rand(1200000000, 2000000000) / 4),
-        ];
-
-        $view->addData('salesRegion', $salesRegion);
-
-        $salesRep = [];
-        for ($i = 1; $i < 13; ++$i) {
-            $salesRep['Rep ' . $i] = [
-                'net_sales' => (int) (\mt_rand(1200000000, 2000000000) / 12),
-            ];
-        }
-
-        \uasort($salesRep, function($a, $b) { return $b['net_sales'] <=> $a['net_sales']; });
-
-        $view->addData('salesRep', $salesRep);
-
-        $salesCountry = [];
-        for ($i = 1; $i < 13; ++$i) {
-            $country                                = ISO3166NameEnum::getRandom();
-            $salesCountry[\substr($country, 0, 20)] = [
-                'net_sales' => (int) (\mt_rand(1200000000, 2000000000) / 12),
-            ];
-        }
-
-        \uasort($salesCountry, function($a, $b) { return $b['net_sales'] <=> $a['net_sales']; });
-
-        $view->addData('salesCountry', $salesCountry);
-
-        $salesGroups = [];
-        for ($i = 1; $i < 7; ++$i) {
-            $salesGroups['Group ' . $i] = [
-                'net_sales' => (int) (\mt_rand(1200000000, 2000000000) / 12),
-            ];
-        }
-
-        $view->addData('salesGroups', $salesGroups);
 
         return $view;
     }

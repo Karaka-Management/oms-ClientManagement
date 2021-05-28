@@ -45,6 +45,7 @@ return ['ClientManagement' => [
     'Email'          => 'Email',
     'Fax'            => 'Fax',
     'Files'          => 'Files',
+    'Filter'         => 'Filter',
     'Freightage'     => 'Freightage',
     'Group'          => 'Group',
     'ID'             => 'ID',
