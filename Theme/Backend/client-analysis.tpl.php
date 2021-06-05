@@ -2264,7 +2264,7 @@ echo $this->getData('nav')->render();
                                         <?php
                                             $sum = [];
                                             $rnd = \mt_rand(10, 30);
-                                            $i = 0;
+                                            $i   = 0;
                                         foreach ($customersCountry as $country => $annual) : ++$i;
                                             if ($i > $rnd) break;
                                             ?>
@@ -3329,7 +3329,7 @@ echo $this->getData('nav')->render();
                                         <?php
                                             $sum = [];
                                             $rnd = \mt_rand(10, 30);
-                                            $i = 0;
+                                            $i   = 0;
                                         foreach ($customersCountry as $country => $annual) : ++$i;
                                             if ($i > $rnd) break;
                                             ?>

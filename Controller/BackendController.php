@@ -20,8 +20,8 @@ use Modules\ClientManagement\Models\ClientMapper;
 use Modules\Media\Models\Media;
 use phpOMS\Asset\AssetType;
 use phpOMS\Contract\RenderableInterface;
-use phpOMS\Localization\ISO3166NameEnum;
 use phpOMS\Localization\ISO3166CharEnum;
+use phpOMS\Localization\ISO3166NameEnum;
 use phpOMS\Localization\Money;
 use phpOMS\Message\RequestAbstract;
 use phpOMS\Message\ResponseAbstract;
@@ -281,7 +281,7 @@ final class BackendController extends Controller
             for ($j = 1; $j < 11; ++$j) {
                 $annualCustomersRep['Rep ' . $i][] = [
                     'customers' => (int) (\mt_rand(200, 400) / 12),
-                    'year'    => 2020 - 10 + $j,
+                    'year'      => 2020 - 10 + $j,
                 ];
             }
         }
@@ -291,7 +291,7 @@ final class BackendController extends Controller
         /////
         $currentCustomersCountry = [];
         for ($i = 1; $i < 51; ++$i) {
-            $country                                    = ISO3166NameEnum::getRandom();
+            $country                                           = ISO3166NameEnum::getRandom();
             $currentCustomersCountry[\substr($country, 0, 20)] = [
                 'customers' => (int) (\mt_rand(200, 400) / 12),
             ];
@@ -310,9 +310,9 @@ final class BackendController extends Controller
             for ($j = 1; $j < 11; ++$j) {
                 $annualCustomersCountry[\substr($countryName, 0, 20)][] = [
                     'customers' => (int) (\mt_rand(200, 400) / 12),
-                    'year'    => 2020 - 10 + $j,
-                    'name'    => $countryName,
-                    'code'    => $countryCode,
+                    'year'      => 2020 - 10 + $j,
+                    'name'      => $countryName,
+                    'code'      => $countryCode,
                 ];
             }
         }
