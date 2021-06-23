@@ -325,17 +325,8 @@ final class ApiController extends Controller
         }
 
         $attrType = $this->createClientAttributeTypeFromRequest($request);
+        $attrType->setL11n($request->getData('title'), $request->getData('language'));
         $this->createModel($request->header->account, $attrType, ClientAttributeTypeMapper::class, 'attr_type', $request->getOrigin());
-
-        $l11nRequest = new HttpRequest($request->uri);
-        $l11nRequest->setData('type', $attrType->getId());
-        $l11nRequest->setData('title', $request->getData('title'));
-        $l11nRequest->setData('language', $request->getData('language'));
-
-        $l11nAttributeType = $this->createClientAttributeTypeL11nFromRequest($l11nRequest);
-        $this->createModel($request->header->account, $l11nAttributeType, ClientAttributeTypeL11nMapper::class, 'attr_type_l11n_create', $request->getOrigin());
-
-        $attrType->setL11n($l11nAttributeType);
 
         $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Attribute type', 'Attribute type successfully created', $attrType);
     }
