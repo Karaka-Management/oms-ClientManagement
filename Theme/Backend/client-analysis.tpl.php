@@ -37,11 +37,11 @@ echo $this->getData('nav')->render();
     <div class="tab-content">
         <input type="radio" id="c-tab-1" name="tabular-2"<?= $this->request->uri->fragment === 'c-tab-1' ? ' checked' : ''; ?>>
         <div class="tab">
-        	<div class="row">
+            <div class="row">
                 <div class="col-xs-12 col-lg-6">
                     <section class="portlet">
-                    	<form>
-                    	   <div class="portlet-head"><?= $this->getHtml('Filter'); ?></div>
+                        <form>
+                           <div class="portlet-head"><?= $this->getHtml('Filter'); ?></div>
                             <div class="portlet-body">
                                 <div class="form-group">
                                     <label for="iId"><?= $this->getHtml('Client'); ?></label>
@@ -89,23 +89,23 @@ echo $this->getData('nav')->render();
                             </div>
                             <div class="portlet-foot"><input id="iSubmitGeneral" name="submitGeneral" type="submit" value="<?= $this->getHtml('Save', '0', '0'); ?>"></div>
                         </form>
-        			</section>
-        		</div>
-        	</div>
+                    </section>
+                </div>
+            </div>
         </div>
 
         <input type="radio" id="c-tab-2" name="tabular-2"<?= $this->request->uri->fragment === 'c-tab-2' ? ' checked' : ''; ?>>
         <div class="tab">
-        	<div class="row">
+            <div class="row">
                 <div class="col-xs-12 col-lg-6">
                     <section class="portlet">
-                    	<div class="portlet-head">
-                    		Sales / Customers - Monthly
-                    		<?php include __DIR__ . '/../../../../Web/Backend/Themes/popup-export-data.tpl.php'; ?>
-                    	</div>
+                        <div class="portlet-head">
+                            Sales / Customers - Monthly
+                            <?php include __DIR__ . '/../../../../Web/Backend/Themes/popup-export-data.tpl.php'; ?>
+                        </div>
                         <?php $salesCustomer = $this->getData('monthlySalesCustomer'); ?>
                         <div class="portlet-body">
-                        	<canvas id="sales-region" data-chart='{
+                            <canvas id="sales-region" data-chart='{
                                             "type": "bar",
                                             "data": {
                                                 "labels": [
@@ -157,10 +157,10 @@ echo $this->getData('nav')->render();
                                                 ]
                                             },
                                             "options": {
-											    "title": {
-												    "display": false,
-												    "text": "Sales / Customers"
-											    },
+                                                "title": {
+                                                    "display": false,
+                                                    "text": "Sales / Customers"
+                                                },
                                                 "scales": {
                                                     "yAxes": [
                                                         {
@@ -184,42 +184,42 @@ echo $this->getData('nav')->render();
                                                 }
                                             }
                                     }'></canvas>
-	                        <div class="more-container">
-	                        	<input id="more-customer-sales" type="checkbox">
-	                        	<label for="more-customer-sales">
-	                        		<span>Data</span>
-	                        		<i class="fa fa-chevron-right expand"></i>
-	                        	</label>
-	                        	<div>
-	                            <table class="default">
-	                            	<thead>
-	                            		<tr>
-	                            			<td>Month
-	                            			<td>Sales
-	                            			<td>Customer count
-	                        		<tbody>
-	                            		<?php
-	                            			$sum1 = 0;
-	                            			$sum2 = 0;
-	                            		foreach ($salesCustomer as $values) :
-	                            			$sum1 += ((int) $values['net_sales']) / 1000;
-	                            			$sum2 += ((int) $values['customers']);
-	                            		?>
-	                            			<tr>
-	                            				<td><?= $values['month'] . '/' . \substr((string) $values['year'], -2); ?>
-	                            				<td><?= (new Money(((int) $values['net_sales']) / 1000))->getCurrency(); ?>
-	                            				<td><?= ((int) $values['customers']); ?>
-	                            		<?php endforeach; ?>
-	                            			<tr>
-	                            				<td>Total
-	                            				<td><?= (new Money($sum1))->getCurrency(); ?>
-	                            				<td><?= (int) ($sum2 / 12); ?>
-	                            </table>
-	                        	</div>
-	                        </div>
-                    	</div>
-        			</section>
-        		</div>
+                            <div class="more-container">
+                                <input id="more-customer-sales" type="checkbox">
+                                <label for="more-customer-sales">
+                                    <span>Data</span>
+                                    <i class="fa fa-chevron-right expand"></i>
+                                </label>
+                                <div>
+                                <table class="default">
+                                    <thead>
+                                        <tr>
+                                            <td>Month
+                                            <td>Sales
+                                            <td>Customer count
+                                    <tbody>
+                                        <?php
+                                            $sum1 = 0;
+                                            $sum2 = 0;
+                                        foreach ($salesCustomer as $values) :
+                                            $sum1 += ((int) $values['net_sales']) / 1000;
+                                            $sum2 += ((int) $values['customers']);
+                                        ?>
+                                            <tr>
+                                                <td><?= $values['month'] . '/' . \substr((string) $values['year'], -2); ?>
+                                                <td><?= (new Money(((int) $values['net_sales']) / 1000))->getCurrency(); ?>
+                                                <td><?= ((int) $values['customers']); ?>
+                                        <?php endforeach; ?>
+                                            <tr>
+                                                <td>Total
+                                                <td><?= (new Money($sum1))->getCurrency(); ?>
+                                                <td><?= (int) ($sum2 / 12); ?>
+                                </table>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
 
                 <div class="col-xs-12 col-lg-6">
                     <section class="portlet">
@@ -337,15 +337,15 @@ echo $this->getData('nav')->render();
                     </section>
                 </div>
 
-        		<div class="col-xs-12 col-lg-6">
+                <div class="col-xs-12 col-lg-6">
                     <section class="portlet">
                         <div class="portlet-head">
                             Customers per Region - Current
                             <?php include __DIR__ . '/../../../../Web/Backend/Themes/popup-export-data.tpl.php'; ?>
                         </div>
-                    	<?php $customerRegion = $this->getData('currentCustomerRegion'); ?>
+                        <?php $customerRegion = $this->getData('currentCustomerRegion'); ?>
                         <div class="portlet-body">
-                        	<canvas id="sales-region" data-chart='{
+                            <canvas id="sales-region" data-chart='{
                                         "type": "pie",
                                         "data": {
                                             "labels": [
@@ -371,11 +371,11 @@ echo $this->getData('nav')->render();
                                             }]
                                         },
                                         "options": {
-										    "title": {
-											    "display": false,
-											    "text": "Customers per Region - Currently"
-										    }
-										}
+                                            "title": {
+                                                "display": false,
+                                                "text": "Customers per Region - Currently"
+                                            }
+                                        }
                                 }'></canvas>
 
                             <div class="more-container">
@@ -386,27 +386,27 @@ echo $this->getData('nav')->render();
                                 </label>
                                 <div>
                                 <table class="default">
-                                	<thead>
-                                		<tr>
-                                			<td>Region
-                                			<td>Customer count
-                            		<tbody>
-                                		<?php
-                                			$sum = 0;
-                                		foreach ($customerRegion as $region => $values) : $sum += $values; ?>
-                                			<tr>
-                                				<td><?= $region; ?>
-                                				<td><?= $values; ?>
-                                		<?php endforeach; ?>
-                                			<tr>
-                                				<td>Total
-                                				<td><?= $sum; ?>
+                                    <thead>
+                                        <tr>
+                                            <td>Region
+                                            <td>Customer count
+                                    <tbody>
+                                        <?php
+                                            $sum = 0;
+                                        foreach ($customerRegion as $region => $values) : $sum += $values; ?>
+                                            <tr>
+                                                <td><?= $region; ?>
+                                                <td><?= $values; ?>
+                                        <?php endforeach; ?>
+                                            <tr>
+                                                <td>Total
+                                                <td><?= $sum; ?>
                                 </table>
                                 </div>
                             </div>
                         </div>
-        			</section>
-        		</div>
+                    </section>
+                </div>
 
                 <div class="col-xs-12 col-lg-6">
                     <section class="portlet">
@@ -605,15 +605,15 @@ echo $this->getData('nav')->render();
                     </section>
                 </div>
 
-        		<div class="col-xs-12 col-lg-6">
+                <div class="col-xs-12 col-lg-6">
                     <section class="portlet">
                         <div class="portlet-head">
                             Customers per Rep - Current
                             <?php include __DIR__ . '/../../../../Web/Backend/Themes/popup-export-data.tpl.php'; ?>
                         </div>
-                    	<?php $customersRep = $this->getData('currentCustomersRep'); ?>
+                        <?php $customersRep = $this->getData('currentCustomersRep'); ?>
                         <div class="portlet-body">
-                        	<canvas id="sales-region" data-chart='{
+                            <canvas id="sales-region" data-chart='{
                                             "type": "horizontalBar",
                                             "data": {
                                                 "labels": [
@@ -646,10 +646,10 @@ echo $this->getData('nav')->render();
                                                 ]
                                             },
                                             "options": {
-											    "title": {
-												    "display": false,
-												    "text": "Customers per rep"
-											    }
+                                                "title": {
+                                                    "display": false,
+                                                    "text": "Customers per rep"
+                                                }
                                             }
                                     }'></canvas>
 
@@ -680,8 +680,8 @@ echo $this->getData('nav')->render();
                                 </div>
                             </div>
                         </div>
-        			</section>
-        		</div>
+                    </section>
+                </div>
 
                 <div class="col-xs-12 col-lg-6">
                     <section class="portlet">
@@ -717,15 +717,15 @@ echo $this->getData('nav')->render();
                     </section>
                 </div>
 
-        		<div class="col-xs-12 col-lg-6">
+                <div class="col-xs-12 col-lg-6">
                     <section class="portlet">
                         <div class="portlet-head">
                             Customers per Country - Current
                             <?php include __DIR__ . '/../../../../Web/Backend/Themes/popup-export-data.tpl.php'; ?>
                         </div>
-                    	<?php $customersCountry = $this->getData('currentCustomersCountry'); ?>
+                        <?php $customersCountry = $this->getData('currentCustomersCountry'); ?>
                         <div class="portlet-body">
-                        	<canvas height="400px" id="sales-region" data-chart='{
+                            <canvas height="400px" id="sales-region" data-chart='{
                                             "type": "horizontalBar",
                                             "data": {
                                                 "labels": [
@@ -758,10 +758,10 @@ echo $this->getData('nav')->render();
                                                 ]
                                             },
                                             "options": {
-											    "title": {
-												    "display": false,
-												    "text": "Customers per country"
-											    }
+                                                "title": {
+                                                    "display": false,
+                                                    "text": "Customers per country"
+                                                }
                                             }
                                     }'></canvas>
 
@@ -773,27 +773,27 @@ echo $this->getData('nav')->render();
                                 </label>
                                 <div>
                                 <table class="default">
-                                	<thead>
-                                		<tr>
-                                			<td>Country
-                                			<td>Customer count
-                            		<tbody>
-                                		<?php
-                                			$sum = 0;
-                                		foreach ($customersCountry as $country => $values) : $sum += $values['customers']; ?>
-                                			<tr>
-                                				<td><?= $country; ?>
-                                				<td><?= $values['customers']; ?>
-                                		<?php endforeach; ?>
-                                			<tr>
-                                				<td>Total
-                                				<td><?= $sum; ?>
+                                    <thead>
+                                        <tr>
+                                            <td>Country
+                                            <td>Customer count
+                                    <tbody>
+                                        <?php
+                                            $sum = 0;
+                                        foreach ($customersCountry as $country => $values) : $sum += $values['customers']; ?>
+                                            <tr>
+                                                <td><?= $country; ?>
+                                                <td><?= $values['customers']; ?>
+                                        <?php endforeach; ?>
+                                            <tr>
+                                                <td>Total
+                                                <td><?= $sum; ?>
                                 </table>
                                 </div>
                             </div>
                         </div>
-        			</section>
-        		</div>
+                    </section>
+                </div>
 
                 <div class="col-xs-12 col-lg-6">
                     <section class="portlet">
@@ -831,13 +831,13 @@ echo $this->getData('nav')->render();
                     </section>
                 </div>
 
-        		<div class="col-xs-12 col-lg-6">
+                <div class="col-xs-12 col-lg-6">
                     <section class="portlet">
                         <div class="portlet-head">
                             Customer per Attribute - Current
                             <?php include __DIR__ . '/../../../../Web/Backend/Themes/popup-export-data.tpl.php'; ?>
                         </div>
-                    	<?php $customerGroups = $this->getData('customerGroups'); ?>
+                        <?php $customerGroups = $this->getData('customerGroups'); ?>
                         <div class="portlet-body">
                             <div class="form-group">
                                 <label for="iOname"><?= $this->getHtml('Attribute'); ?></label>
@@ -847,7 +847,7 @@ echo $this->getData('nav')->render();
                             </div>
 
                             <div>
-                        	<canvas id="sales-region" data-chart='{
+                            <canvas id="sales-region" data-chart='{
                                         "type": "pie",
                                         "data": {
                                             "labels": [
@@ -880,11 +880,11 @@ echo $this->getData('nav')->render();
                                             }]
                                         },
                                         "options": {
-										    "title": {
-											    "display": false,
-											    "text": "Customers per group"
-										    }
-										}
+                                            "title": {
+                                                "display": false,
+                                                "text": "Customers per group"
+                                            }
+                                        }
                                 }'></canvas>
                             </div>
 
@@ -896,27 +896,27 @@ echo $this->getData('nav')->render();
                                 </label>
                                 <div>
                                 <table class="default">
-                                	<thead>
-                                		<tr>
-                                			<td>Groups
-                                			<td>Customer count
-                            		<tbody>
-                                		<?php
-                                			$sum = 0;
-                                		foreach ($customerGroups as $groups => $values) : $sum += $values['customers']; ?>
-                                			<tr>
-                                				<td><?= $groups; ?>
-                                				<td><?= $values['customers']; ?>
-                                		<?php endforeach; ?>
-                                			<tr>
-                                				<td>Total
-                                				<td><?= $sum; ?>
+                                    <thead>
+                                        <tr>
+                                            <td>Groups
+                                            <td>Customer count
+                                    <tbody>
+                                        <?php
+                                            $sum = 0;
+                                        foreach ($customerGroups as $groups => $values) : $sum += $values['customers']; ?>
+                                            <tr>
+                                                <td><?= $groups; ?>
+                                                <td><?= $values['customers']; ?>
+                                        <?php endforeach; ?>
+                                            <tr>
+                                                <td>Total
+                                                <td><?= $sum; ?>
                                 </table>
                                 </div>
                             </div>
                         </div>
-        			</section>
-        		</div>
+                    </section>
+                </div>
 
                 <div class="col-xs-12 col-lg-6">
                     <section class="portlet">
@@ -1218,7 +1218,7 @@ echo $this->getData('nav')->render();
 
         <input type="radio" id="c-tab-3" name="tabular-2"<?= $this->request->uri->fragment === 'c-tab-3' ? ' checked' : ''; ?>>
         <div class="tab">
-        	<div class="row">
+            <div class="row">
                 <div class="col-xs-12 col-lg-6">
                     <section class="portlet">
                         <div class="portlet-head">
@@ -2283,7 +2283,7 @@ echo $this->getData('nav')->render();
 
         <input type="radio" id="c-tab-4" name="tabular-2"<?= $this->request->uri->fragment === 'c-tab-4' ? ' checked' : ''; ?>>
         <div class="tab">
-        	<div class="row">
+            <div class="row">
                 <div class="col-xs-12 col-lg-6">
                     <section class="portlet">
                         <div class="portlet-head">

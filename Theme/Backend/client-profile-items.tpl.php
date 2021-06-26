@@ -128,14 +128,14 @@ $items = $this->getData('items') ?? [];
                         </label>
                 <tbody>
                 <?php
-                	$count = 0;
-                	foreach ($items as $key => $value) :
-                		if ($value->itemNumber === '') {
-                			continue;
-                		}
+                    $count = 0;
+                    foreach ($items as $key => $value) :
+                        if ($value->itemNumber === '') {
+                            continue;
+                        }
 
-                		++$count;
-                		$url = UriFactory::build('{/prefix}sales/item/profile?{?}&id=' . $value->getId());
+                        ++$count;
+                        $url = UriFactory::build('{/prefix}sales/item/profile?{?}&id=' . $value->getId());
                 ?>
                 <tr data-href="<?= $url; ?>">
                     <td><label class="checkbox" for="iSalesItemSelect-<?= $key; ?>">

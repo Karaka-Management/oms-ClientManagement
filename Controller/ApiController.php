@@ -202,10 +202,10 @@ final class ApiController extends Controller
      */
     private function createClientAttributeFromRequest(RequestAbstract $request) : ClientAttribute
     {
-        $attribute          = new ClientAttribute();
-        $attribute->client  = (int) $request->getData('client');
-        $attribute->type    = new NullClientAttributeType((int) $request->getData('type'));
-        $attribute->value   = new NullClientAttributeValue((int) $request->getData('value'));
+        $attribute         = new ClientAttribute();
+        $attribute->client = (int) $request->getData('client');
+        $attribute->type   = new NullClientAttributeType((int) $request->getData('type'));
+        $attribute->value  = new NullClientAttributeValue((int) $request->getData('value'));
 
         return $attribute;
     }
