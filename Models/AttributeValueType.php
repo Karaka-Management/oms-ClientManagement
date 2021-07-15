@@ -26,11 +26,11 @@ use phpOMS\Stdlib\Base\Enum;
  */
 abstract class AttributeValueType extends Enum
 {
-    public const _INT = 0;
+    public const _INT = 1;
 
-    public const _STRING = 1;
+    public const _STRING = 2;
 
-    public const _FLOAT = 2;
+    public const _FLOAT = 3;
 
-    public const _DATETIME = 3;
+    public const _DATETIME = 4;
 }
