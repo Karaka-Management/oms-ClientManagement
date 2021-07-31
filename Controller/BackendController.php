@@ -247,6 +247,7 @@ final class BackendController extends Controller
 
         $view->addData('currentCustomerRegion', $currentCustomerRegion);
 
+        $annualCustomerRegion = [];
         for ($i = 1; $i < 11; ++$i) {
             $annualCustomerRegion[] = [
                 'year'    => 2020 - 10 + $i,
@@ -270,7 +271,9 @@ final class BackendController extends Controller
             ];
         }
 
-        \uasort($currentCustomersRep, function($a, $b) { return $b['customers'] <=> $a['customers']; });
+        \uasort($currentCustomersRep, function($a, $b) {
+            return $b['customers'] <=> $a['customers'];
+        });
 
         $view->addData('currentCustomersRep', $currentCustomersRep);
 
@@ -297,7 +300,9 @@ final class BackendController extends Controller
             ];
         }
 
-        \uasort($currentCustomersCountry, function($a, $b) { return $b['customers'] <=> $a['customers']; });
+        \uasort($currentCustomersCountry, function($a, $b) {
+            return $b['customers'] <=> $a['customers'];
+        });
 
         $view->addData('currentCustomersCountry', $currentCustomersCountry);
 
