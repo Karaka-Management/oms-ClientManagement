@@ -111,8 +111,8 @@ final class BackendController extends Controller
         $view->addData('nav', $this->app->moduleManager->get('Navigation')->createNavigationMid(1003102001, $request, $response));
 
         $client = ClientMapper
-            ::with('files', limit: 5, orderBy: 'createdAt', sortOrder: 'ASC')
-            ::with('notes', limit: 5, orderBy: 'id', sortOrder: 'ASC')
+            ::with('files', limit: 5)::orderBy('createdAt', 'ASC')
+            ::with('notes', limit: 5)::orderBy('id', 'ASC')
             ::get((int) $request->getData('id'));
 
         $view->setData('client', $client);
