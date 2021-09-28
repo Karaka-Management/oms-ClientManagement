@@ -23,7 +23,7 @@ return [
             'dest'       => '\Modules\ClientManagement\Controller\BackendController:viewClientManagementClientList',
             'verb'       => RouteVerb::GET,
             'permission' => [
-                'module' => BackendController::MODULE_NAME,
+                'module' => BackendController::NAME,
                 'type'   => PermissionType::READ,
                 'state'  => PermissionState::CLIENT,
             ],
@@ -34,7 +34,7 @@ return [
             'dest'       => '\Modules\ClientManagement\Controller\BackendController:viewClientManagementClientCreate',
             'verb'       => RouteVerb::GET,
             'permission' => [
-                'module' => BackendController::MODULE_NAME,
+                'module' => BackendController::NAME,
                 'type'   => PermissionType::CREATE,
                 'state'  => PermissionState::CLIENT,
             ],
@@ -45,7 +45,7 @@ return [
             'dest'       => '\Modules\ClientManagement\Controller\BackendController:viewClientManagementClientProfile',
             'verb'       => RouteVerb::GET,
             'permission' => [
-                'module' => BackendController::MODULE_NAME,
+                'module' => BackendController::NAME,
                 'type'   => PermissionType::READ,
                 'state'  => PermissionState::CLIENT,
             ],
@@ -56,7 +56,7 @@ return [
             'dest'       => '\Modules\ClientManagement\Controller\BackendController:viewClientManagementClientAnalysis',
             'verb'       => RouteVerb::GET,
             'permission' => [
-                'module' => BackendController::MODULE_NAME,
+                'module' => BackendController::NAME,
                 'type'   => PermissionType::READ,
                 'state'  => PermissionState::ANALYSIS,
             ],
@@ -67,7 +67,7 @@ return [
             'dest'       => '\Modules\ClientManagement\Controller\BackendController:viewClientAnalysis',
             'verb'       => RouteVerb::GET,
             'permission' => [
-                'module' => BackendController::MODULE_NAME,
+                'module' => BackendController::NAME,
                 'type'   => PermissionType::READ,
                 'state'  => PermissionState::ANALYSIS,
             ],
