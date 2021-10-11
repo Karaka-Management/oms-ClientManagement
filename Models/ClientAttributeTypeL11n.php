@@ -41,9 +41,7 @@ class ClientAttributeTypeL11n implements \JsonSerializable, ArrayableInterface
      * @var int|ClientAttributeType
      * @since 1.0.0
      */
-    protected int |
-
-ClientAttributeType $type = 0;
+    protected int | ClientAttributeType $type = 0;
 
     /**
      * Language.
