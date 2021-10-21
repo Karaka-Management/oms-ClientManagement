@@ -24,7 +24,7 @@ use Modules\Profile\Models\ProfileMapper;
 /**
  * @internal
  */
-class ClientMapperTest extends \PHPUnit\Framework\TestCase
+final class ClientMapperTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @covers Modules\ClientManagement\Models\ClientMapper
