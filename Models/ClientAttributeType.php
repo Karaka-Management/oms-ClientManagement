@@ -41,15 +41,16 @@ class ClientAttributeType implements \JsonSerializable, ArrayableInterface
      * @var string
      * @since 1.0.0
      */
-    protected string $name = ''; // @todo: currently not filled, should be used as identifier or if not required removed (at the moment it seems like it is useless?!)
+    public string $name = ''; // @todo: currently not filled, should be used as identifier or if not required removed (at the moment it seems like it is useless?!)
 
     /**
      * Which field data type is required (string, int, ...) in the value
+     * @todo create enum for this
      *
      * @var int
      * @since 1.0.0
      */
-    protected int $fields = 0;
+    public int $fields = 0;
 
     /**
      * Is a custom value allowed (e.g. custom string)
@@ -57,7 +58,7 @@ class ClientAttributeType implements \JsonSerializable, ArrayableInterface
      * @var bool
      * @since 1.0.0
      */
-    protected bool $custom = false;
+    public bool $custom = false;
 
     public string $validationPattern = '';
 
@@ -135,39 +136,18 @@ class ClientAttributeType implements \JsonSerializable, ArrayableInterface
     }
 
     /**
-     * Set fields
-     *
-     * @param int $fields Fields
-     *
-     * @return void
-     *
-     * @since 1.0.0
-     */
-    public function setFields(int $fields) : void
-    {
-        $this->fields = $fields;
-    }
-
-    /**
-     * Set custom
-     *
-     * @param bool $custom FieldsCustom
-     *
-     * @return void
-     *
-     * @since 1.0.0
-     */
-    public function setCustom(bool $custom) : void
-    {
-        $this->custom = $custom;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function toArray() : array
     {
-        return [];
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'fields' => $this->fields,
+            'custom' => $this->custom,
+            'validationPattern' => $this->validationPattern,
+            'isRequired' => $this->isRequired,
+        ];
     }
 
     /**

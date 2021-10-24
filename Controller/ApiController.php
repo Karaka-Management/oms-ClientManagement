@@ -36,6 +36,7 @@ use phpOMS\Message\Http\RequestStatusCode;
 use phpOMS\Message\NotificationLevel;
 use phpOMS\Message\RequestAbstract;
 use phpOMS\Message\ResponseAbstract;
+use phpOMS\Localization\ISO639x1Enum;
 use phpOMS\Model\Message\FormValidation;
 
 /**
@@ -157,7 +158,7 @@ final class ApiController extends Controller
         $this->createModel($request->header->account, $contactElement, ContactElementMapper::class, 'client-contactElement', $request->getOrigin());
         $this->createModelRelation(
             $request->header->account,
-            (int) $request->getData('client'),
+            (int) $request->getData('account'),
             $contactElement->getId(),
             ClientMapper::class, 'contactElements', '', $request->getOrigin()
         );
@@ -271,7 +272,7 @@ final class ApiController extends Controller
     private function createClientAttributeTypeL11nFromRequest(RequestAbstract $request) : ClientAttributeTypeL11n
     {
         $attrL11n = new ClientAttributeTypeL11n();
-        $attrL11n->setType((int) ($request->getData('type') ?? 0));
+        $attrL11n->type = (int) ($request->getData('type') ?? 0);
         $attrL11n->setLanguage((string) (
             $request->getData('language') ?? $request->getLanguage()
         ));
@@ -324,7 +325,6 @@ final class ApiController extends Controller
         }
 
         $attrType = $this->createClientAttributeTypeFromRequest($request);
-        $attrType->setL11n($request->getData('title'), $request->getData('language'));
         $this->createModel($request->header->account, $attrType, ClientAttributeTypeMapper::class, 'attr_type', $request->getOrigin());
 
         $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Attribute type', 'Attribute type successfully created', $attrType);
@@ -342,9 +342,9 @@ final class ApiController extends Controller
     private function createClientAttributeTypeFromRequest(RequestAbstract $request) : ClientAttributeType
     {
         $attrType = new ClientAttributeType();
-        $attrType->setL11n((string) ($request->getData('name') ?? ''));
-        $attrType->setFields((int) ($request->getData('fields') ?? 0));
-        $attrType->setCustom((bool) ($request->getData('custom') ?? false));
+        $attrType->setL11n((string) ($request->getData('title') ?? ''), $request->getData('language') ?? ISO639x1Enum::_EN);
+        $attrType->fields = (int) ($request->getData('fields') ?? 0);
+        $attrType->custom = (bool) ($request->getData('custom') ?? false);
 
         return $attrType;
     }
@@ -361,9 +361,7 @@ final class ApiController extends Controller
     private function validateClientAttributeTypeCreate(RequestAbstract $request) : array
     {
         $val = [];
-        if (($val['name'] = empty($request->getData('name')))
-            || ($val['title'] = empty($request->getData('title')))
-        ) {
+        if (($val['title'] = empty($request->getData('title')))) {
             return $val;
         }
 

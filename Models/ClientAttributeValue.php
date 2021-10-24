@@ -111,7 +111,7 @@ class ClientAttributeValue implements \JsonSerializable, ArrayableInterface
      *
      * @since 1.0.0
      */
-    public function __construct(int $type = 0, $value = '', string $language = ISO639x1Enum::_EN)
+    public function __construct(int $type = 0, mixed $value = null, string $language = ISO639x1Enum::_EN)
     {
         $this->type     = $type;
         $this->language = $language;
@@ -140,7 +140,7 @@ class ClientAttributeValue implements \JsonSerializable, ArrayableInterface
      *
      * @since 1.0.0
      */
-    public function setValue($value) : void
+    public function setValue(mixed $value) : void
     {
         if (\is_string($value)) {
             $this->valueStr = $value;
@@ -190,6 +190,18 @@ class ClientAttributeValue implements \JsonSerializable, ArrayableInterface
     }
 
     /**
+     * Get language
+     *
+     * @return string
+     *
+     * @since 1.0.0
+     */
+    public function getLanguage() : string
+    {
+        return $this->language;
+    }
+
+    /**
      * Set country
      *
      * @param string $country Country
@@ -204,11 +216,33 @@ class ClientAttributeValue implements \JsonSerializable, ArrayableInterface
     }
 
     /**
+     * Get country
+     *
+     * @return string
+     *
+     * @since 1.0.0
+     */
+    public function getCountry() : string
+    {
+        return $this->country;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function toArray() : array
     {
-        return [];
+        return [
+            'id' => $this->id,
+            'type' => $this->type,
+            'valueInt' => $this->valueInt,
+            'valueStr' => $this->valueStr,
+            'valueDec' => $this->valueDec,
+            'valueDat' => $this->valueDat,
+            'isDefault' => $this->isDefault,
+            'language' => $this->language,
+            'country' => $this->country,
+        ];
     }
 
     /**

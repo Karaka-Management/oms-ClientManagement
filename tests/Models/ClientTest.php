@@ -1,1 +1,139 @@
-<?php declare(strict_types=1);
+<?php
+/**
+ * Orange Management
+ *
+ * PHP Version 8.0
+ *
+ * @package   tests
+ * @copyright Dennis Eichhorn
+ * @license   OMS License 1.0
+ * @version   1.0.0
+ * @link      https://orange-management.org
+ */
+declare(strict_types=1);
+
+namespace Modules\ClientManagement\tests\Models;
+
+use Modules\Media\Models\Media;
+use Modules\Editor\Models\EditorDoc;
+use Modules\Profile\Models\ContactElement;
+use Modules\Admin\Models\Account;
+use Modules\Admin\Models\NullAccount;
+use Modules\ClientManagement\Models\Client;
+use Modules\ClientManagement\Models\ClientStatus;
+
+/**
+ * @internal
+ */
+final class ClientTest extends \PHPUnit\Framework\TestCase
+{
+    private Client $client;
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function setUp() : void
+    {
+        $this->client = new Client();
+    }
+
+    /**
+     * @covers Modules\ClientManagement\Models\Client
+     * @group module
+     */
+    public function testDefault() : void
+    {
+        self::assertEquals(0, $this->client->getId());
+        self::assertEquals('', $this->client->number);
+        self::assertEquals('', $this->client->numberReverse);
+        self::assertEquals('', $this->client->info);
+        self::assertEquals(ClientStatus::ACTIVE, $this->client->getStatus());
+        self::assertEquals(0, $this->client->getType());
+        self::assertEquals([], $this->client->getNotes());
+        self::assertEquals([], $this->client->getFiles());
+        self::assertEquals([], $this->client->getAddresses());
+        self::assertEquals([], $this->client->getContactElements());
+        self::assertEquals([], $this->client->getFilesByType(0));
+        self::assertEquals((new \DateTime('now'))->format('Y-m-d'), $this->client->createdAt->format('Y-m-d'));
+        self::assertInstanceOf('\Modules\Profile\Models\Profile', $this->client->profile);
+        self::assertInstanceOf('\Modules\Admin\Models\Address', $this->client->mainAddress);
+        self::assertInstanceOf('\Modules\Profile\Models\NullContactElement', $this->client->getMainContactElement(0));
+    }
+
+    /**
+     * @covers Modules\ClientManagement\Models\Client
+     * @group module
+     */
+    public function testStatusInputOutput() : void
+    {
+    	$this->client->setStatus(ClientStatus::INACTIVE);
+    	self::assertEquals(ClientStatus::INACTIVE, $this->client->getStatus());
+    }
+
+    /**
+     * @covers Modules\ClientManagement\Models\Client
+     * @group module
+     */
+    public function testTypeInputOutput() : void
+    {
+        $this->client->setType(2);
+        self::assertEquals(2, $this->client->getType());
+    }
+
+    /**
+     * @covers Modules\ClientManagement\Models\Client
+     * @group module
+     */
+    public function testFileInputOutput() : void
+    {
+        $this->client->addFile($temp = new Media());
+        self::assertCount(1, $this->client->getFiles());
+        self::assertEquals([$temp], $this->client->getFilesByType());
+    }
+
+    /**
+     * @covers Modules\ClientManagement\Models\Client
+     * @group module
+     */
+    public function testContactElementInputOutput() : void
+    {
+        $this->client->addContactElement($temp = new ContactElement());
+        self::assertCount(1, $this->client->getContactElements());
+        self::assertEquals($temp, $this->client->getMainContactElement(0));
+    }
+
+    /**
+     * @covers Modules\ClientManagement\Models\Client
+     * @group module
+     */
+    public function testNoteInputOutput() : void
+    {
+        $this->client->addNote(new EditorDoc());
+        self::assertCount(1, $this->client->getNotes());
+    }
+
+    /**
+     * @covers Modules\ClientManagement\Models\Client
+     * @group module
+     */
+    public function testSerialize() : void
+    {
+        $this->client->number = '123456';
+        $this->client->numberReverse = '654321';
+        $this->client->setStatus(ClientStatus::INACTIVE);
+        $this->client->setType(2);
+        $this->client->info = 'Test info';
+
+        self::assertEquals(
+            [
+                'id'    => 0,
+                'number' => '123456',
+                'numberReverse' => '654321',
+                'status' => ClientStatus::INACTIVE,
+                'type' => 2,
+                'info' => 'Test info',
+            ],
+            $this->client->jsonSerialize()
+        );
+    }
+}

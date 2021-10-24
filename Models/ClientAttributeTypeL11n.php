@@ -41,7 +41,7 @@ class ClientAttributeTypeL11n implements \JsonSerializable, ArrayableInterface
      * @var int|ClientAttributeType
      * @since 1.0.0
      */
-    protected int | ClientAttributeType $type = 0;
+    public int | ClientAttributeType $type = 0;
 
     /**
      * Language.
@@ -88,29 +88,15 @@ class ClientAttributeTypeL11n implements \JsonSerializable, ArrayableInterface
     }
 
     /**
-     * Get attribute type
+     * Get language
      *
-     * @return int|ClientAttributeType
-     *
-     * @since 1.0.0
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * Set type.
-     *
-     * @param int $type Type id
-     *
-     * @return void
+     * @return string
      *
      * @since 1.0.0
      */
-    public function setType(int $type) : void
+    public function getLanguage() : string
     {
-        $this->type = $type;
+        return $this->language;
     }
 
     /**
@@ -132,7 +118,12 @@ class ClientAttributeTypeL11n implements \JsonSerializable, ArrayableInterface
      */
     public function toArray() : array
     {
-        return [];
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'type' => $this->type,
+            'language' => $this->language,
+        ];
     }
 
     /**

@@ -37,15 +37,15 @@ class Client
 
     public string $number = '';
 
-    private string $numberReverse = '';
+    public string $numberReverse = '';
 
-    private int $status = 0;
+    private int $status = ClientStatus::ACTIVE;
 
     private int $type = 0;
 
     private array $ids = [];
 
-    private string $info = '';
+    public string $info = '';
 
     public \DateTimeImmutable $createdAt;
 
@@ -110,36 +110,6 @@ class Client
     }
 
     /**
-     * Get reverse number.
-     *
-     * @return string
-     *
-     * @since 1.0.0
-     */
-    public function getReverseNumber() : string
-    {
-        return $this->numberReverse;
-    }
-
-    /**
-     * Set reverse number.
-     *
-     * @param string $numberReverse Reverse number
-     *
-     * @return void
-     *
-     * @since 1.0.0
-     */
-    public function setReverseNumber(string $numberReverse) : void
-    {
-        if (!\is_scalar($numberReverse)) {
-            throw new \Exception();
-        }
-
-        $this->numberReverse = $numberReverse;
-    }
-
-    /**
      * Get status.
      *
      * @return int
@@ -189,32 +159,6 @@ class Client
     public function setType(int $type) : void
     {
         $this->type = $type;
-    }
-
-    /**
-     * Get info.
-     *
-     * @return string
-     *
-     * @since 1.0.0
-     */
-    public function getInfo() : string
-    {
-        return $this->info;
-    }
-
-    /**
-     * Set info.
-     *
-     * @param string $info Info
-     *
-     * @return void
-     *
-     * @since 1.0.0
-     */
-    public function setInfo(string $info) : void
-    {
-        $this->info = $info;
     }
 
     /**
@@ -345,35 +289,15 @@ class Client
     }
 
     /**
-     * Get media file by type
-     *
-     * @param string $type Media type
-     *
-     * @return Media
-     *
-     * @since 1.0.0
-     */
-    public function getFileByType(string $type) : Media
-    {
-        foreach ($this->files as $file) {
-            if ($file->type === $type) {
-                return $file;
-            }
-        }
-
-        return new NullMedia();
-    }
-
-    /**
      * Get all media files by type
      *
-     * @param string $type Media type
+     * @param int $type Media type
      *
      * @return Media[]
      *
      * @since 1.0.0
      */
-    public function getFilesByType(string $type) : array
+    public function getFilesByType(int $type = null) : array
     {
         $files = [];
         foreach ($this->files as $file) {
@@ -383,5 +307,28 @@ class Client
         }
 
         return $files;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function toArray() : array
+    {
+        return [
+            'id'    => $this->id,
+            'number' => $this->number,
+            'numberReverse' => $this->numberReverse,
+            'status' => $this->status,
+            'type' => $this->type,
+            'info' => $this->info,
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function jsonSerialize()
+    {
+        return $this->toArray();
     }
 }
