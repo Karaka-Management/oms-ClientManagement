@@ -40,7 +40,7 @@ final class ClientAttributeValueTest extends \PHPUnit\Framework\TestCase
     public function testDefault() : void
     {
         self::assertEquals(0, $this->value->getId());
-        self::assertEquals(null, $this->value->getValue());
+        self::assertNull($this->value->getValue());
     }
 
     /**
@@ -117,15 +117,15 @@ final class ClientAttributeValueTest extends \PHPUnit\Framework\TestCase
 
         self::assertEquals(
             [
-                'id'       => 0,
-                'type'    => 1,
-                'valueInt'    => null,
-                'valueStr'    => 'test',
-                'valueDec'    => null,
-                'valueDat'    => null,
+                'id'           => 0,
+                'type'         => 1,
+                'valueInt'     => null,
+                'valueStr'     => 'test',
+                'valueDec'     => null,
+                'valueDat'     => null,
                 'isDefault'    => true,
-                'language'    => ISO639x1Enum::_DE,
-                'country'    => ISO3166TwoEnum::_DEU,
+                'language'     => ISO639x1Enum::_DE,
+                'country'      => ISO3166TwoEnum::_DEU,
             ],
             $this->value->jsonSerialize()
         );

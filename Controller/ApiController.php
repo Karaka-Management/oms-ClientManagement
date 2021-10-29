@@ -32,11 +32,11 @@ use Modules\ClientManagement\Models\NullClientAttributeValue;
 use Modules\Media\Models\PathSettings;
 use Modules\Profile\Models\ContactElementMapper;
 use Modules\Profile\Models\Profile;
+use phpOMS\Localization\ISO639x1Enum;
 use phpOMS\Message\Http\RequestStatusCode;
 use phpOMS\Message\NotificationLevel;
 use phpOMS\Message\RequestAbstract;
 use phpOMS\Message\ResponseAbstract;
-use phpOMS\Localization\ISO639x1Enum;
 use phpOMS\Model\Message\FormValidation;
 
 /**
@@ -271,7 +271,7 @@ final class ApiController extends Controller
      */
     private function createClientAttributeTypeL11nFromRequest(RequestAbstract $request) : ClientAttributeTypeL11n
     {
-        $attrL11n = new ClientAttributeTypeL11n();
+        $attrL11n       = new ClientAttributeTypeL11n();
         $attrL11n->type = (int) ($request->getData('type') ?? 0);
         $attrL11n->setLanguage((string) (
             $request->getData('language') ?? $request->getLanguage()
@@ -489,7 +489,8 @@ final class ApiController extends Controller
         }
 
         $uploaded = $this->app->moduleManager->get('Media')->uploadFiles(
-            [$request->getData('name') ?? ''],
+            $request->getDataList('names') ?? [],
+            $request->getDataList('filenames') ?? [],
             $uploadedFiles,
             $request->header->account,
             __DIR__ . '/../../../Modules/Media/Files/Modules/ClientManagement/' . ($request->getData('client') ?? '0'),

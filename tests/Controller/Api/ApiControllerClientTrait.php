@@ -14,16 +14,13 @@ declare(strict_types=1);
 
 namespace Modules\ClientManagement\tests\Controller\Api;
 
+use Modules\Profile\Models\ContactType;
+use phpOMS\Localization\ISO3166TwoEnum;
 use phpOMS\Message\Http\HttpRequest;
 use phpOMS\Message\Http\HttpResponse;
 use phpOMS\Message\Http\RequestStatusCode;
-use phpOMS\Uri\HttpUri;
-use Modules\ClientManagement\Models\AttributeValueType;
-use Modules\Profile\Models\ContactType;
-use phpOMS\Localization\ISO3166TwoEnum;
-use phpOMS\Localization\ISO639x1Enum;
-use phpOMS\Stdlib\Base\AddressType;
 use phpOMS\System\MimeType;
+use phpOMS\Uri\HttpUri;
 use phpOMS\Utils\TestUtils;
 
 trait ApiControllerClientTrait
@@ -31,11 +28,11 @@ trait ApiControllerClientTrait
     public static function tearDownAfterClass() : void
     {
         if (\is_file(__DIR__ . '/m_icon_tmp.png')) {
-            unlink(__DIR__ . '/m_icon_tmp.png');
+            \unlink(__DIR__ . '/m_icon_tmp.png');
         }
 
         if (\is_file(__DIR__ . '/Test file_tmp.txt')) {
-            unlink(__DIR__ . '/Test file_tmp.txt');
+            \unlink(__DIR__ . '/Test file_tmp.txt');
         }
     }
 

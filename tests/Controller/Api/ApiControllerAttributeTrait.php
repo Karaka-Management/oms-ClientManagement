@@ -14,21 +14,17 @@ declare(strict_types=1);
 
 namespace Modules\ClientManagement\tests\Controller\Api;
 
+use Modules\ClientManagement\Models\AttributeValueType;
+use phpOMS\Localization\ISO3166TwoEnum;
+use phpOMS\Localization\ISO639x1Enum;
 use phpOMS\Message\Http\HttpRequest;
 use phpOMS\Message\Http\HttpResponse;
 use phpOMS\Message\Http\RequestStatusCode;
 use phpOMS\Uri\HttpUri;
-use Modules\ClientManagement\Models\AttributeValueType;
-use Modules\Profile\Models\ContactType;
-use phpOMS\Localization\ISO3166TwoEnum;
-use phpOMS\Localization\ISO639x1Enum;
-use phpOMS\Stdlib\Base\AddressType;
-use phpOMS\System\MimeType;
-use phpOMS\Utils\TestUtils;
 
 trait ApiControllerAttributeTrait
 {
-	/**
+    /**
      * @covers Modules\ClientManagement\Controller\ApiController
      * @group module
      */
@@ -141,7 +137,7 @@ trait ApiControllerAttributeTrait
         self::assertGreaterThan(0, $response->get('')['response']->getId());
     }
 
-	/**
+    /**
      * @covers Modules\ClientManagement\Controller\ApiController
      * @group module
      */
@@ -159,7 +155,7 @@ trait ApiControllerAttributeTrait
         self::assertGreaterThan(0, $response->get('')['response']->getId());
     }
 
-	/**
+    /**
      * @covers Modules\ClientManagement\Controller\ApiController
      * @group module
      */

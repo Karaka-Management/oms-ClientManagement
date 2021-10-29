@@ -65,7 +65,7 @@ class ClientAttribute implements \JsonSerializable, ArrayableInterface
      */
     public function __construct()
     {
-        $this->type = new ClientAttributeType();
+        $this->type  = new ClientAttributeType();
         $this->value = new ClientAttributeValue();
     }
 
@@ -87,8 +87,8 @@ class ClientAttribute implements \JsonSerializable, ArrayableInterface
     public function toArray() : array
     {
         return [
-            'id' => $this->id,
-            'type' => $this->type,
+            'id'    => $this->id,
+            'type'  => $this->type,
             'value' => $this->value,
         ];
     }

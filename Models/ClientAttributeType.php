@@ -141,12 +141,12 @@ class ClientAttributeType implements \JsonSerializable, ArrayableInterface
     public function toArray() : array
     {
         return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'fields' => $this->fields,
-            'custom' => $this->custom,
+            'id'                => $this->id,
+            'name'              => $this->name,
+            'fields'            => $this->fields,
+            'custom'            => $this->custom,
             'validationPattern' => $this->validationPattern,
-            'isRequired' => $this->isRequired,
+            'isRequired'        => $this->isRequired,
         ];
     }
 

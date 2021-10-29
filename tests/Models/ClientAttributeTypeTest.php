@@ -16,7 +16,6 @@ namespace Modules\ClientManagement\tests\Models;
 
 use Modules\ClientManagement\Models\ClientAttributeType;
 use Modules\ClientManagement\Models\ClientAttributeTypeL11n;
-use phpOMS\Localization\ISO639x1Enum;
 
 /**
  * @internal
@@ -62,20 +61,20 @@ final class ClientAttributeTypeTest extends \PHPUnit\Framework\TestCase
      */
     public function testSerialize() : void
     {
-        $this->type->name = 'Title';
-        $this->type->fields = 2;
-        $this->type->custom   = true;
+        $this->type->name                = 'Title';
+        $this->type->fields              = 2;
+        $this->type->custom              = true;
         $this->type->validationPattern   = '\d*';
-        $this->type->isRequired   = true;
+        $this->type->isRequired          = true;
 
         self::assertEquals(
             [
-                'id'       => 0,
-                'name'    => 'Title',
-                'fields'      => 2,
-                'custom'      => true,
+                'id'                => 0,
+                'name'              => 'Title',
+                'fields'            => 2,
+                'custom'            => true,
                 'validationPattern' => '\d*',
-                'isRequired' => true,
+                'isRequired'        => true,
             ],
             $this->type->jsonSerialize()
         );

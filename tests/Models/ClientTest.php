@@ -14,13 +14,11 @@ declare(strict_types=1);
 
 namespace Modules\ClientManagement\tests\Models;
 
-use Modules\Media\Models\Media;
-use Modules\Editor\Models\EditorDoc;
-use Modules\Profile\Models\ContactElement;
-use Modules\Admin\Models\Account;
-use Modules\Admin\Models\NullAccount;
 use Modules\ClientManagement\Models\Client;
 use Modules\ClientManagement\Models\ClientStatus;
+use Modules\Editor\Models\EditorDoc;
+use Modules\Media\Models\Media;
+use Modules\Profile\Models\ContactElement;
 
 /**
  * @internal
@@ -118,7 +116,7 @@ final class ClientTest extends \PHPUnit\Framework\TestCase
      */
     public function testSerialize() : void
     {
-        $this->client->number = '123456';
+        $this->client->number        = '123456';
         $this->client->numberReverse = '654321';
         $this->client->setStatus(ClientStatus::INACTIVE);
         $this->client->setType(2);
@@ -126,12 +124,12 @@ final class ClientTest extends \PHPUnit\Framework\TestCase
 
         self::assertEquals(
             [
-                'id'    => 0,
-                'number' => '123456',
+                'id'            => 0,
+                'number'        => '123456',
                 'numberReverse' => '654321',
-                'status' => ClientStatus::INACTIVE,
-                'type' => 2,
-                'info' => 'Test info',
+                'status'        => ClientStatus::INACTIVE,
+                'type'          => 2,
+                'info'          => 'Test info',
             ],
             $this->client->jsonSerialize()
         );

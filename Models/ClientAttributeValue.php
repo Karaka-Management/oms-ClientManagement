@@ -233,15 +233,15 @@ class ClientAttributeValue implements \JsonSerializable, ArrayableInterface
     public function toArray() : array
     {
         return [
-            'id' => $this->id,
-            'type' => $this->type,
-            'valueInt' => $this->valueInt,
-            'valueStr' => $this->valueStr,
-            'valueDec' => $this->valueDec,
-            'valueDat' => $this->valueDat,
+            'id'        => $this->id,
+            'type'      => $this->type,
+            'valueInt'  => $this->valueInt,
+            'valueStr'  => $this->valueStr,
+            'valueDec'  => $this->valueDec,
+            'valueDat'  => $this->valueDat,
             'isDefault' => $this->isDefault,
-            'language' => $this->language,
-            'country' => $this->country,
+            'language'  => $this->language,
+            'country'   => $this->country,
         ];
     }
 

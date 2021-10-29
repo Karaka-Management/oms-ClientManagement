@@ -16,13 +16,13 @@ namespace Modules\ClientManagement\tests\Controller;
 
 use Model\CoreSettings;
 use Modules\Admin\Models\AccountPermission;
-use Modules\ClientManagement\tests\Controller\Api\ApiControllerClientTrait;
 use Modules\ClientManagement\tests\Controller\Api\ApiControllerAttributeTrait;
-use phpOMS\DataStorage\Session\HttpSession;
+use Modules\ClientManagement\tests\Controller\Api\ApiControllerClientTrait;
 use phpOMS\Account\Account;
 use phpOMS\Account\AccountManager;
 use phpOMS\Account\PermissionType;
 use phpOMS\Application\ApplicationAbstract;
+use phpOMS\DataStorage\Session\HttpSession;
 use phpOMS\Dispatcher\Dispatcher;
 use phpOMS\Event\EventManager;
 use phpOMS\Module\ModuleAbstract;

@@ -30,7 +30,6 @@ final class NullClientAttributeTypeL11nTest extends \PHPUnit\Framework\TestCase
         self::assertInstanceOf('\Modules\ClientManagement\Models\ClientAttributeTypeL11n', new NullClientAttributeTypeL11n());
     }
 
-
     /**
      * @covers Modules\ClientManagement\Models\NullClientAttributeTypeL11n
      * @group framework
