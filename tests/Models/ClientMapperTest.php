@@ -49,26 +49,4 @@ final class ClientMapperTest extends \PHPUnit\Framework\TestCase
         self::assertGreaterThan(0, $client->getId());
         self::assertEquals($id, $client->getId());
     }
-
-    /**
-     * @group volume
-     * @group module
-     * @coversNothing
-     */
-    public function testClientVolume() : void
-    {
-        $profile = ProfileMapper::getFor(1, 'account');
-        $profile = $profile instanceof NullProfile ? new Profile() : $profile;
-        if ($profile->account->getId() === 0) {
-            $profile->account = new NullAccount(1);
-        }
-
-        for ($i = 0; $i < 100; ++$i) {
-            $client         = new Client();
-            $client->number = (string) \mt_rand(100000, 999999);
-
-            $client->profile = $profile;
-            ClientMapper::create($client);
-        }
-    }
 }

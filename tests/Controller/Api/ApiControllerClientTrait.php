@@ -56,7 +56,6 @@ trait ApiControllerClientTrait
         $request->setData('country', ISO3166TwoEnum::_USA);
 
         $this->module->apiClientCreate($request, $response);
-
         self::assertGreaterThan(0, $response->get('')['response']->getId());
     }
 

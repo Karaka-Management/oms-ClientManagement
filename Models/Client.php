@@ -290,7 +290,7 @@ class Client
     /**
      * Get all media files by type
      *
-     * @param int $type Media type
+     * @param null|int $type Media type
      *
      * @return Media[]
      *
