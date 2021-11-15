@@ -86,11 +86,11 @@ echo $this->getData('nav')->render();
                         <div class="portlet-body">
                             <table class="layout wf-100">
                                 <tr><td><label for="iName1"><?= $this->getHtml('Phone'); ?></label>
-                                <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->getMainContactElement(ContactType::PHONE)->getContent()); ?>">
+                                <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->getMainContactElement(ContactType::PHONE)->content); ?>">
                                 <tr><td><label for="iName1"><?= $this->getHtml('Email'); ?></label>
-                                <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->getMainContactElement(ContactType::EMAIL)->getContent()); ?>">
+                                <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->getMainContactElement(ContactType::EMAIL)->content); ?>">
                                 <tr><td><label for="iName1"><?= $this->getHtml('Website'); ?></label>
-                                <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->getMainContactElement(ContactType::WEBSITE)->getContent()); ?>">
+                                <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->getMainContactElement(ContactType::WEBSITE)->content); ?>">
                             </table>
                         </div>
                     </section>
@@ -147,7 +147,7 @@ echo $this->getData('nav')->render();
 
                     <section class="portlet highlight-4">
                         <div class="portlet-body">
-                            <textarea class="undecorated"><?= $this->printHtml($client->getInfo()); ?></textarea>
+                            <textarea class="undecorated"><?= $this->printHtml($client->info); ?></textarea>
                         </div>
                     </section>
                 </div>

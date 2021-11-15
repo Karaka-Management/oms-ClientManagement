@@ -53,6 +53,7 @@ final class ClientAttributeTest extends \PHPUnit\Framework\TestCase
         self::assertEquals(
             [
                 'id',
+                'client',
                 'type',
                 'value',
             ],

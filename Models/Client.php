@@ -248,7 +248,7 @@ class Client
      */
     private function orderContactElements(ContactElement $a, ContactElement $b) : int
     {
-        return $a->getOrder() <=> $b->getOrder();
+        return $a->order <=> $b->order;
     }
 
     /**
