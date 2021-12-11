@@ -37,7 +37,7 @@ final class ClientMapperTest extends \PHPUnit\Framework\TestCase
 
         // This is required because by default a NullAccount without an ID is created in the Profile model
         // but NullModels without ids are handled like "null" values which are not allowed for Accounts.
-        $profile = ProfileMapper::getFor(1, 'account');
+        $profile = ProfileMapper::get()->where('account', 1)->execute();
         $profile = $profile instanceof NullProfile ? new Profile() : $profile;
         if ($profile->account->getId() === 0) {
             $profile->account = new NullAccount(1);
@@ -45,7 +45,7 @@ final class ClientMapperTest extends \PHPUnit\Framework\TestCase
 
         $client->profile = $profile;
 
-        $id = ClientMapper::create($client);
+        $id = ClientMapper::create()->execute($client);
         self::assertGreaterThan(0, $client->getId());
         self::assertEquals($id, $client->getId());
     }

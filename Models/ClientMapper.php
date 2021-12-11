@@ -19,7 +19,7 @@ use Modules\Editor\Models\EditorDocMapper;
 use Modules\Media\Models\MediaMapper;
 use Modules\Profile\Models\ContactElementMapper;
 use Modules\Profile\Models\ProfileMapper;
-use phpOMS\DataStorage\Database\DataMapperAbstract;
+use phpOMS\DataStorage\Database\Mapper\DataMapperFactory;
 
 /**
  * Client mapper class.
@@ -29,7 +29,7 @@ use phpOMS\DataStorage\Database\DataMapperAbstract;
  * @link    https://orange-management.org
  * @since   1.0.0
  */
-final class ClientMapper extends DataMapperAbstract
+final class ClientMapper extends DataMapperFactory
 {
     /**
      * Columns.
@@ -37,7 +37,7 @@ final class ClientMapper extends DataMapperAbstract
      * @var array<string, array{name:string, type:string, internal:string, autocomplete?:bool, readonly?:bool, writeonly?:bool, annotations?:array}>
      * @since 1.0.0
      */
-    protected static array $columns = [
+    public const COLUMNS = [
         'clientmgmt_client_id'         => ['name' => 'clientmgmt_client_id',         'type' => 'int',      'internal' => 'id'],
         'clientmgmt_client_no'         => ['name' => 'clientmgmt_client_no',         'type' => 'string',   'internal' => 'number'],
         'clientmgmt_client_no_reverse' => ['name' => 'clientmgmt_client_no_reverse', 'type' => 'string',   'internal' => 'numberReverse'],
@@ -55,7 +55,7 @@ final class ClientMapper extends DataMapperAbstract
      * @var string
      * @since 1.0.0
      */
-    protected static string $table = 'clientmgmt_client';
+    public const TABLE = 'clientmgmt_client';
 
     /**
      * Primary field name.
@@ -63,7 +63,7 @@ final class ClientMapper extends DataMapperAbstract
      * @var string
      * @since 1.0.0
      */
-    protected static string $primaryField = 'clientmgmt_client_id';
+    public const PRIMARYFIELD ='clientmgmt_client_id';
 
     /**
      * Created at column
@@ -71,7 +71,7 @@ final class ClientMapper extends DataMapperAbstract
      * @var string
      * @since 1.0.0
      */
-    protected static string $createdAt = 'clientmgmt_client_created_at';
+    public const CREATED_AT = 'clientmgmt_client_created_at';
 
     /**
      * Has one relation.
@@ -79,7 +79,7 @@ final class ClientMapper extends DataMapperAbstract
      * @var array<string, array{mapper:string, external:string, by?:string, column?:string, conditional?:bool}>
      * @since 1.0.0
      */
-    protected static array $ownsOne = [
+    public const OWNS_ONE = [
         'profile' => [
             'mapper'   => ProfileMapper::class,
             'external' => 'clientmgmt_client_profile',
@@ -96,7 +96,7 @@ final class ClientMapper extends DataMapperAbstract
      * @var array<string, array{mapper:string, table:string, self?:?string, external?:?string, column?:string}>
      * @since 1.0.0
      */
-    protected static array $hasMany = [
+    public const HAS_MANY = [
         'files'           => [
             'mapper'   => MediaMapper::class,              /* mapper of the related object */
             'table'    => 'clientmgmt_client_media',       /* table of the related object, null if no relation table is used (many->1) */

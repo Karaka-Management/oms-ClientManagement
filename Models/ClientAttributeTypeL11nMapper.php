@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace Modules\ClientManagement\Models;
 
-use phpOMS\DataStorage\Database\DataMapperAbstract;
+use phpOMS\DataStorage\Database\Mapper\DataMapperFactory;
 
 /**
  * Client mapper class.
@@ -24,7 +24,7 @@ use phpOMS\DataStorage\Database\DataMapperAbstract;
  * @link    https://orange-management.org
  * @since   1.0.0
  */
-final class ClientAttributeTypeL11nMapper extends DataMapperAbstract
+final class ClientAttributeTypeL11nMapper extends DataMapperFactory
 {
     /**
      * Columns.
@@ -32,7 +32,7 @@ final class ClientAttributeTypeL11nMapper extends DataMapperAbstract
      * @var array<string, array{name:string, type:string, internal:string, autocomplete?:bool, readonly?:bool, writeonly?:bool, annotations?:array}>
      * @since 1.0.0
      */
-    protected static array $columns = [
+    public const COLUMNS = [
         'clientmgmt_attr_type_l11n_id'        => ['name' => 'clientmgmt_attr_type_l11n_id',       'type' => 'int',    'internal' => 'id'],
         'clientmgmt_attr_type_l11n_title'     => ['name' => 'clientmgmt_attr_type_l11n_title',    'type' => 'string', 'internal' => 'title', 'autocomplete' => true],
         'clientmgmt_attr_type_l11n_type'      => ['name' => 'clientmgmt_attr_type_l11n_type',      'type' => 'int',    'internal' => 'type'],
@@ -45,7 +45,7 @@ final class ClientAttributeTypeL11nMapper extends DataMapperAbstract
      * @var string
      * @since 1.0.0
      */
-    protected static string $table = 'clientmgmt_attr_type_l11n';
+    public const TABLE = 'clientmgmt_attr_type_l11n';
 
     /**
      * Primary field name.
@@ -53,5 +53,5 @@ final class ClientAttributeTypeL11nMapper extends DataMapperAbstract
      * @var string
      * @since 1.0.0
      */
-    protected static string $primaryField = 'clientmgmt_attr_type_l11n_id';
+    public const PRIMARYFIELD ='clientmgmt_attr_type_l11n_id';
 }

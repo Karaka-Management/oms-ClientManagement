@@ -20,6 +20,7 @@ use Modules\ClientManagement\Models\ClientMapper;
 use Modules\Media\Models\Media;
 use phpOMS\Asset\AssetType;
 use phpOMS\Contract\RenderableInterface;
+use phpOMS\DataStorage\Database\Query\OrderType;
 use phpOMS\Localization\ISO3166CharEnum;
 use phpOMS\Localization\ISO3166NameEnum;
 use phpOMS\Localization\Money;
@@ -57,10 +58,13 @@ final class BackendController extends Controller
         $view->setTemplate('/Modules/ClientManagement/Theme/Backend/client-list');
         $view->addData('nav', $this->app->moduleManager->get('Navigation')->createNavigationMid(1003102001, $request, $response));
 
-        $client = ClientMapper::with('notes', models: null)
-            ::with('contactElements', models: null)
-            //::with('type', 'backend_image', models: [Media::class]) // @todo: it would be nicer if I coult say files:type or files/type and remove the models parameter? @todo: uncommented for now because the type is also part of client and therefore bug. that's the problem with a mix of black/whitelisting in the datamapper with the "with" feature. make it whitelist only for belongsTo, ownsMany, hasOne, ....
-            ::getAfterPivot(0, null, 25);
+        $client = ClientMapper::getAll()
+            ->with('profile')
+            ->with('profile/account')
+            ->with('profile/image')
+            ->with('mainAddress')
+            ->limit(25)
+            ->execute();
 
         $view->addData('client', $client);
 
@@ -111,10 +115,15 @@ final class BackendController extends Controller
         $view->setTemplate('/Modules/ClientManagement/Theme/Backend/client-profile');
         $view->addData('nav', $this->app->moduleManager->get('Navigation')->createNavigationMid(1003102001, $request, $response));
 
-        $client = ClientMapper
-            ::with('files', limit: 5)::orderBy('createdAt', 'ASC')
-            ::with('notes', limit: 5)::orderBy('id', 'ASC')
-            ::get((int) $request->getData('id'));
+        $client = ClientMapper::get()
+            ->with('profile')
+            ->with('profile/account')
+            ->with('contactElements')
+            ->with('mainAddress')
+            ->with('files')->limit(5, 'files')->sort('files', OrderType::DESC)
+            ->with('notes')->limit(5, 'files')->sort('notes', OrderType::DESC)
+            ->where('id', (int) $request->getData('id'))
+            ->execute();
 
         $view->setData('client', $client);
 
@@ -123,9 +132,7 @@ final class BackendController extends Controller
             $ytd               = SalesBillMapper::getSalesByClientId($client->getId(), new SmartDateTime('Y-01-01'), new SmartDateTime('now'));
             $mtd               = SalesBillMapper::getSalesByClientId($client->getId(), new SmartDateTime('Y-m-01'), new SmartDateTime('now'));
             $lastOrder         = SalesBillMapper::getLastOrderDateByClientId($client->getId());
-            $newestInvoices    = SalesBillMapper
-                ::with('language', $response->getLanguage(), [BillTypeL11n::class])
-                ::getNewestClientInvoices($client->getId(), 5);
+            $newestInvoices    = SalesBillMapper::getAll()->with('client')->where('client', $client->getId())->sort('id', OrderType::DESC)->limit(5)->execute();
             $monthlySalesCosts = SalesBillMapper::getClientMonthlySalesCosts($client->getId(), (new SmartDateTime('now'))->createModify(-1), new SmartDateTime('now'));
             $items             = SalesBillMapper::getClientItem($client->getId(), (new SmartDateTime('now'))->createModify(-1), new SmartDateTime('now'));
         } else {

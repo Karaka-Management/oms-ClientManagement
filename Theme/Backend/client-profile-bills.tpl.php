@@ -162,7 +162,9 @@ $bills = $this->getData('newestInvoices') ?? [];
                             <i class="filter fa fa-filter"></i>
                         </label>
                 <tbody>
-                <?php $count = 0; foreach ($bills as $key => $value) :
+                <?php $count = 0;
+                    /** @var \Modules\Billing\Models\Bill $value */
+                foreach ($bills as $key => $value) :
                     ++$count;
                     $url = UriFactory::build('{/prefix}sales/bill?{?}&id=' . $value->getId());
                 ?>
@@ -179,8 +181,8 @@ $bills = $this->getData('newestInvoices') ?? [];
                         <td><a href="<?= $url; ?>"><?= $value->billZip; ?></a>
                         <td><a href="<?= $url; ?>"><?= $value->billCity; ?></a>
                         <td><a href="<?= $url; ?>"><?= $value->billCountry; ?></a>
-                        <td><a href="<?= $url; ?>"><?= $value->net->getCurrency(); ?></a>
-                        <td><a href="<?= $url; ?>"><?= $value->profit->getCurrency(); ?></a>
+                        <td><a href="<?= $url; ?>"><?= $value->netSales->getCurrency(); ?></a>
+                        <td><a href="<?= $url; ?>"><?= $value->netProfit->getCurrency(); ?></a>
                         <td><a href="<?= $url; ?>"><?= $value->createdAt->format('Y-m-d'); ?></a>
                 <?php endforeach; ?>
                 <?php if ($count === 0) : ?>

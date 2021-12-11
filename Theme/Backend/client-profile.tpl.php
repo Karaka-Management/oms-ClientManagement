@@ -262,14 +262,16 @@ echo $this->getData('nav')->render();
                                         <td><?= $this->getHtml('Net'); ?>
                                         <td><?= $this->getHtml('Date'); ?>
                                     <tbody>
-                                    <?php foreach ($newestInvoices as $invoice) :
+                                    <?php
+                                    /** @var \Modules\Billing\Models\Bill $invoice */
+                                    foreach ($newestInvoices as $invoice) :
                                         $url = UriFactory::build('{/prefix}sales/bill?{?}&id=' . $invoice->getId());
                                         ?>
                                     <tr data-href="<?= $url; ?>">
                                         <td><a href="<?= $url; ?>"><?= $invoice->getNumber(); ?></a>
                                         <td><a href="<?= $url; ?>"><?= $invoice->type->getL11n(); ?></a>
                                         <td><a href="<?= $url; ?>"><?= $invoice->billTo; ?></a>
-                                        <td><a href="<?= $url; ?>"><?= $invoice->net->getCurrency(); ?></a>
+                                        <td><a href="<?= $url; ?>"><?= $invoice->netSales->getCurrency(); ?></a>
                                         <td><a href="<?= $url; ?>"><?= $invoice->createdAt->format('Y-m-d'); ?></a>
                                     <?php endforeach; ?>
                                 </table>
