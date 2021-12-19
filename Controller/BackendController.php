@@ -14,10 +14,8 @@ declare(strict_types=1);
 
 namespace Modules\ClientManagement\Controller;
 
-use Modules\Billing\Models\BillTypeL11n;
 use Modules\Billing\Models\SalesBillMapper;
 use Modules\ClientManagement\Models\ClientMapper;
-use Modules\Media\Models\Media;
 use phpOMS\Asset\AssetType;
 use phpOMS\Contract\RenderableInterface;
 use phpOMS\DataStorage\Database\Query\OrderType;
@@ -120,8 +118,8 @@ final class BackendController extends Controller
             ->with('profile/account')
             ->with('contactElements')
             ->with('mainAddress')
-            ->with('files')->limit(5, 'files')->sort('files', OrderType::DESC)
-            ->with('notes')->limit(5, 'files')->sort('notes', OrderType::DESC)
+            ->with('files')->limit(5, 'files')->sort('files/id', OrderType::DESC)
+            ->with('notes')->limit(5, 'files')->sort('notes/id', OrderType::DESC)
             ->where('id', (int) $request->getData('id'))
             ->execute();
 
@@ -129,10 +127,19 @@ final class BackendController extends Controller
 
         // stats
         if ($this->app->moduleManager->isActive('Billing')) {
-            $ytd               = SalesBillMapper::getSalesByClientId($client->getId(), new SmartDateTime('Y-01-01'), new SmartDateTime('now'));
-            $mtd               = SalesBillMapper::getSalesByClientId($client->getId(), new SmartDateTime('Y-m-01'), new SmartDateTime('now'));
-            $lastOrder         = SalesBillMapper::getLastOrderDateByClientId($client->getId());
-            $newestInvoices    = SalesBillMapper::getAll()->with('client')->where('client', $client->getId())->sort('id', OrderType::DESC)->limit(5)->execute();
+            $ytd            = SalesBillMapper::getSalesByClientId($client->getId(), new SmartDateTime('Y-01-01'), new SmartDateTime('now'));
+            $mtd            = SalesBillMapper::getSalesByClientId($client->getId(), new SmartDateTime('Y-m-01'), new SmartDateTime('now'));
+            $lastOrder      = SalesBillMapper::getLastOrderDateByClientId($client->getId());
+            $newestInvoices = SalesBillMapper::getAll()
+                ->with('type')
+                ->with('type/l11n')
+                ->with('client')
+                ->where('client', $client->getId())
+                ->where('type/l11n/language', $response->getLanguage())
+                ->sort('id', OrderType::DESC)
+                ->limit(5)
+                ->execute();
+
             $monthlySalesCosts = SalesBillMapper::getClientMonthlySalesCosts($client->getId(), (new SmartDateTime('now'))->createModify(-1), new SmartDateTime('now'));
             $items             = SalesBillMapper::getClientItem($client->getId(), (new SmartDateTime('now'))->createModify(-1), new SmartDateTime('now'));
         } else {
