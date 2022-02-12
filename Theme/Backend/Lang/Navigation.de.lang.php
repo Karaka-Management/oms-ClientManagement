@@ -4,7 +4,7 @@
  *
  * PHP Version 8.0
  *
- * @package   Modules\ClientManagement
+ * @package   Modules\Localization
  * @copyright Dennis Eichhorn
  * @license   OMS License 1.0
  * @version   1.0.0
@@ -13,4 +13,7 @@
 declare(strict_types=1);
 
 return ['Navigation' => [
+    'Client'   => 'Klient',
+    'Region'   => 'Region',
+    'SalesRep' => 'VerkäufeRep',
 ]];
