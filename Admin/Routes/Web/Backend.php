@@ -13,7 +13,7 @@
 declare(strict_types=1);
 
 use Modules\ClientManagement\Controller\BackendController;
-use Modules\ClientManagement\Models\PermissionState;
+use Modules\ClientManagement\Models\PermissionCategory;
 use phpOMS\Account\PermissionType;
 use phpOMS\Router\RouteVerb;
 
@@ -25,7 +25,7 @@ return [
             'permission' => [
                 'module' => BackendController::NAME,
                 'type'   => PermissionType::READ,
-                'state'  => PermissionState::CLIENT,
+                'state'  => PermissionCategory::CLIENT,
             ],
         ],
     ],
@@ -36,7 +36,7 @@ return [
             'permission' => [
                 'module' => BackendController::NAME,
                 'type'   => PermissionType::CREATE,
-                'state'  => PermissionState::CLIENT,
+                'state'  => PermissionCategory::CLIENT,
             ],
         ],
     ],
@@ -47,7 +47,7 @@ return [
             'permission' => [
                 'module' => BackendController::NAME,
                 'type'   => PermissionType::READ,
-                'state'  => PermissionState::CLIENT,
+                'state'  => PermissionCategory::CLIENT,
             ],
         ],
     ],
@@ -58,7 +58,7 @@ return [
             'permission' => [
                 'module' => BackendController::NAME,
                 'type'   => PermissionType::READ,
-                'state'  => PermissionState::ANALYSIS,
+                'state'  => PermissionCategory::ANALYSIS,
             ],
         ],
     ],
@@ -69,7 +69,7 @@ return [
             'permission' => [
                 'module' => BackendController::NAME,
                 'type'   => PermissionType::READ,
-                'state'  => PermissionState::ANALYSIS,
+                'state'  => PermissionCategory::ANALYSIS,
             ],
         ],
     ],
