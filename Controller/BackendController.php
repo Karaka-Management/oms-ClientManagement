@@ -119,7 +119,7 @@ final class BackendController extends Controller
             ->with('contactElements')
             ->with('mainAddress')
             ->with('files')->limit(5, 'files')->sort('files/id', OrderType::DESC)
-            ->with('notes')->limit(5, 'files')->sort('notes/id', OrderType::DESC)
+            ->with('notes')->limit(5, 'notes')->sort('notes/id', OrderType::DESC)
             ->where('id', (int) $request->getData('id'))
             ->execute();
 
