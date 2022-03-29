@@ -209,6 +209,7 @@ echo $this->getData('nav')->render();
                         <div class="col-xs-12 col-md-6">
                             <section class="portlet">
                                 <div class="portlet-head"><?= $this->getHtml('Notes'); ?></div>
+                                <div class="slider">
                                 <table id="iNotesItemList" class="default">
                                     <thead>
                                     <tr>
@@ -223,12 +224,14 @@ echo $this->getData('nav')->render();
                                         <td><a href="<?= $url; ?>"><?= $note->createdAt->format('Y-m-d'); ?></a>
                                     <?php endforeach; ?>
                                 </table>
+                                </div>
                             </section>
                         </div>
 
                         <div class="col-xs-12 col-md-6">
                             <section class="portlet">
                                 <div class="portlet-head"><?= $this->getHtml('Documents'); ?></div>
+                                <div class="slider">
                                 <table id="iFilesClientList" class="default">
                                     <thead>
                                     <tr>
@@ -245,6 +248,7 @@ echo $this->getData('nav')->render();
                                         <td><a href="<?= $url; ?>"><?= $file->createdAt->format('Y-m-d'); ?></a>
                                     <?php endforeach; ?>
                                 </table>
+                                </div>
                             </section>
                         </div>
                     </div>
