@@ -26,8 +26,8 @@ $items = $this->getData('items') ?? [];
             <table id="iSalesItemList" class="default">
                 <thead>
                 <tr>
-                    <td><label class="checkbox" for="iSalesItemSelect-0">
-                            <input type="checkbox" id="iSalesItemSelect-0" name="itemselect">
+                    <td><label class="checkbox" for="iSalesItemSelect-">
+                            <input type="checkbox" id="iSalesItemSelect-" name="itemselect">
                             <span class="checkmark"></span>
                         </label>
                     <td><?= $this->getHtml('ID', '0', '0'); ?>
