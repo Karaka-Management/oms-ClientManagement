@@ -59,7 +59,7 @@ final class ClientAttributeTypeMapper extends DataMapperFactory
             'mapper'            => ClientAttributeValueMapper::class,
             'table'             => 'clientmgmt_client_attr_default',
             'self'              => 'clientmgmt_client_attr_default_type',
-            'external'          => 'clientmgmt_client_attr_default_value'
+            'external'          => 'clientmgmt_client_attr_default_value',
         ],
     ];
 

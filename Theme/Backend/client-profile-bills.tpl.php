@@ -163,7 +163,7 @@ $bills = $this->getData('newestInvoices') ?? [];
                         </label>
                 <tbody>
                 <?php $count = 0;
-                    /** @var \Modules\Billing\Models\Bill $value */
+                /** @var \Modules\Billing\Models\Bill $value */
                 foreach ($bills as $key => $value) :
                     ++$count;
                     $url = UriFactory::build('{/prefix}sales/bill?{?}&id=' . $value->getId());
