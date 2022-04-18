@@ -496,9 +496,7 @@ final class ApiController extends Controller
             __DIR__ . '/../../../Modules/Media/Files/Modules/ClientManagement/' . ($request->getData('client') ?? '0'),
             '/Modules/ClientManagement/' . ($request->getData('client') ?? '0'),
             $request->getData('type', 'int'),
-            '',
-            '',
-            PathSettings::FILE_PATH
+            pathSettings: PathSettings::FILE_PATH
         );
 
         $this->createModelRelation(
