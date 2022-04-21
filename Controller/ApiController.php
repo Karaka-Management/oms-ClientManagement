@@ -62,7 +62,7 @@ final class ApiController extends Controller
      *
      * @since 1.0.0
      */
-    public function apiClientCreate(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
+    public function apiClientCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
     {
         if (!empty($val = $this->validateClientCreate($request))) {
             $response->set('client_create', new FormValidation($val));
@@ -142,7 +142,7 @@ final class ApiController extends Controller
      *
      * @since 1.0.0
      */
-    public function apiContactElementCreate(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
+    public function apiContactElementCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
     {
         $profileModule = $this->app->moduleManager->get('Profile');
 
@@ -178,7 +178,7 @@ final class ApiController extends Controller
      *
      * @since 1.0.0
      */
-    public function apiClientAttributeCreate(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
+    public function apiClientAttributeCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
     {
         if (!empty($val = $this->validateClientAttributeCreate($request))) {
             $response->set('attribute_create', new FormValidation($val));
@@ -246,7 +246,7 @@ final class ApiController extends Controller
      *
      * @since 1.0.0
      */
-    public function apiClientAttributeTypeL11nCreate(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
+    public function apiClientAttributeTypeL11nCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
     {
         if (!empty($val = $this->validateClientAttributeTypeL11nCreate($request))) {
             $response->set('attr_type_l11n_create', new FormValidation($val));
@@ -315,7 +315,7 @@ final class ApiController extends Controller
      *
      * @since 1.0.0
      */
-    public function apiClientAttributeTypeCreate(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
+    public function apiClientAttributeTypeCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
     {
         if (!empty($val = $this->validateClientAttributeTypeCreate($request))) {
             $response->set('attr_type_create', new FormValidation($val));
@@ -381,7 +381,7 @@ final class ApiController extends Controller
      *
      * @since 1.0.0
      */
-    public function apiClientAttributeValueCreate(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
+    public function apiClientAttributeValueCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
     {
         if (!empty($val = $this->validateClientAttributeValueCreate($request))) {
             $response->set('attr_value_create', new FormValidation($val));
@@ -477,7 +477,7 @@ final class ApiController extends Controller
      *
      * @since 1.0.0
      */
-    public function apiFileCreate(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
+    public function apiFileCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
     {
         $uploadedFiles = $request->getFiles();
 
@@ -522,7 +522,7 @@ final class ApiController extends Controller
      *
      * @since 1.0.0
      */
-    public function apiNoteCreate(RequestAbstract $request, ResponseAbstract $response, $data = null) : void
+    public function apiNoteCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
     {
         $request->setData('virtualpath', '/Modules/ClientManagement/' . $request->getData('id'), true);
         $this->app->moduleManager->get('Editor')->apiEditorCreate($request, $response, $data);
