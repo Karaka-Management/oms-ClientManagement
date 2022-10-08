@@ -73,7 +73,7 @@ echo $this->getData('nav')->render();
                                 </table>
                             </div>
                             <div class="portlet-foot">
-                                <input type="submit" value="<?= $this->getHtml('Save', '0', '0'); ?>"> <input type="submit" value="<?= $this->getHtml('Delete', '0', '0'); ?>">
+                                <input type="submit" value="<?= $this->getHtml('Save', '0', '0'); ?>" name="save-client-profile"> <input type="submit" value="<?= $this->getHtml('Delete', '0', '0'); ?>" name="delete-client-profile">
                             </div>
                         </form>
                     </section>
@@ -132,14 +132,14 @@ echo $this->getData('nav')->render();
                                 <tr><td><label for="iName1"><?= $this->getHtml('City'); ?></label>
                                 <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->mainAddress->city); ?>" required>
                                 <tr><td><label for="iName1"><?= $this->getHtml('Country'); ?></label>
-                                <tr><td><select>
+                                <tr><td><select name="country">
                                     <?php foreach ($countryCodes as $code3 => $code2) : ?>
                                         <option value="<?= $this->printHtml($code2); ?>"<?= $this->printHtml($code2 === $client->mainAddress->getCountry() ? ' selected' : ''); ?>><?= $this->printHtml($countries[$code3]); ?>
                                     <?php endforeach; ?>
                                 </select>
                                 <tr><td>
                                     <?php if (\is_file(__DIR__ . '/../../../../phpOMS/Localization/Maps/svg/' . \strtolower($client->mainAddress->getCountry()) . '.svg')) : ?>
-                                    <img id="iMap" style="width: 100%;" src="<?= UriFactory::build('phpOMS/Localization/Maps/svg/' . \strtolower($client->mainAddress->getCountry()) . '.svg'); ?>">
+                                    <img alt="<?= $this->getHtml('IMG_alt_map'); ?>" id="iMap" style="width: 100%;" src="<?= UriFactory::build('phpOMS/Localization/Maps/svg/' . \strtolower($client->mainAddress->getCountry()) . '.svg'); ?>">
                                     <?php endif; ?>
                             </table>
                         </div>

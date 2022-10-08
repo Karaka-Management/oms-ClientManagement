@@ -49,7 +49,7 @@ echo $this->getData('nav')->render(); ?>
                                     <tr><td><input type="text" id="iName2" name="name2" placeholder="&#xf040;">
                                     <tr><td><label for="iName3"><?= $this->getHtml('Name3'); ?></label>
                                     <tr><td><input type="text" id="iName3" name="name3" placeholder="&#xf040;">
-                                    <tr><td colspan="2"><input type="submit" value="<?= $this->getHtml('Create', '0', '0'); ?>">
+                                    <tr><td colspan="2"><input type="submit" value="<?= $this->getHtml('Create', '0', '0'); ?>" name="create-client">
                                 </table>
                             </form>
                         </div>

@@ -107,7 +107,7 @@ echo $this->getData('nav')->render(); ?>
                  $image      = $value->getFileByType(0);
                  ?>
                 <tr data-href="<?= $url; ?>">
-                    <td><a href="<?= $url; ?>"><img width="30" loading="lazy" class="item-image"
+                    <td><a href="<?= $url; ?>"><img alt="<?= $this->getHtml('IMG_alt_client'); ?>" width="30" loading="lazy" class="item-image"
                             src="<?= $image instanceof NullMedia ?
                                         UriFactory::build('Web/Backend/img/user_default_' . \mt_rand(1, 6) .'.png') :
                                         UriFactory::build('{/prefix}' . $image->getPath()); ?>"></a>

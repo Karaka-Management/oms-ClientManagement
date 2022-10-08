@@ -123,4 +123,5 @@ return ['ClientManagement' => [
     'Wire'           => 'Wire',
     'YTDSales'       => 'YTD Sales',
     'Zip'            => 'Zip',
+    'IMG_alt_map'            => 'Map',
 ]];
