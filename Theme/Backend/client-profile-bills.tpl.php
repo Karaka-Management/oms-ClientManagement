@@ -166,7 +166,7 @@ $bills = $this->getData('newestInvoices') ?? [];
                 /** @var \Modules\Billing\Models\Bill $value */
                 foreach ($bills as $key => $value) :
                     ++$count;
-                    $url = UriFactory::build('{/prefix}sales/bill?{?}&id=' . $value->getId());
+                    $url = UriFactory::build('sales/bill?{?}&id=' . $value->getId());
                 ?>
                     <tr data-href="<?= $url; ?>">
                         <td><label class="checkbox" for="iBillSelect-<?= $key; ?>">
