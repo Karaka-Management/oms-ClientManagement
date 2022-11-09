@@ -35,4 +35,12 @@ final class NullClientAttributeValue extends ClientAttributeValue
     {
         $this->id = $id;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function jsonSerialize() : mixed
+    {
+        return ['id' => $this->id];
+    }
 }
