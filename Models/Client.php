@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace Modules\ClientManagement\Models;
 
+use Modules\Admin\Models\Account;
 use Modules\Admin\Models\Address;
 use Modules\Admin\Models\NullAddress;
 use Modules\Editor\Models\EditorDoc;
@@ -22,7 +23,6 @@ use Modules\Media\Models\NullMedia;
 use Modules\Profile\Models\ContactElement;
 use Modules\Profile\Models\NullContactElement;
 use Modules\Profile\Models\Profile;
-use Modules\Admin\Models\Account;
 
 /**
  * Client class.
