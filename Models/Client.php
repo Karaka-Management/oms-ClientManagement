@@ -22,9 +22,10 @@ use Modules\Media\Models\NullMedia;
 use Modules\Profile\Models\ContactElement;
 use Modules\Profile\Models\NullContactElement;
 use Modules\Profile\Models\Profile;
+use Modules\Admin\Models\Account;
 
 /**
- * Account class.
+ * Client class.
  *
  * @package Modules\ClientManagement\Models
  * @license OMS License 1.0
@@ -43,8 +44,6 @@ class Client
 
     private int $type = 0;
 
-    private array $ids = [];
-
     public string $info = '';
 
     public \DateTimeImmutable $createdAt;
@@ -54,7 +53,7 @@ class Client
     /**
      * Attributes.
      *
-     * @var int[]|ClientAttribute[]
+     * @var ClientAttribute[]
      * @since 1.0.0
      */
     private array $attributes = [];
@@ -77,9 +76,9 @@ class Client
 
     private array $partners = [];
 
-    private ?Profile $salesRep = null;
+    public ?Profile $salesRep = null;
 
-    private int $advertisementMaterial = 0;
+    public int $advertisementMaterial = 0;
 
     public ?Address $defaultDeliveryAddress = null;
 
@@ -223,6 +222,58 @@ class Client
     public function getAddresses() : array
     {
         return $this->address;
+    }
+
+    /**
+     * Add partner
+     *
+     * @param Account $partner Partner
+     *
+     * @return void
+     *
+     * @since 1.0.0
+     */
+    public function addPartner(Account $partner) : void
+    {
+        $this->partners[] = $partner;
+    }
+
+    /**
+     * Get partners
+     *
+     * @return Account[]
+     *
+     * @since 1.0.0
+     */
+    public function getPartners() : array
+    {
+        return $this->partners;
+    }
+
+    /**
+     * Add attribute to client
+     *
+     * @param ClientAttribute $attribute Attribute
+     *
+     * @return void
+     *
+     * @since 1.0.0
+     */
+    public function addAttribute(ClientAttribute $attribute) : void
+    {
+        $this->attributes[] = $attribute;
+    }
+
+    /**
+     * Get attributes
+     *
+     * @return ClientAttribute[]
+     *
+     * @since 1.0.0
+     */
+    public function getAttributes() : array
+    {
+        return $this->attributes;
     }
 
     /**
