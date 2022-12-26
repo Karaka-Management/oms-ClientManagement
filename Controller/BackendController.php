@@ -114,6 +114,7 @@ final class BackendController extends Controller
         $view->setTemplate('/Modules/ClientManagement/Theme/Backend/client-profile');
         $view->addData('nav', $this->app->moduleManager->get('Navigation')->createNavigationMid(1003102001, $request, $response));
 
+        /** @var \Modules\ClientManagement\Models\Client $client */
         $client = ClientMapper::get()
             ->with('profile')
             ->with('profile/account')
