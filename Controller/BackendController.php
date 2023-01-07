@@ -60,9 +60,12 @@ final class BackendController extends Controller
         $client = ClientMapper::getAll()
             ->with('profile')
             ->with('profile/account')
-            ->with('profile/image')
+            ->with('files')
+            ->with('files/type')
             ->with('mainAddress')
+            ->where('files/type/name', 'client_profile_image')
             ->limit(25)
+            ->limit(1, 'files/type')
             ->execute();
 
         $view->addData('client', $client);

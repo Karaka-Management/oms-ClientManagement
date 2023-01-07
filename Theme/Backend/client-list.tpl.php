@@ -104,7 +104,7 @@ echo $this->getData('nav')->render(); ?>
                 <tbody>
                 <?php $count = 0; foreach ($clients as $key => $value) : ++$count;
                  $url        = UriFactory::build('{/lang}/{/app}/sales/client/profile?{?}&id=' . $value->getId());
-                 $image      = $value->getFileByType(0);
+                 $image      = $value->getFileByTypeName('client_profile_image');
                  ?>
                 <tr data-href="<?= $url; ?>">
                     <td><a href="<?= $url; ?>"><img alt="<?= $this->getHtml('IMG_alt_client'); ?>" width="30" loading="lazy" class="item-image"

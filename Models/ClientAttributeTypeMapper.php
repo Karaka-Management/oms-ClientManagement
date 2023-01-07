@@ -35,6 +35,7 @@ final class ClientAttributeTypeMapper extends DataMapperFactory
     public const COLUMNS = [
         'clientmgmt_attr_type_id'       => ['name' => 'clientmgmt_attr_type_id',     'type' => 'int',    'internal' => 'id'],
         'clientmgmt_attr_type_name'     => ['name' => 'clientmgmt_attr_type_name',   'type' => 'string', 'internal' => 'name', 'autocomplete' => true],
+        'clientmgmt_attr_type_datatype'   => ['name' => 'clientmgmt_attr_type_datatype',   'type' => 'int',    'internal' => 'datatype'],
         'clientmgmt_attr_type_fields'   => ['name' => 'clientmgmt_attr_type_fields', 'type' => 'int',    'internal' => 'fields'],
         'clientmgmt_attr_type_custom'   => ['name' => 'clientmgmt_attr_type_custom', 'type' => 'bool', 'internal' => 'custom'],
         'clientmgmt_attr_type_pattern'  => ['name' => 'clientmgmt_attr_type_pattern', 'type' => 'string', 'internal' => 'validationPattern'],

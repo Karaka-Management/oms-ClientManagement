@@ -35,13 +35,25 @@ final class ClientAttributeValueMapper extends DataMapperFactory
     public const COLUMNS = [
         'clientmgmt_attr_value_id'       => ['name' => 'clientmgmt_attr_value_id',       'type' => 'int',    'internal' => 'id'],
         'clientmgmt_attr_value_default'  => ['name' => 'clientmgmt_attr_value_default',  'type' => 'bool', 'internal' => 'isDefault'],
-        'clientmgmt_attr_value_type'     => ['name' => 'clientmgmt_attr_value_type',     'type' => 'int',    'internal' => 'type'],
         'clientmgmt_attr_value_valueStr' => ['name' => 'clientmgmt_attr_value_valueStr', 'type' => 'string', 'internal' => 'valueStr'],
         'clientmgmt_attr_value_valueInt' => ['name' => 'clientmgmt_attr_value_valueInt', 'type' => 'int', 'internal' => 'valueInt'],
         'clientmgmt_attr_value_valueDec' => ['name' => 'clientmgmt_attr_value_valueDec', 'type' => 'float', 'internal' => 'valueDec'],
         'clientmgmt_attr_value_valueDat' => ['name' => 'clientmgmt_attr_value_valueDat', 'type' => 'DateTime', 'internal' => 'valueDat'],
-        'clientmgmt_attr_value_lang'     => ['name' => 'clientmgmt_attr_value_lang',     'type' => 'string', 'internal' => 'language'],
-        'clientmgmt_attr_value_country'  => ['name' => 'clientmgmt_attr_value_country',  'type' => 'string', 'internal' => 'country'],
+    ];
+
+    /**
+     * Has many relation.
+     *
+     * @var array<string, array{mapper:string, table:string, self?:?string, external?:?string, column?:string}>
+     * @since 1.0.0
+     */
+    public const HAS_MANY = [
+        'l11n' => [
+            'mapper'   => ClientAttributeValueL11nMapper::class,
+            'table'    => 'clientmgmt_attr_value_l11n',
+            'self'     => 'clientmgmt_attr_value_l11n_value',
+            'external' => null,
+        ],
     ];
 
     /**

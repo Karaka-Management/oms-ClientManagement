@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace Modules\ClientManagement\Models;
 
 use phpOMS\Localization\ISO639x1Enum;
+use phpOMS\Localization\BaseStringL11n;
 
 /**
  * Client Attribute Type class.
@@ -64,11 +65,19 @@ class ClientAttributeType implements \JsonSerializable
     public bool $isRequired = false;
 
     /**
+     * Datatype of the attribute
+     *
+     * @var int
+     * @since 1.0.0
+     */
+    public int $datatype = AttributeValueType::_STRING;
+
+    /**
      * Localization
      *
-     * @var string | ClientAttributeTypeL11n
+     * @var string | BaseStringL11n
      */
-    protected string | ClientAttributeTypeL11n $l11n;
+    protected string | BaseStringL11n $l11n;
 
     /**
      * Possible default attribute values
@@ -86,7 +95,7 @@ class ClientAttributeType implements \JsonSerializable
      */
     public function __construct(string $name = '')
     {
-        $this->setL11n($name);
+        $this->name = $name;
     }
 
     /**
@@ -104,22 +113,22 @@ class ClientAttributeType implements \JsonSerializable
     /**
      * Set l11n
      *
-     * @param string|ClientAttributeTypeL11n $l11n Tag article l11n
+     * @param string|BaseStringL11n $l11n Tag article l11n
      * @param string                         $lang Language
      *
      * @return void
      *
      * @since 1.0.0
      */
-    public function setL11n(string | ClientAttributeTypeL11n $l11n, string $lang = ISO639x1Enum::_EN) : void
+    public function setL11n(string | BaseStringL11n $l11n, string $lang = ISO639x1Enum::_EN) : void
     {
-        if ($l11n instanceof ClientAttributeTypeL11n) {
+        if ($l11n instanceof BaseStringL11n) {
             $this->l11n = $l11n;
-        } elseif (isset($this->l11n) && $this->l11n instanceof ClientAttributeTypeL11n) {
-            $this->l11n->title = $l11n;
+        } elseif (isset($this->l11n) && $this->l11n instanceof BaseStringL11n) {
+            $this->l11n->content = $l11n;
         } else {
-            $this->l11n        = new ClientAttributeTypeL11n();
-            $this->l11n->title = $l11n;
+            $this->l11n        = new BaseStringL11n();
+            $this->l11n->content = $l11n;
             $this->l11n->setLanguage($lang);
         }
     }
@@ -131,7 +140,33 @@ class ClientAttributeType implements \JsonSerializable
      */
     public function getL11n() : string
     {
-        return $this->l11n instanceof ClientAttributeTypeL11n ? $this->l11n->title : $this->l11n;
+        return $this->l11n instanceof BaseStringL11n ? $this->l11n->content : $this->l11n;
+    }
+
+    /**
+     * Set fields
+     *
+     * @param int $fields Fields
+     *
+     * @return void
+     *
+     * @since 1.0.0
+     */
+    public function setFields(int $fields) : void
+    {
+        $this->fields = $fields;
+    }
+
+    /**
+     * Get default values
+     *
+     * @return array
+     *
+     * @sicne 1.0.0
+     */
+    public function getDefaults() : array
+    {
+        return $this->defaults;
     }
 
     /**

@@ -71,7 +71,6 @@ trait ApiControllerAttributeTrait
         $request->header->account = 1;
         $request->setData('default', '1');
         $request->setData('attributetype', '1');
-        $request->setData('type', AttributeValueType::_INT);
         $request->setData('value', '1');
         $request->setData('language', ISO639x1Enum::_DE);
         $request->setData('country', ISO3166TwoEnum::_DEU);
@@ -90,8 +89,8 @@ trait ApiControllerAttributeTrait
         $request  = new HttpRequest(new HttpUri(''));
 
         $request->header->account = 1;
-        $request->setData('type', AttributeValueType::_STRING);
         $request->setData('value', '1');
+        $request->setData('attributetype', '1');
         $request->setData('language', ISO639x1Enum::_DE);
         $request->setData('country', ISO3166TwoEnum::_DEU);
 
@@ -109,8 +108,8 @@ trait ApiControllerAttributeTrait
         $request  = new HttpRequest(new HttpUri(''));
 
         $request->header->account = 1;
-        $request->setData('type', AttributeValueType::_FLOAT);
         $request->setData('value', '1.1');
+        $request->setData('attributetype', '1');
         $request->setData('language', ISO639x1Enum::_DE);
         $request->setData('country', ISO3166TwoEnum::_DEU);
 
@@ -128,8 +127,8 @@ trait ApiControllerAttributeTrait
         $request  = new HttpRequest(new HttpUri(''));
 
         $request->header->account = 1;
-        $request->setData('type', AttributeValueType::_DATETIME);
         $request->setData('value', '2020-08-02');
+        $request->setData('attributetype', '1');
         $request->setData('language', ISO639x1Enum::_DE);
         $request->setData('country', ISO3166TwoEnum::_DEU);
 

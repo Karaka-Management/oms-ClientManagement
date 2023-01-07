@@ -25,7 +25,7 @@ use phpOMS\Localization\BaseStringL11n;
  * @link    https://jingga.app
  * @since   1.0.0
  */
-final class ClientAttributeTypeL11nMapper extends DataMapperFactory
+final class ClientAttributeValueL11nMapper extends DataMapperFactory
 {
     /**
      * Columns.
@@ -34,10 +34,10 @@ final class ClientAttributeTypeL11nMapper extends DataMapperFactory
      * @since 1.0.0
      */
     public const COLUMNS = [
-        'clientmgmt_attr_type_l11n_id'        => ['name' => 'clientmgmt_attr_type_l11n_id',       'type' => 'int',    'internal' => 'id'],
-        'clientmgmt_attr_type_l11n_title'     => ['name' => 'clientmgmt_attr_type_l11n_title',    'type' => 'string', 'internal' => 'content', 'autocomplete' => true],
-        'clientmgmt_attr_type_l11n_type'      => ['name' => 'clientmgmt_attr_type_l11n_type',      'type' => 'int',    'internal' => 'ref'],
-        'clientmgmt_attr_type_l11n_lang'      => ['name' => 'clientmgmt_attr_type_l11n_lang', 'type' => 'string', 'internal' => 'language'],
+        'clientmgmt_attr_value_l11n_id'     => ['name' => 'clientmgmt_attr_value_l11n_id',    'type' => 'int',    'internal' => 'id'],
+        'clientmgmt_attr_value_l11n_title'  => ['name' => 'clientmgmt_attr_value_l11n_title', 'type' => 'string', 'internal' => 'content', 'autocomplete' => true],
+        'clientmgmt_attr_value_l11n_value'  => ['name' => 'clientmgmt_attr_value_l11n_value',  'type' => 'int',    'internal' => 'ref'],
+        'clientmgmt_attr_value_l11n_lang'   => ['name' => 'clientmgmt_attr_value_l11n_lang',  'type' => 'string', 'internal' => 'language'],
     ];
 
     /**
@@ -46,7 +46,7 @@ final class ClientAttributeTypeL11nMapper extends DataMapperFactory
      * @var string
      * @since 1.0.0
      */
-    public const TABLE = 'clientmgmt_attr_type_l11n';
+    public const TABLE = 'clientmgmt_attr_value_l11n';
 
     /**
      * Primary field name.
@@ -54,7 +54,7 @@ final class ClientAttributeTypeL11nMapper extends DataMapperFactory
      * @var string
      * @since 1.0.0
      */
-    public const PRIMARYFIELD ='clientmgmt_attr_type_l11n_id';
+    public const PRIMARYFIELD ='clientmgmt_attr_value_l11n_id';
 
     /**
      * Model to use by the mapper.

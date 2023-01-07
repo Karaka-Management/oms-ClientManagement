@@ -16,12 +16,11 @@ namespace Modules\ClientManagement\Controller;
 
 use Modules\Admin\Models\Account;
 use Modules\Admin\Models\Address;
-use Modules\ClientManagement\Models\AttributeValueType;
 use Modules\ClientManagement\Models\Client;
 use Modules\ClientManagement\Models\ClientAttribute;
 use Modules\ClientManagement\Models\ClientAttributeMapper;
 use Modules\ClientManagement\Models\ClientAttributeType;
-use Modules\ClientManagement\Models\ClientAttributeTypeL11n;
+use phpOMS\Localization\BaseStringL11n;
 use Modules\ClientManagement\Models\ClientAttributeTypeL11nMapper;
 use Modules\ClientManagement\Models\ClientAttributeTypeMapper;
 use Modules\ClientManagement\Models\ClientAttributeValue;
@@ -104,6 +103,8 @@ final class ApiController extends Controller
         $addr->setCountry($request->getData('country') ?? '');
         $addr->state         = (string) ($request->getData('state') ?? '');
         $client->mainAddress = $addr;
+
+        $client->unit = $request->getData('unit', 'int');
 
         return $client;
     }
@@ -265,18 +266,18 @@ final class ApiController extends Controller
      *
      * @param RequestAbstract $request Request
      *
-     * @return ClientAttributeTypeL11n
+     * @return BaseStringL11n
      *
      * @since 1.0.0
      */
-    private function createClientAttributeTypeL11nFromRequest(RequestAbstract $request) : ClientAttributeTypeL11n
+    private function createClientAttributeTypeL11nFromRequest(RequestAbstract $request) : BaseStringL11n
     {
-        $attrL11n       = new ClientAttributeTypeL11n();
-        $attrL11n->type = (int) ($request->getData('type') ?? 0);
+        $attrL11n       = new BaseStringL11n();
+        $attrL11n->ref = (int) ($request->getData('type') ?? 0);
         $attrL11n->setLanguage((string) (
             $request->getData('language') ?? $request->getLanguage()
         ));
-        $attrL11n->title = (string) ($request->getData('title') ?? '');
+        $attrL11n->content = (string) ($request->getData('title') ?? '');
 
         return $attrL11n;
     }
@@ -341,10 +342,13 @@ final class ApiController extends Controller
      */
     private function createClientAttributeTypeFromRequest(RequestAbstract $request) : ClientAttributeType
     {
-        $attrType = new ClientAttributeType();
+        $attrType = new ClientAttributeType($request->getData('name') ?? '');
         $attrType->setL11n((string) ($request->getData('title') ?? ''), $request->getData('language') ?? ISO639x1Enum::_EN);
-        $attrType->fields = (int) ($request->getData('fields') ?? 0);
-        $attrType->custom = (bool) ($request->getData('custom') ?? false);
+        $attrType->datatype            = (int) ($request->getData('datatype') ?? 0);
+        $attrType->setFields((int) ($request->getData('fields') ?? 0));
+        $attrType->custom            = (bool) ($request->getData('custom') ?? false);
+        $attrType->isRequired        = (bool) ($request->getData('is_required') ?? false);
+        $attrType->validationPattern = (string) ($request->getData('validation_pattern') ?? '');
 
         return $attrType;
     }
@@ -361,7 +365,9 @@ final class ApiController extends Controller
     private function validateClientAttributeTypeCreate(RequestAbstract $request) : array
     {
         $val = [];
-        if (($val['title'] = empty($request->getData('title')))) {
+        if (($val['title'] = empty($request->getData('title')))
+            || ($val['name'] = empty($request->getData('name')))
+        ) {
             return $val;
         }
 
@@ -396,7 +402,7 @@ final class ApiController extends Controller
         if ($attrValue->isDefault) {
             $this->createModelRelation(
                 $request->header->account,
-                (int) $request->getData('attributetype'),
+                (int) $request->getData('type'),
                 $attrValue->getId(),
                 ClientAttributeTypeMapper::class, 'defaults', '', $request->getOrigin()
             );
@@ -416,28 +422,16 @@ final class ApiController extends Controller
      */
     private function createClientAttributeValueFromRequest(RequestAbstract $request) : ClientAttributeValue
     {
+        $type = ClientAttributeTypeMapper::get()
+            ->where('id', (int) ($request->getData('type') ?? 0))
+            ->execute();
+
         $attrValue = new ClientAttributeValue();
-
-        $type = (int) ($request->getData('type') ?? 0);
-        if ($type === AttributeValueType::_INT) {
-            $attrValue->valueInt = $request->hasData('value') ? (int) $request->getData('value') : null;
-        } elseif ($type === AttributeValueType::_STRING) {
-            $attrValue->valueStr = $request->hasData('value') ? (string) $request->getData('value') : null;
-        } elseif ($type === AttributeValueType::_FLOAT) {
-            $attrValue->valueDec = $request->hasData('value') ? (float) $request->getData('value') : null;
-        } elseif ($type === AttributeValueType::_DATETIME) {
-            $attrValue->valueDat = $request->hasData('value') ? new \DateTime((string) ($request->getData('value') ?? '')) : null;
-        }
-
-        $attrValue->type      = $type;
         $attrValue->isDefault = (bool) ($request->getData('default') ?? false);
+        $attrValue->setValue($request->getData('value'), $type->datatype);
 
-        if ($request->hasData('language')) {
-            $attrValue->setLanguage((string) ($request->getData('language') ?? $request->getLanguage()));
-        }
-
-        if ($request->hasData('country')) {
-            $attrValue->setCountry((string) ($request->getData('country') ?? $request->header->l11n->getCountry()));
+        if ($request->getData('title') !== null) {
+            $attrValue->setL11n($request->getData('title'), $request->getData('language') ?? ISO639x1Enum::_EN);
         }
 
         return $attrValue;
@@ -456,6 +450,75 @@ final class ApiController extends Controller
     {
         $val = [];
         if (($val['type'] = empty($request->getData('type')))
+            || ($val['value'] = empty($request->getData('value')))
+        ) {
+            return $val;
+        }
+
+        return [];
+    }
+
+    /**
+     * Api method to create client attribute l11n
+     *
+     * @param RequestAbstract  $request  Request
+     * @param ResponseAbstract $response Response
+     * @param mixed            $data     Generic data
+     *
+     * @return void
+     *
+     * @api
+     *
+     * @since 1.0.0
+     */
+    public function apiClientAttributeValueL11nCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
+    {
+        if (!empty($val = $this->validateClientAttributeValueL11nCreate($request))) {
+            $response->set('attr_value_l11n_create', new FormValidation($val));
+            $response->header->status = RequestStatusCode::R_400;
+
+            return;
+        }
+
+        $attrL11n = $this->createClientAttributeValueL11nFromRequest($request);
+        $this->createModel($request->header->account, $attrL11n, ClientAttributeValueL11nMapper::class, 'attr_value_l11n', $request->getOrigin());
+        $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Attribute type localization', 'Attribute type localization successfully created', $attrL11n);
+    }
+
+    /**
+     * Method to create Client attribute l11n from request.
+     *
+     * @param RequestAbstract $request Request
+     *
+     * @return BaseStringL11n
+     *
+     * @since 1.0.0
+     */
+    private function createClientAttributeValueL11nFromRequest(RequestAbstract $request) : BaseStringL11n
+    {
+        $attrL11n        = new BaseStringL11n();
+        $attrL11n->ref = (int) ($request->getData('value') ?? 0);
+        $attrL11n->setLanguage((string) (
+            $request->getData('language') ?? $request->getLanguage()
+        ));
+        $attrL11n->content = (string) ($request->getData('title') ?? '');
+
+        return $attrL11n;
+    }
+
+    /**
+     * Validate Client attribute l11n create request
+     *
+     * @param RequestAbstract $request Request
+     *
+     * @return array<string, bool>
+     *
+     * @since 1.0.0
+     */
+    private function validateClientAttributeValueL11nCreate(RequestAbstract $request) : array
+    {
+        $val = [];
+        if (($val['title'] = empty($request->getData('title')))
             || ($val['value'] = empty($request->getData('value')))
         ) {
             return $val;
