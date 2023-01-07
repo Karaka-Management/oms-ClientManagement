@@ -47,7 +47,7 @@ final class ClientMapper extends DataMapperFactory
         'clientmgmt_client_created_at' => ['name' => 'clientmgmt_client_created_at', 'type' => 'DateTimeImmutable', 'internal' => 'createdAt', 'readonly' => true],
         'clientmgmt_client_profile'    => ['name' => 'clientmgmt_client_profile',    'type' => 'int',      'internal' => 'profile'],
         'clientmgmt_client_address'    => ['name' => 'clientmgmt_client_address',    'type' => 'int',      'internal' => 'mainAddress'],
-        'clientmgmt_client_unit'    => ['name' => 'clientmgmt_client_unit',    'type' => 'int',      'internal' => 'unit'],
+        'clientmgmt_client_unit'       => ['name' => 'clientmgmt_client_unit',    'type' => 'int',      'internal' => 'unit'],
     ];
 
     /**
