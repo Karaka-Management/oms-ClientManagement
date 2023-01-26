@@ -1,0 +1,170 @@
+[
+	{
+        "name": "abc_class",
+        "l11n": {
+            "en": "Rating",
+            "de": "Bewertung"
+        },
+        "value_type": 2,
+        "is_custom_allowed": true,
+        "validation_pattern": "",
+        "is_required": false,
+        "default_value": "",
+        "values": [
+            {
+                "value": "A",
+                "l11n": {
+                    "en": "A",
+                    "de": "A"
+                }
+            },
+            {
+                "value": "B",
+                "l11n": {
+                    "en": "B",
+                    "de": "B"
+                }
+            },
+            {
+                "value": "C",
+                "l11n": {
+                    "en": "C",
+                    "de": "C"
+                }
+            },
+            {
+                "value": "D",
+                "l11n": {
+                    "en": "D",
+                    "de": "D"
+                }
+            },
+            {
+                "value": "E",
+                "l11n": {
+                    "en": "E",
+                    "de": "E"
+                }
+            },
+            {
+                "value": "F",
+                "l11n": {
+                    "en": "F",
+                    "de": "F"
+                }
+            }
+        ]
+    },
+    {
+        "name": "group",
+        "l11n": {
+            "en": "Group",
+            "de": "Gruppe"
+        },
+        "value_type": 1,
+        "is_custom_allowed": false,
+        "validation_pattern": "",
+        "is_required": true,
+        "default_value": "",
+        "values": [
+            {
+                "value": 1,
+                "l11n": {
+                    "en": "Group 1",
+                    "de": "Gruppe 1"
+                }
+            }
+        ]
+    },
+	{
+        "name": "vat_id",
+        "l11n": {
+            "en": "VAT Id",
+            "de": "USt IdNr."
+        },
+        "value_type": 2,
+        "is_custom_allowed": true,
+        "validation_pattern": "",
+        "is_required": false,
+        "default_value": "",
+        "values": []
+    },
+    {
+        "name": "tax_id",
+        "l11n": {
+            "en": "Tax Id",
+            "de": "Steuernummer"
+        },
+        "value_type": 2,
+        "is_custom_allowed": true,
+        "validation_pattern": "",
+        "is_required": false,
+        "default_value": "",
+        "values": []
+    },
+    {
+        "name": "legal_form",
+        "l11n": {
+            "en": "Legal form",
+            "de": "Rechtsform"
+        },
+        "value_type": 2,
+        "is_custom_allowed": true,
+        "validation_pattern": "",
+        "is_required": false,
+        "default_value": "",
+        "values": []
+    },
+    {
+        "name": "credit_rating",
+        "l11n": {
+            "en": "Credit rating",
+            "de": "Bonität"
+        },
+        "value_type": 2,
+        "is_custom_allowed": true,
+        "validation_pattern": "",
+        "is_required": false,
+        "default_value": "",
+        "values": []
+    },
+    {
+        "name": "line_of_credit",
+        "l11n": {
+            "en": "Line of credit",
+            "de": "Kreditlimit"
+        },
+        "value_type": 1,
+        "is_custom_allowed": true,
+        "validation_pattern": "",
+        "is_required": false,
+        "default_value": "",
+        "values": []
+    },
+    {
+        "name": "order_limit",
+        "l11n": {
+            "en": "Order limit",
+            "de": "Bestelllimit"
+        },
+        "value_type": 1,
+        "is_custom_allowed": true,
+        "validation_pattern": "",
+        "is_required": false,
+        "default_value": "",
+        "values": []
+    },
+    {
+        "name": "minimum_order",
+        "l11n": {
+            "en": "MOQ",
+            "de": "Mindestbestellmenge"
+        },
+        "value_type": 1,
+        "is_custom_allowed": true,
+        "validation_pattern": "",
+        "is_required": false,
+        "default_value": "",
+        "values": []
+    }
+]

@@ -1,0 +1,48 @@
+{
+    "triggers": [
+        "PRE:Module:client-create",
+        "POST:Module:client-create",
+        "PRE:Module:client-update",
+        "POST:Module:client-update",
+        "PRE:Module:client-delete",
+        "POST:Module:client-delete"
+    ],
+    "actions": {
+        "1003100001": {
+            "name": "",
+            "function": "",
+            "settings": {
+                "name1": {
+                    "type": "select",
+                    "subtype": null,
+                    "title": {
+                        "en": "",
+                        "de": ""
+                    },
+                    "options": [
+                        {
+                            "value": 1,
+                            "text": {
+                                "en": "",
+                                "de": ""
+                            }
+                        }
+                    ]
+                },
+                "name2": {
+                    "type": "input",
+                    "subtype": "text",
+                    "title": {
+                        "en": "",
+                        "de": ""
+                    }
+                }
+            }
+        },
+        "unique_id": {
+            "name": "",
+            "function": "",
+            "settings": {}
+        }
+    }
+}

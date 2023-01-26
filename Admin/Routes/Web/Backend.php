@@ -18,6 +18,28 @@ use phpOMS\Account\PermissionType;
 use phpOMS\Router\RouteVerb;
 
 return [
+    '^.*/sales/client/attribute/type/list.*$' => [
+        [
+            'dest'       => '\Modules\ClientManagement\Controller\BackendController:viewClientManagementAttributeTypeList',
+            'verb'       => RouteVerb::GET,
+            'permission' => [
+                'module' => BackendController::NAME,
+                'type'   => PermissionType::READ,
+                'state'  => PermissionCategory::CLIENT,
+            ],
+        ],
+    ],
+    '^.*/sales/client/attribute/type\?.*$' => [
+        [
+            'dest'       => '\Modules\ClientManagement\Controller\BackendController:viewClientManagementAttributeType',
+            'verb'       => RouteVerb::GET,
+            'permission' => [
+                'module' => BackendController::NAME,
+                'type'   => PermissionType::READ,
+                'state'  => PermissionCategory::CLIENT,
+            ],
+        ],
+    ],
     '^.*/sales/client/list.*$' => [
         [
             'dest'       => '\Modules\ClientManagement\Controller\BackendController:viewClientManagementClientList',

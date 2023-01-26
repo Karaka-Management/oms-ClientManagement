@@ -53,7 +53,7 @@ final class ClientAttributeTypeMapper extends DataMapperFactory
             'mapper'            => ClientAttributeTypeL11nMapper::class,
             'table'             => 'clientmgmt_attr_type_l11n',
             'self'              => 'clientmgmt_attr_type_l11n_type',
-            'column'            => 'title',
+            'column'            => 'content',
             'external'          => null,
         ],
         'defaults' => [

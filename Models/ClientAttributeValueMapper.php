@@ -39,6 +39,9 @@ final class ClientAttributeValueMapper extends DataMapperFactory
         'clientmgmt_attr_value_valueInt' => ['name' => 'clientmgmt_attr_value_valueInt', 'type' => 'int', 'internal' => 'valueInt'],
         'clientmgmt_attr_value_valueDec' => ['name' => 'clientmgmt_attr_value_valueDec', 'type' => 'float', 'internal' => 'valueDec'],
         'clientmgmt_attr_value_valueDat' => ['name' => 'clientmgmt_attr_value_valueDat', 'type' => 'DateTime', 'internal' => 'valueDat'],
+        'clientmgmt_attr_value_unit'          => ['name' => 'clientmgmt_attr_value_unit', 'type' => 'string', 'internal' => 'unit'],
+        'clientmgmt_attr_value_deptype'          => ['name' => 'clientmgmt_attr_value_deptype', 'type' => 'int', 'internal' => 'dependingAttributeType'],
+        'clientmgmt_attr_value_depvalue'          => ['name' => 'clientmgmt_attr_value_depvalue', 'type' => 'int', 'internal' => 'dependingAttributeValue'],
     ];
 
     /**

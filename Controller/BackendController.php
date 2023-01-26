@@ -15,6 +15,8 @@ declare(strict_types=1);
 namespace Modules\ClientManagement\Controller;
 
 use Modules\Billing\Models\SalesBillMapper;
+use Modules\ClientManagement\Models\ClientAttributeTypeMapper;
+use Modules\ClientManagement\Models\ClientAttributeValueMapper;
 use Modules\ClientManagement\Models\ClientMapper;
 use phpOMS\Asset\AssetType;
 use phpOMS\Contract\RenderableInterface;
@@ -38,6 +40,94 @@ use phpOMS\Views\View;
  */
 final class BackendController extends Controller
 {
+    /**
+     * Routing end-point for application behaviour.
+     *
+     * @param RequestAbstract  $request  Request
+     * @param ResponseAbstract $response Response
+     * @param mixed            $data     Generic data
+     *
+     * @return RenderableInterface
+     *
+     * @since 1.0.0
+     * @codeCoverageIgnore
+     */
+    public function viewClientManagementAttributeTypeList(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : RenderableInterface
+    {
+        $view = new View($this->app->l11nManager, $request, $response);
+        $view->setTemplate('/Modules/ClientManagement/Theme/Backend/attribute-type-list');
+        $view->addData('nav', $this->app->moduleManager->get('Navigation')->createNavigationMid(1004801001, $request, $response));
+
+        /** @var \Modules\ClientManagement\Models\ClientAttributeType[] $attributes */
+        $attributes = ClientAttributeTypeMapper::getAll()
+            ->with('l11n')
+            ->where('l11n/language', $response->getLanguage())
+            ->execute();
+
+        $view->addData('attributes', $attributes);
+
+        return $view;
+    }
+
+    /**
+     * Routing end-point for application behaviour.
+     *
+     * @param RequestAbstract  $request  Request
+     * @param ResponseAbstract $response Response
+     * @param mixed            $data     Generic data
+     *
+     * @return RenderableInterface
+     *
+     * @since 1.0.0
+     * @codeCoverageIgnore
+     */
+    public function viewClientManagementAttributeValues(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : RenderableInterface
+    {
+        $view = new View($this->app->l11nManager, $request, $response);
+        $view->setTemplate('/Modules/ClientManagement/Theme/Backend/attribute-value-list');
+        $view->addData('nav', $this->app->moduleManager->get('Navigation')->createNavigationMid(1004801001, $request, $response));
+
+        /** @var \Modules\ClientManagement\Models\ClientAttributeValue[] $attributes */
+        $attributes = ClientAttributeValueMapper::getAll()
+            ->with('l11n')
+            ->where('l11n/language', $response->getLanguage())
+            ->execute();
+
+        $view->addData('attributes', $attributes);
+
+        return $view;
+    }
+
+    /**
+     * Routing end-point for application behaviour.
+     *
+     * @param RequestAbstract  $request  Request
+     * @param ResponseAbstract $response Response
+     * @param mixed            $data     Generic data
+     *
+     * @return RenderableInterface
+     *
+     * @since 1.0.0
+     * @codeCoverageIgnore
+     */
+    public function viewClientManagementAttributeType(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : RenderableInterface
+    {
+        $view = new View($this->app->l11nManager, $request, $response);
+        $view->setTemplate('/Modules/ClientManagement/Theme/Backend/attribute-type');
+        $view->addData('nav', $this->app->moduleManager->get('Navigation')->createNavigationMid(1004801001, $request, $response));
+
+        /** @var \Modules\ClientManagement\Models\ClientAttributeType $attribute */
+        $attribute = ClientAttributeTypeMapper::get()
+            ->with('l11n')
+            ->where('id', (int) $request->getData('id'))
+            ->where('l11n/language', $response->getLanguage())
+            ->execute();
+
+        $view->addData('attribute', $attribute);
+
+        return $view;
+    }
+
     /**
      * Routing end-point for application behaviour.
      *

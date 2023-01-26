@@ -60,8 +60,8 @@
                 "type": "INT",
                 "default": null,
                 "null": true,
-                "foreignTable": "organization_unit",
-                "foreignKey": "organization_unit_id"
+                "foreignTable": "unit",
+                "foreignKey": "unit_id"
             }
         }
     },
@@ -205,6 +205,27 @@
                 "type": "DATETIME",
                 "null": true,
                 "default": null
+            },
+            "clientmgmt_attr_value_unit": {
+                "name": "clientmgmt_attr_value_unit",
+                "type": "VARCHAR(255)",
+                "null": false
+            },
+            "clientmgmt_attr_value_deptype": {
+                "name": "clientmgmt_attr_value_deptype",
+                "type": "INT(11)",
+                "null": true,
+                "default": null,
+                "foreignTable": "clientmgmt_attr_type",
+                "foreignKey": "clientmgmt_attr_type_id"
+            },
+            "clientmgmt_attr_value_depvalue": {
+                "name": "clientmgmt_attr_value_depvalue",
+                "type": "INT(11)",
+                "null": true,
+                "default": null,
+                "foreignTable": "clientmgmt_attr_value",
+                "foreignKey": "clientmgmt_attr_value_id"
             }
         }
     },
