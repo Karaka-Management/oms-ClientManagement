@@ -14,8 +14,8 @@ declare(strict_types=1);
 
 namespace Modules\ClientManagement\tests\Models;
 
-use Modules\ClientManagement\Models\ClientAttributeValue;
 use Modules\ClientManagement\Models\AttributeValueType;
+use Modules\ClientManagement\Models\ClientAttributeValue;
 
 /**
  * @internal
