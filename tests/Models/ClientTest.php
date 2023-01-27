@@ -51,7 +51,6 @@ final class ClientTest extends \PHPUnit\Framework\TestCase
         self::assertEquals([], $this->client->getFiles());
         self::assertEquals([], $this->client->getAddresses());
         self::assertEquals([], $this->client->getContactElements());
-        self::assertEquals([], $this->client->getFilesByType(0));
         self::assertEquals((new \DateTime('now'))->format('Y-m-d'), $this->client->createdAt->format('Y-m-d'));
         self::assertInstanceOf('\Modules\Profile\Models\Profile', $this->client->profile);
         self::assertInstanceOf('\Modules\Admin\Models\Address', $this->client->mainAddress);
@@ -86,7 +85,6 @@ final class ClientTest extends \PHPUnit\Framework\TestCase
     {
         $this->client->addFile($temp = new Media());
         self::assertCount(1, $this->client->getFiles());
-        self::assertEquals([$temp], $this->client->getFilesByType());
     }
 
     /**

@@ -66,6 +66,12 @@ class Client
      */
     private array $notes = [];
 
+    /**
+     * Files.
+     *
+     * @var Media[]
+     * @since 1.0.0
+     */
     private array $files = [];
 
     private array $contactElements = [];
@@ -192,18 +198,6 @@ class Client
     public function getNotes() : array
     {
         return $this->notes;
-    }
-
-    /**
-     * Get media.
-     *
-     * @return array
-     *
-     * @since 1.0.0
-     */
-    public function getFiles() : array
-    {
-        return $this->files;
     }
 
     /**
@@ -348,28 +342,19 @@ class Client
     }
 
     /**
-     * Get all media files by type
-     *
-     * @param null|int $type Media type
+     * Get files
      *
      * @return Media[]
      *
      * @since 1.0.0
      */
-    public function getFilesByType(int $type = null) : array
+    public function getFiles() : array
     {
-        $files = [];
-        foreach ($this->files as $file) {
-            if ($file->type === $type) {
-                $files[] = $file;
-            }
-        }
-
-        return $files;
+        return $this->files;
     }
 
     /**
-     * Get all media files by type
+     * Get media file by type
      *
      * @param int $type Media type
      *
@@ -380,7 +365,7 @@ class Client
     public function getFileByType(int $type) : Media
     {
         foreach ($this->files as $file) {
-            if ($file->type === $type) {
+            if ($file->hasMediaTypeId($type)) {
                 return $file;
             }
         }
@@ -400,7 +385,7 @@ class Client
     public function getFileByTypeName(string $type) : Media
     {
         foreach ($this->files as $file) {
-            if ($file->type->name === $type) {
+            if ($file->hasMediaTypeName($type)) {
                 return $file;
             }
         }

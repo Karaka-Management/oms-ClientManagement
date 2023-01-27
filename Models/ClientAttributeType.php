@@ -125,7 +125,8 @@ class ClientAttributeType implements \JsonSerializable
         if ($l11n instanceof BaseStringL11n) {
             $this->l11n = $l11n;
         } elseif (isset($this->l11n) && $this->l11n instanceof BaseStringL11n) {
-            $this->l11n->content = $l11n;
+            $this->l11n->content  = $l11n;
+            $this->l11n->setLanguage($lang);
         } else {
             $this->l11n          = new BaseStringL11n();
             $this->l11n->content = $l11n;
@@ -140,6 +141,10 @@ class ClientAttributeType implements \JsonSerializable
      */
     public function getL11n() : string
     {
+        if (!isset($this->l11n)) {
+            return '';
+        }
+
         return $this->l11n instanceof BaseStringL11n ? $this->l11n->content : $this->l11n;
     }
 

@@ -23,10 +23,17 @@ use Modules\ClientManagement\Models\ClientAttributeType;
 use Modules\ClientManagement\Models\ClientAttributeTypeL11nMapper;
 use Modules\ClientManagement\Models\ClientAttributeTypeMapper;
 use Modules\ClientManagement\Models\ClientAttributeValue;
+use Modules\ClientManagement\Models\ClientAttributeValueL11nMapper;
 use Modules\ClientManagement\Models\ClientAttributeValueMapper;
+use Modules\ClientManagement\Models\ClientL11n;
+use Modules\ClientManagement\Models\ClientL11nMapper;
+use Modules\ClientManagement\Models\ClientL11nType;
+use Modules\ClientManagement\Models\ClientL11nTypeMapper;
 use Modules\ClientManagement\Models\ClientMapper;
 use Modules\ClientManagement\Models\NullClientAttributeType;
 use Modules\ClientManagement\Models\NullClientAttributeValue;
+use Modules\ClientManagement\Models\NullClientL11nType;
+use Modules\Media\Models\MediaMapper;
 use Modules\Media\Models\PathSettings;
 use Modules\Profile\Models\ContactElementMapper;
 use Modules\Profile\Models\Profile;
@@ -131,7 +138,7 @@ final class ApiController extends Controller
     }
 
     /**
-     * Routing end-point for application behaviour.
+     * Api method to create client l11n
      *
      * @param RequestAbstract  $request  Request
      * @param ResponseAbstract $response Response
@@ -143,27 +150,126 @@ final class ApiController extends Controller
      *
      * @since 1.0.0
      */
-    public function apiContactElementCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
+    public function apiClientL11nCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
     {
-        $profileModule = $this->app->moduleManager->get('Profile');
-
-        if (!empty($val = $profileModule->validateContactElementCreate($request))) {
-            $response->set('contact_element_create', new FormValidation($val));
+        if (!empty($val = $this->validateClientL11nCreate($request))) {
+            $response->set('client_l11n_create', new FormValidation($val));
             $response->header->status = RequestStatusCode::R_400;
 
             return;
         }
 
-        $contactElement = $profileModule->createContactElementFromRequest($request);
+        $clientL11n = $this->createClientL11nFromRequest($request);
+        $this->createModel($request->header->account, $clientL11n, ClientL11nMapper::class, 'client_l11n', $request->getOrigin());
+        $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Client localization', 'Client localization successfully created', $clientL11n);
+    }
 
-        $this->createModel($request->header->account, $contactElement, ContactElementMapper::class, 'client-contactElement', $request->getOrigin());
-        $this->createModelRelation(
-            $request->header->account,
-            (int) $request->getData('account'),
-            $contactElement->getId(),
-            ClientMapper::class, 'contactElements', '', $request->getOrigin()
-        );
-        $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Contact Element', 'Contact element successfully created', $contactElement);
+    /**
+     * Method to create client l11n from request.
+     *
+     * @param RequestAbstract $request Request
+     *
+     * @return ClientL11n
+     *
+     * @since 1.0.0
+     */
+    private function createClientL11nFromRequest(RequestAbstract $request) : ClientL11n
+    {
+        $clientL11n         = new ClientL11n();
+        $clientL11n->client = (int) ($request->getData('client') ?? 0);
+        $clientL11n->type   = new NullClientL11nType((int) ($request->getData('type') ?? 0));
+        $clientL11n->setLanguage((string) (
+            $request->getData('language') ?? $request->getLanguage()
+        ));
+        $clientL11n->description = (string) ($request->getData('description') ?? '');
+
+        return $clientL11n;
+    }
+
+    /**
+     * Validate client l11n create request
+     *
+     * @param RequestAbstract $request Request
+     *
+     * @return array<string, bool>
+     *
+     * @since 1.0.0
+     */
+    private function validateClientL11nCreate(RequestAbstract $request) : array
+    {
+        $val = [];
+        if (($val['client'] = empty($request->getData('client')))
+            || ($val['type'] = empty($request->getData('type')))
+            || ($val['description'] = empty($request->getData('description')))
+        ) {
+            return $val;
+        }
+
+        return [];
+    }
+
+    /**
+     * Api method to create client l11n type
+     *
+     * @param RequestAbstract  $request  Request
+     * @param ResponseAbstract $response Response
+     * @param mixed            $data     Generic data
+     *
+     * @return void
+     *
+     * @api
+     *
+     * @since 1.0.0
+     */
+    public function apiClientL11nTypeCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
+    {
+        if (!empty($val = $this->validateClientL11nTypeCreate($request))) {
+            $response->set('client_l11n_type_create', new FormValidation($val));
+            $response->header->status = RequestStatusCode::R_400;
+
+            return;
+        }
+
+        $clientL11nType = $this->createClientL11nTypeFromRequest($request);
+        $this->createModel($request->header->account, $clientL11nType, ClientL11nTypeMapper::class, 'client_l11n_type', $request->getOrigin());
+        $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Client localization type', 'Client localization type successfully created', $clientL11nType);
+    }
+
+    /**
+     * Method to create client l11n type from request.
+     *
+     * @param RequestAbstract $request Request
+     *
+     * @return ClientL11nType
+     *
+     * @since 1.0.0
+     */
+    private function createClientL11nTypeFromRequest(RequestAbstract $request) : ClientL11nType
+    {
+        $clientL11nType             = new ClientL11nType();
+        $clientL11nType->title      = (string) ($request->getData('title') ?? '');
+        $clientL11nType->isRequired = (bool) ($request->getData('is_required') ?? false);
+
+        return $clientL11nType;
+    }
+
+    /**
+     * Validate client l11n type create request
+     *
+     * @param RequestAbstract $request Request
+     *
+     * @return array<string, bool>
+     *
+     * @since 1.0.0
+     */
+    private function validateClientL11nTypeCreate(RequestAbstract $request) : array
+    {
+        $val = [];
+        if (($val['title'] = empty($request->getData('title')))) {
+            return $val;
+        }
+
+        return [];
     }
 
     /**
@@ -272,8 +378,8 @@ final class ApiController extends Controller
      */
     private function createClientAttributeTypeL11nFromRequest(RequestAbstract $request) : BaseStringL11n
     {
-        $attrL11n       = new BaseStringL11n();
-        $attrL11n->ref  = (int) ($request->getData('type') ?? 0);
+        $attrL11n      = new BaseStringL11n();
+        $attrL11n->ref = (int) ($request->getData('type') ?? 0);
         $attrL11n->setLanguage((string) (
             $request->getData('language') ?? $request->getLanguage()
         ));
@@ -342,13 +448,13 @@ final class ApiController extends Controller
      */
     private function createClientAttributeTypeFromRequest(RequestAbstract $request) : ClientAttributeType
     {
-        $attrType = new ClientAttributeType($request->getData('name') ?? '');
-        $attrType->setL11n((string) ($request->getData('title') ?? ''), $request->getData('language') ?? ISO639x1Enum::_EN);
-        $attrType->datatype            = (int) ($request->getData('datatype') ?? 0);
-        $attrType->setFields((int) ($request->getData('fields') ?? 0));
+        $attrType                    = new ClientAttributeType($request->getData('name') ?? '');
+        $attrType->datatype          = (int) ($request->getData('datatype') ?? 0);
         $attrType->custom            = (bool) ($request->getData('custom') ?? false);
         $attrType->isRequired        = (bool) ($request->getData('is_required') ?? false);
         $attrType->validationPattern = (string) ($request->getData('validation_pattern') ?? '');
+        $attrType->setL11n((string) ($request->getData('title') ?? ''), $request->getData('language') ?? ISO639x1Enum::_EN);
+        $attrType->setFields((int) ($request->getData('fields') ?? 0));
 
         return $attrType;
     }
@@ -422,6 +528,7 @@ final class ApiController extends Controller
      */
     private function createClientAttributeValueFromRequest(RequestAbstract $request) : ClientAttributeValue
     {
+        /** @var ClientAttributeType $type */
         $type = ClientAttributeTypeMapper::get()
             ->where('id', (int) ($request->getData('type') ?? 0))
             ->execute();
@@ -496,8 +603,8 @@ final class ApiController extends Controller
      */
     private function createClientAttributeValueL11nFromRequest(RequestAbstract $request) : BaseStringL11n
     {
-        $attrL11n        = new BaseStringL11n();
-        $attrL11n->ref   = (int) ($request->getData('value') ?? 0);
+        $attrL11n      = new BaseStringL11n();
+        $attrL11n->ref = (int) ($request->getData('value') ?? 0);
         $attrL11n->setLanguage((string) (
             $request->getData('language') ?? $request->getLanguage()
         ));
@@ -552,15 +659,28 @@ final class ApiController extends Controller
         }
 
         $uploaded = $this->app->moduleManager->get('Media')->uploadFiles(
-            $request->getDataList('names'),
-            $request->getDataList('filenames'),
-            $uploadedFiles,
-            $request->header->account,
-            __DIR__ . '/../../../Modules/Media/Files/Modules/ClientManagement/' . ($request->getData('client') ?? '0'),
-            '/Modules/ClientManagement/' . ($request->getData('client') ?? '0'),
-            $request->getData('type', 'int'),
+            names: $request->getDataList('names'),
+            fileNames: $request->getDataList('filenames'),
+            files: $uploadedFiles,
+            account: $request->header->account,
+            basePath: __DIR__ . '/../../../Modules/Media/Files/Modules/ClientManagement/' . ($request->getData('client') ?? '0'),
+            virtualPath: '/Modules/ClientManagement/' . ($request->getData('client') ?? '0'),
             pathSettings: PathSettings::FILE_PATH
         );
+
+        if ($request->hasData('type')) {
+            foreach ($uploaded as $file) {
+                $this->createModelRelation(
+                    $request->header->account,
+                    $file->getId(),
+                    $request->getData('type', 'int'),
+                    MediaMapper::class,
+                    'types',
+                    '',
+                    $request->getOrigin()
+                );
+            }
+        }
 
         $this->createModelRelation(
             $request->header->account,

@@ -63,41 +63,6 @@ trait ApiControllerClientTrait
      * @covers Modules\ClientManagement\Controller\ApiController
      * @group module
      */
-    public function testApiClientContactElementCreate() : void
-    {
-        $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
-
-        $request->header->account = 1;
-        $request->setData('account', '1'); // client id in this case
-        $request->setData('type', ContactType::EMAIL);
-        $request->setData('content', 'email@email.com');
-
-        $this->module->apiContactElementCreate($request, $response);
-
-        self::assertGreaterThan(0, $response->get('')['response']->getId());
-    }
-
-    /**
-     * @covers Modules\ClientManagement\Controller\ApiController
-     * @group module
-     */
-    public function testApiClientContactElementCreateInvalidData() : void
-    {
-        $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
-
-        $request->header->account = 1;
-        $request->setData('invalid', '1');
-
-        $this->module->apiContactElementCreate($request, $response);
-        self::assertEquals(RequestStatusCode::R_400, $response->header->status);
-    }
-
-    /**
-     * @covers Modules\ClientManagement\Controller\ApiController
-     * @group module
-     */
     public function testApiClientCreateInvalidData() : void
     {
         $response = new HttpResponse();
@@ -124,7 +89,7 @@ trait ApiControllerClientTrait
         $request->header->account = 1;
         $request->setData('name', '123456 backend');
         $request->setData('client', 1);
-        $request->setData('type', 'backend_image');
+        $request->setData('type', '1');
 
         TestUtils::setMember($request, 'files', [
             'file1' => [

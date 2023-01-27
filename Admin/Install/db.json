@@ -65,6 +65,66 @@
             }
         }
     },
+    "clientmgmt_client_l11n_type": {
+        "name": "clientmgmt_client_l11n_type",
+        "fields": {
+            "clientmgmt_client_l11n_type_id": {
+                "name": "clientmgmt_client_l11n_type_id",
+                "type": "INT",
+                "null": false,
+                "primary": true,
+                "autoincrement": true
+            },
+            "clientmgmt_client_l11n_type_title": {
+                "name": "clientmgmt_client_l11n_type_title",
+                "type": "VARCHAR(50)",
+                "null": false
+            },
+            "clientmgmt_client_l11n_type_required": {
+                "name": "clientmgmt_client_l11n_type_required",
+                "type": "TINYINT(1)",
+                "null": false
+            }
+        }
+    },
+    "clientmgmt_client_l11n": {
+        "name": "clientmgmt_client_l11n",
+        "fields": {
+            "clientmgmt_client_l11n_id": {
+                "name": "clientmgmt_client_l11n_id",
+                "type": "INT",
+                "null": false,
+                "primary": true,
+                "autoincrement": true
+            },
+            "clientmgmt_client_l11n_description": {
+                "name": "clientmgmt_client_l11n_description",
+                "type": "TEXT",
+                "null": false
+            },
+            "clientmgmt_client_l11n_client": {
+                "name": "clientmgmt_client_l11n_client",
+                "type": "INT(11)",
+                "null": false,
+                "foreignTable": "clientmgmt_client",
+                "foreignKey": "clientmgmt_client_id"
+            },
+            "clientmgmt_client_l11n_typeref": {
+                "name": "clientmgmt_client_l11n_typeref",
+                "type": "INT(11)",
+                "null": false,
+                "foreignTable": "clientmgmt_client_l11n_type",
+                "foreignKey": "clientmgmt_client_l11n_type_id"
+            },
+            "clientmgmt_client_l11n_lang": {
+                "name": "clientmgmt_client_l11n_lang",
+                "type": "VARCHAR(2)",
+                "null": false,
+                "foreignTable": "language",
+                "foreignKey": "language_639_1"
+            }
+        }
+    },
     "clientmgmt_client_contactelement": {
         "name": "clientmgmt_client_contactelement",
         "fields": {

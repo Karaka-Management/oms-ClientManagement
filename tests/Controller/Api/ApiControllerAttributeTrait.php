@@ -34,6 +34,7 @@ trait ApiControllerAttributeTrait
 
         $request->header->account = 1;
         $request->setData('title', 'EN:1');
+        $request->setData('name', 'test_name');
         $request->setData('language', ISO639x1Enum::_EN);
 
         $this->module->apiClientAttributeTypeCreate($request, $response);
@@ -69,7 +70,7 @@ trait ApiControllerAttributeTrait
 
         $request->header->account = 1;
         $request->setData('default', '1');
-        $request->setData('attributetype', '1');
+        $request->setData('type', '1');
         $request->setData('value', '1');
         $request->setData('language', ISO639x1Enum::_DE);
         $request->setData('country', ISO3166TwoEnum::_DEU);
@@ -89,7 +90,7 @@ trait ApiControllerAttributeTrait
 
         $request->header->account = 1;
         $request->setData('value', '1');
-        $request->setData('attributetype', '1');
+        $request->setData('type', '1');
         $request->setData('language', ISO639x1Enum::_DE);
         $request->setData('country', ISO3166TwoEnum::_DEU);
 
@@ -108,7 +109,7 @@ trait ApiControllerAttributeTrait
 
         $request->header->account = 1;
         $request->setData('value', '1.1');
-        $request->setData('attributetype', '1');
+        $request->setData('type', '1');
         $request->setData('language', ISO639x1Enum::_DE);
         $request->setData('country', ISO3166TwoEnum::_DEU);
 
@@ -127,7 +128,7 @@ trait ApiControllerAttributeTrait
 
         $request->header->account = 1;
         $request->setData('value', '2020-08-02');
-        $request->setData('attributetype', '1');
+        $request->setData('type', '1');
         $request->setData('language', ISO639x1Enum::_DE);
         $request->setData('country', ISO3166TwoEnum::_DEU);
 

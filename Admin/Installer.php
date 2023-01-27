@@ -176,9 +176,9 @@ final class Installer extends InstallerAbstract
     /**
      * Create default attribute values for types
      *
-     * @param ApplicationAbstract                                                                                                                                                              $app          Application
+     * @param ApplicationAbstract                                                                                                                                                              $app            Application
      * @param array                                                                                                                                                                            $clientAttrType Attribute types
-     * @param array<array{name:string, l11n?:array<string, string>, is_required?:bool, is_custom_allowed?:bool, validation_pattern?:string, value_type?:string, values?:array<string, mixed>}> $attributes   Attribute definition
+     * @param array<array{name:string, l11n?:array<string, string>, is_required?:bool, is_custom_allowed?:bool, validation_pattern?:string, value_type?:string, values?:array<string, mixed>}> $attributes     Attribute definition
      *
      * @return array<string, array>
      *

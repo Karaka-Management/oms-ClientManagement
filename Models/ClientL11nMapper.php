@@ -24,7 +24,7 @@ use phpOMS\DataStorage\Database\Mapper\DataMapperFactory;
  * @link    https://jingga.app
  * @since   1.0.0
  */
-final class ClientAttributeMapper extends DataMapperFactory
+final class ClientL11nMapper extends DataMapperFactory
 {
     /**
      * Columns.
@@ -33,10 +33,11 @@ final class ClientAttributeMapper extends DataMapperFactory
      * @since 1.0.0
      */
     public const COLUMNS = [
-        'clientmgmt_client_attr_id'      => ['name' => 'clientmgmt_client_attr_id',    'type' => 'int', 'internal' => 'id'],
-        'clientmgmt_client_attr_client'  => ['name' => 'clientmgmt_client_attr_client',  'type' => 'int', 'internal' => 'client'],
-        'clientmgmt_client_attr_type'    => ['name' => 'clientmgmt_client_attr_type',  'type' => 'int', 'internal' => 'type'],
-        'clientmgmt_client_attr_value'   => ['name' => 'clientmgmt_client_attr_value', 'type' => 'int', 'internal' => 'value'],
+        'clientmgmt_client_l11n_id'          => ['name' => 'clientmgmt_client_l11n_id',          'type' => 'int',    'internal' => 'id'],
+        'clientmgmt_client_l11n_description' => ['name' => 'clientmgmt_client_l11n_description', 'type' => 'string', 'internal' => 'description', 'autocomplete' => true],
+        'clientmgmt_client_l11n_client'        => ['name' => 'clientmgmt_client_l11n_client',        'type' => 'int',    'internal' => 'client'],
+        'clientmgmt_client_l11n_lang'        => ['name' => 'clientmgmt_client_l11n_lang',        'type' => 'string', 'internal' => 'language'],
+        'clientmgmt_client_l11n_typeref'     => ['name' => 'clientmgmt_client_l11n_typeref',     'type' => 'int',    'internal' => 'type'],
     ];
 
     /**
@@ -47,12 +48,8 @@ final class ClientAttributeMapper extends DataMapperFactory
      */
     public const OWNS_ONE = [
         'type' => [
-            'mapper'            => ClientAttributeTypeMapper::class,
-            'external'          => 'clientmgmt_client_attr_type',
-        ],
-        'value' => [
-            'mapper'            => ClientAttributeValueMapper::class,
-            'external'          => 'clientmgmt_client_attr_value',
+            'mapper'   => ClientL11nTypeMapper::class,
+            'external' => 'clientmgmt_client_l11n_typeref',
         ],
     ];
 
@@ -62,7 +59,7 @@ final class ClientAttributeMapper extends DataMapperFactory
      * @var string
      * @since 1.0.0
      */
-    public const TABLE = 'clientmgmt_client_attr';
+    public const TABLE = 'clientmgmt_client_l11n';
 
     /**
      * Primary field name.
@@ -70,5 +67,5 @@ final class ClientAttributeMapper extends DataMapperFactory
      * @var string
      * @since 1.0.0
      */
-    public const PRIMARYFIELD ='clientmgmt_client_attr_id';
+    public const PRIMARYFIELD ='clientmgmt_client_l11n_id';
 }
