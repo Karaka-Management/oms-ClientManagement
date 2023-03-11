@@ -65,11 +65,11 @@ echo $this->getData('nav')->render();
                                     <tr><td><label for="iId"><?= $this->getHtml('ID', '0', '0'); ?></label>
                                     <tr><td><span class="input"><button type="button" formaction=""><i class="fa fa-book"></i></button><input type="number" id="iId" min="1" name="id" value="<?= $this->printHtml($client->number); ?>" disabled></span>
                                     <tr><td><label for="iName1"><?= $this->getHtml('Name1'); ?></label>
-                                    <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->profile->account->name1); ?>" required>
+                                    <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->account->name1); ?>" required>
                                     <tr><td><label for="iName2"><?= $this->getHtml('Name2'); ?></label>
-                                    <tr><td><input type="text" id="iName2" name="name2" value="<?= $this->printHtml($client->profile->account->name2); ?>">
+                                    <tr><td><input type="text" id="iName2" name="name2" value="<?= $this->printHtml($client->account->name2); ?>">
                                     <tr><td><label for="iName3"><?= $this->getHtml('Name3'); ?></label>
-                                    <tr><td><input type="text" id="iName3" name="name3" value="<?= $this->printHtml($client->profile->account->name3); ?>">
+                                    <tr><td><input type="text" id="iName3" name="name3" value="<?= $this->printHtml($client->account->name3); ?>">
                                 </table>
                             </div>
                             <div class="portlet-foot">

@@ -76,6 +76,50 @@
             }
         ]
     },
+    {
+        "name": "sales_tax_code",
+        "l11n": {
+            "en": "Sales tax code",
+            "de": "USt. code"
+        },
+        "value_type": 2,
+        "is_custom_allowed": false,
+        "validation_pattern": "",
+        "is_required": true,
+        "default_value": "",
+        "values": [
+            { "value": "AT" },
+            { "value": "BE" },
+            { "value": "BG" },
+            { "value": "HR" },
+            { "value": "CY" },
+            { "value": "CZ" },
+            { "value": "DK" },
+            { "value": "EE" },
+            { "value": "FI" },
+            { "value": "FR" },
+            { "value": "DE" },
+            { "value": "GR" },
+            { "value": "HU" },
+            { "value": "IE" },
+            { "value": "IT" },
+            { "value": "LV" },
+            { "value": "LT" },
+            { "value": "LU" },
+            { "value": "MT" },
+            { "value": "NL" },
+            { "value": "PL" },
+            { "value": "PT" },
+            { "value": "RO" },
+            { "value": "SK" },
+            { "value": "SI" },
+            { "value": "ES" },
+            { "value": "SE" },
+            { "value": "GB" },
+            { "value": "INT" },
+            { "value": "EU" }
+        ]
+    },
 	{
         "name": "vat_id",
         "l11n": {

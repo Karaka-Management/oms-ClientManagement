@@ -148,8 +148,7 @@ final class BackendController extends Controller
 
         /** @var \Modules\ClientManagement\Models\Client $client */
         $client = ClientMapper::getAll()
-            ->with('profile')
-            ->with('profile/account')
+            ->with('account')
             ->with('files')
             ->with('files/type')
             ->with('mainAddress')
@@ -209,8 +208,7 @@ final class BackendController extends Controller
 
         /** @var \Modules\ClientManagement\Models\Client $client */
         $client = ClientMapper::get()
-            ->with('profile')
-            ->with('profile/account')
+            ->with('account')
             ->with('contactElements')
             ->with('mainAddress')
             ->with('files')->limit(5, 'files')->sort('files/id', OrderType::DESC)

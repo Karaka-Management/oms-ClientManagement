@@ -16,6 +16,9 @@ namespace Modules\ClientManagement\Controller;
 
 use Modules\Admin\Models\Account;
 use Modules\Admin\Models\Address;
+use Modules\Admin\Models\NullAccount;
+use Modules\Auditor\Models\Audit;
+use Modules\Auditor\Models\AuditMapper;
 use Modules\ClientManagement\Models\Client;
 use Modules\ClientManagement\Models\ClientAttribute;
 use Modules\ClientManagement\Models\ClientAttributeMapper;
@@ -35,15 +38,23 @@ use Modules\ClientManagement\Models\NullClientAttributeValue;
 use Modules\ClientManagement\Models\NullClientL11nType;
 use Modules\Media\Models\MediaMapper;
 use Modules\Media\Models\PathSettings;
+use Modules\Organization\Models\UnitMapper;
 use Modules\Profile\Models\ContactElementMapper;
 use Modules\Profile\Models\Profile;
+use phpOMS\Api\EUVAT\EUVATBffOnline;
 use phpOMS\Localization\BaseStringL11n;
+use phpOMS\Localization\ISO3166CharEnum;
+use phpOMS\Localization\ISO3166TwoEnum;
 use phpOMS\Localization\ISO639x1Enum;
+use phpOMS\Message\Http\HttpRequest;
+use phpOMS\Message\Http\HttpResponse;
 use phpOMS\Message\Http\RequestStatusCode;
 use phpOMS\Message\NotificationLevel;
 use phpOMS\Message\RequestAbstract;
 use phpOMS\Message\ResponseAbstract;
 use phpOMS\Model\Message\FormValidation;
+use phpOMS\Uri\HttpUri;
+use phpOMS\Utils\StringUtils;
 
 /**
  * ClientManagement class.
@@ -79,6 +90,78 @@ final class ApiController extends Controller
 
         $client = $this->createClientFromRequest($request);
         $this->createModel($request->header->account, $client, ClientMapper::class, 'client', $request->getOrigin());
+
+        // Set VAT Id
+        if ($request->hasData('vat_id')) {
+            /** @var \Modules\Admin\Models\Unit $unit */
+            $unit = UnitMapper::get()
+                ->with('attributes')
+                ->execute();
+
+            $validate = ['status' => -1];
+
+            if (\in_array($client->mainAddress->getCountry(), ISO3166CharEnum::getRegion('eu'))) {
+                $validate = EUVATBffOnline::validateQualified(
+                    $unit->getAttribute('vat_id')?->value->getValue() ?? '',
+                    $request->getData('vat_id'),
+                    $client->account->name1,
+                    $client->mainAddress->city,
+                    $client->mainAddress->postal,
+                    $client->mainAddress->address
+                );
+            }
+
+            $audit = new Audit(
+                new NullAccount($request->header->account),
+                null,
+                (string) $validate['status'],
+                StringUtils::intHash(EUVATBffOnline::class),
+                'vat_validation',
+                self::NAME,
+                (string) $client->getId(),
+                \json_encode($validate),
+                (int) \ip2long($request->getOrigin())
+            );
+
+            AuditMapper::create()->execute($audit);
+
+            if ($validate['status'] === 0) {
+                /** @var \Modules\ClientManagement\Models\ClientAttributeType $type */
+                $type = ClientAttributeTypeMapper::get()->where('name', 'vat_id')->execute();
+
+                $internalRequest = new HttpRequest(new HttpUri(''));
+                $internalResponse = new HttpResponse();
+
+                $internalRequest->header->account = $request->header->account;
+                $internalRequest->setData('client', $client->getId());
+                $internalRequest->setData('type',  $type->getId());
+                $internalRequest->setData('custom',  $request->hasData('vat_id'));
+
+                $this->apiClientAttributeCreate($internalRequest, $internalResponse);
+            }
+        }
+
+        // Find tax code
+        if ($this->app->moduleManager->isActive('Billing')) {
+            /** @var \Modules\Admin\Models\Unit $unit */
+            $unit = UnitMapper::get()->with('mainAddress')->where('id', $this->app->unitId)->execute();
+
+            /** @var \Modules\ClientManagement\Models\ClientAttributeType $type */
+            $type = ClientAttributeTypeMapper::get()->where('name', 'sales_tax_code')->execute();
+
+            $value = $this->app->moduleManager->get('Billing')->getClientTaxCode($client, $unit->mainAddress);
+
+            $internalRequest = new HttpRequest(new HttpUri(''));
+            $internalResponse = new HttpResponse();
+
+            $internalRequest->header->account = $request->header->account;
+            $internalRequest->setData('client', $client->getId());
+            $internalRequest->setData('type',  $type->getId());
+            $internalRequest->setData('value', $value->getId());
+
+            $this->apiClientAttributeCreate($internalRequest, $internalResponse);
+        }
+
         $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Client', 'Client successfully created', $client);
     }
 
@@ -93,21 +176,24 @@ final class ApiController extends Controller
      */
     private function createClientFromRequest(RequestAbstract $request) : Client
     {
-        $account        = new Account();
-        $account->name1 = (string) ($request->getData('name1') ?? '');
-        $account->name2 = (string) ($request->getData('name2') ?? '');
-
-        $profile = new Profile($account);
+        $account = null;
+        if (!$request->hasData('account')) {
+            $account        = new Account();
+            $account->name1 = (string) ($request->getData('name1') ?? '');
+            $account->name2 = (string) ($request->getData('name2') ?? '');
+        } else {
+            $account = new NullAccount((int) $request->getData('account'));
+        }
 
         $client          = new Client();
         $client->number  = (string) ($request->getData('number') ?? '');
-        $client->profile = $profile;
+        $client->account = $account;
 
         $addr          = new Address();
         $addr->address = (string) ($request->getData('address') ?? '');
         $addr->postal  = (string) ($request->getData('postal') ?? '');
         $addr->city    = (string) ($request->getData('city') ?? '');
-        $addr->setCountry($request->getData('country') ?? '');
+        $addr->setCountry($request->getData('country') ?? ISO3166TwoEnum::_XXX);
         $addr->state         = (string) ($request->getData('state') ?? '');
         $client->mainAddress = $addr;
 
@@ -129,7 +215,7 @@ final class ApiController extends Controller
     {
         $val = [];
         if (($val['number'] = empty($request->getData('number')))
-            || ($val['name1'] = empty($request->getData('name1')))
+            || ($val['account'] = empty($request->getData('name1')) && empty($request->getData('account')))
         ) {
             return $val;
         }
@@ -161,7 +247,7 @@ final class ApiController extends Controller
 
         $clientL11n = $this->createClientL11nFromRequest($request);
         $this->createModel($request->header->account, $clientL11n, ClientL11nMapper::class, 'client_l11n', $request->getOrigin());
-        $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Client localization', 'Client localization successfully created', $clientL11n);
+        $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Localization', 'Localization successfully created', $clientL11n);
     }
 
     /**
@@ -232,7 +318,7 @@ final class ApiController extends Controller
 
         $clientL11nType = $this->createClientL11nTypeFromRequest($request);
         $this->createModel($request->header->account, $clientL11nType, ClientL11nTypeMapper::class, 'client_l11n_type', $request->getOrigin());
-        $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Client localization type', 'Client localization type successfully created', $clientL11nType);
+        $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Localization type', 'Localization type successfully created', $clientL11nType);
     }
 
     /**
@@ -313,7 +399,17 @@ final class ApiController extends Controller
         $attribute         = new ClientAttribute();
         $attribute->client = (int) $request->getData('client');
         $attribute->type   = new NullClientAttributeType((int) $request->getData('type'));
-        $attribute->value  = new NullClientAttributeValue((int) $request->getData('value'));
+
+        if ($request->getData('value') !== null) {
+            $attribute->value = new NullClientAttributeValue((int) $request->getData('value'));
+        } else {
+            $newRequest = clone $request;
+            $newRequest->setData('value', $request->getData('custom'), true);
+
+            $value = $this->createClientAttributeValueFromRequest($newRequest);
+
+            $attribute->value = $value;
+        }
 
         return $attribute;
     }
@@ -331,7 +427,7 @@ final class ApiController extends Controller
     {
         $val = [];
         if (($val['type'] = empty($request->getData('type')))
-            || ($val['value'] = empty($request->getData('value')))
+            || ($val['value'] = (empty($request->getData('value')) && empty($request->getData('custom'))))
             || ($val['client'] = empty($request->getData('client')))
         ) {
             return $val;
@@ -364,7 +460,7 @@ final class ApiController extends Controller
 
         $attrL11n = $this->createClientAttributeTypeL11nFromRequest($request);
         $this->createModel($request->header->account, $attrL11n, ClientAttributeTypeL11nMapper::class, 'attr_type_l11n', $request->getOrigin());
-        $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Attribute type localization', 'Attribute type localization successfully created', $attrL11n);
+        $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Localization', 'Localization successfully created', $attrL11n);
     }
 
     /**
@@ -589,7 +685,7 @@ final class ApiController extends Controller
 
         $attrL11n = $this->createClientAttributeValueL11nFromRequest($request);
         $this->createModel($request->header->account, $attrL11n, ClientAttributeValueL11nMapper::class, 'attr_value_l11n', $request->getOrigin());
-        $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Attribute type localization', 'Attribute type localization successfully created', $attrL11n);
+        $this->fillJsonResponse($request, $response, NotificationLevel::OK, 'Localization', 'Localization successfully created', $attrL11n);
     }
 
     /**

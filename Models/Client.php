@@ -20,6 +20,7 @@ use Modules\Admin\Models\NullAddress;
 use Modules\Editor\Models\EditorDoc;
 use Modules\Media\Models\Media;
 use Modules\Media\Models\NullMedia;
+use Modules\Payment\Models\Payment;
 use Modules\Profile\Models\ContactElement;
 use Modules\Profile\Models\NullContactElement;
 use Modules\Profile\Models\Profile;
@@ -48,7 +49,7 @@ class Client
 
     public \DateTimeImmutable $createdAt;
 
-    public Profile $profile;
+    public Account $account;
 
     /**
      * Attributes.
@@ -57,6 +58,14 @@ class Client
      * @since 1.0.0
      */
     private array $attributes = [];
+
+    /**
+     * Payments.
+     *
+     * @var Payment[]
+     * @since 1.0.0
+     */
+    private array $payments = [];
 
     /**
      * Files.
@@ -106,7 +115,7 @@ class Client
     public function __construct()
     {
         $this->createdAt   = new \DateTimeImmutable('now');
-        $this->profile     = new Profile();
+        $this->account     = new Account();
         $this->mainAddress = new NullAddress();
     }
 
@@ -276,6 +285,60 @@ class Client
     public function getAttributes() : array
     {
         return $this->attributes;
+    }
+
+    /**
+     * Get attribute
+     *
+     * @param string $attrName Attribute name
+     *
+     * @return null|ClientAttribute
+     *
+     * @since 1.0.0
+     */
+    public function getAttribute(string $attrName) : ?ClientAttribute
+    {
+        foreach ($this->attributes as $attribute) {
+            if ($attribute->type->name === $attrName) {
+                return $attribute->value;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Get payments
+     *
+     * @return Payment[]
+     *
+     * @since 1.0.0
+     */
+    public function getPayments() : array
+    {
+        return $this->payments;
+    }
+
+    /**
+     * Get payments
+     *
+     * @param int $type Payment type
+     *
+     * @return array
+     *
+     * @since 1.0.0
+     */
+    public function getPaymentsByType(int $type) : array
+    {
+        $payments = [];
+
+        foreach ($this->payments as $payment) {
+            if ($payment->getType() === $type) {
+                $payments[] = $payment;
+            }
+        }
+
+        return $payments;
     }
 
     /**

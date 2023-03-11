@@ -67,5 +67,5 @@ final class ClientL11nMapper extends DataMapperFactory
      * @var string
      * @since 1.0.0
      */
-    public const PRIMARYFIELD ='clientmgmt_client_l11n_id';
+    public const PRIMARYFIELD = 'clientmgmt_client_l11n_id';
 }

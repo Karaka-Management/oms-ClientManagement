@@ -40,12 +40,12 @@
                 "type": "DATETIME",
                 "null": false
             },
-            "clientmgmt_client_profile": {
-                "name": "clientmgmt_client_profile",
+            "clientmgmt_client_account": {
+                "name": "clientmgmt_client_account",
                 "type": "INT",
                 "null": false,
-                "foreignTable": "profile_account",
-                "foreignKey": "profile_account_id"
+                "foreignTable": "account",
+                "foreignKey": "account_id"
             },
             "clientmgmt_client_address": {
                 "name": "clientmgmt_client_address",
@@ -144,6 +144,32 @@
             },
             "clientmgmt_client_contactelement_src": {
                 "name": "clientmgmt_client_contactelement_src",
+                "type": "INT",
+                "null": false,
+                "foreignTable": "clientmgmt_client",
+                "foreignKey": "clientmgmt_client_id"
+            }
+        }
+    },
+    "clientmgmt_client_payment": {
+        "name": "clientmgmt_client_payment",
+        "fields": {
+            "clientmgmt_client_payment_id": {
+                "name": "clientmgmt_client_payment_id",
+                "type": "INT",
+                "null": false,
+                "primary": true,
+                "autoincrement": true
+            },
+            "clientmgmt_client_payment_dst": {
+                "name": "clientmgmt_client_payment_dst",
+                "type": "INT",
+                "null": false,
+                "foreignTable": "payment",
+                "foreignKey": "payment_id"
+            },
+            "clientmgmt_client_payment_src": {
+                "name": "clientmgmt_client_payment_src",
                 "type": "INT",
                 "null": false,
                 "foreignTable": "clientmgmt_client",

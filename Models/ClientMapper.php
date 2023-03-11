@@ -14,9 +14,11 @@ declare(strict_types=1);
 
 namespace Modules\ClientManagement\Models;
 
+use Modules\Admin\Models\AccountMapper;
 use Modules\Admin\Models\AddressMapper;
 use Modules\Editor\Models\EditorDocMapper;
 use Modules\Media\Models\MediaMapper;
+use Modules\Payment\Models\PaymentMapper;
 use Modules\Profile\Models\ContactElementMapper;
 use Modules\Profile\Models\ProfileMapper;
 use phpOMS\DataStorage\Database\Mapper\DataMapperFactory;
@@ -45,7 +47,7 @@ final class ClientMapper extends DataMapperFactory
         'clientmgmt_client_type'       => ['name' => 'clientmgmt_client_type',       'type' => 'int',      'internal' => 'type'],
         'clientmgmt_client_info'       => ['name' => 'clientmgmt_client_info',       'type' => 'string',   'internal' => 'info'],
         'clientmgmt_client_created_at' => ['name' => 'clientmgmt_client_created_at', 'type' => 'DateTimeImmutable', 'internal' => 'createdAt', 'readonly' => true],
-        'clientmgmt_client_profile'    => ['name' => 'clientmgmt_client_profile',    'type' => 'int',      'internal' => 'profile'],
+        'clientmgmt_client_account'    => ['name' => 'clientmgmt_client_account',    'type' => 'int',      'internal' => 'account'],
         'clientmgmt_client_address'    => ['name' => 'clientmgmt_client_address',    'type' => 'int',      'internal' => 'mainAddress'],
         'clientmgmt_client_unit'       => ['name' => 'clientmgmt_client_unit',    'type' => 'int',      'internal' => 'unit'],
     ];
@@ -64,7 +66,7 @@ final class ClientMapper extends DataMapperFactory
      * @var string
      * @since 1.0.0
      */
-    public const PRIMARYFIELD ='clientmgmt_client_id';
+    public const PRIMARYFIELD = 'clientmgmt_client_id';
 
     /**
      * Created at column
@@ -81,9 +83,9 @@ final class ClientMapper extends DataMapperFactory
      * @since 1.0.0
      */
     public const OWNS_ONE = [
-        'profile' => [
-            'mapper'   => ProfileMapper::class,
-            'external' => 'clientmgmt_client_profile',
+        'account' => [
+            'mapper'   => AccountMapper::class,
+            'external' => 'clientmgmt_client_account',
         ],
         'mainAddress' => [
             'mapper'   => AddressMapper::class,
@@ -115,6 +117,12 @@ final class ClientMapper extends DataMapperFactory
             'table'    => 'clientmgmt_client_contactelement',
             'external' => 'clientmgmt_client_contactelement_dst',
             'self'     => 'clientmgmt_client_contactelement_src',
+        ],
+        'payments' => [
+            'mapper'   => PaymentMapper::class,
+            'table'    => 'clientmgmt_client_payment',
+            'external' => 'clientmgmt_client_payment_dst',
+            'self'     => 'clientmgmt_client_payment_src',
         ],
         'attributes' => [
             'mapper'      => ClientAttributeMapper::class,

@@ -110,6 +110,17 @@ class ClientAttributeType implements \JsonSerializable
         return $this->id;
     }
 
+    public function getDefaultByValue(mixed $value) : ClientAttributeValue
+    {
+        foreach ($this->defaults as $default) {
+            if ($default->getValue() === $value) {
+                return $default;
+            }
+        }
+
+        return new NullClientAttributeValue();
+    }
+
     /**
      * Set l11n
      *

@@ -73,5 +73,5 @@ final class ClientAttributeValueMapper extends DataMapperFactory
      * @var string
      * @since 1.0.0
      */
-    public const PRIMARYFIELD ='clientmgmt_attr_value_id';
+    public const PRIMARYFIELD = 'clientmgmt_attr_value_id';
 }
