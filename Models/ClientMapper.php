@@ -6,7 +6,7 @@
  *
  * @package   Modules\ClientManagement\Models
  * @copyright Dennis Eichhorn
- * @license   OMS License 1.0
+ * @license   OMS License 2.0
  * @version   1.0.0
  * @link      https://jingga.app
  */
@@ -27,7 +27,7 @@ use phpOMS\DataStorage\Database\Mapper\DataMapperFactory;
  * Client mapper class.
  *
  * @package Modules\ClientManagement\Models
- * @license OMS License 1.0
+ * @license OMS License 2.0
  * @link    https://jingga.app
  * @since   1.0.0
  */

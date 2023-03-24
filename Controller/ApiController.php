@@ -6,7 +6,7 @@
  *
  * @package   Modules\ClientManagement
  * @copyright Dennis Eichhorn
- * @license   OMS License 1.0
+ * @license   OMS License 2.0
  * @version   1.0.0
  * @link      https://jingga.app
  */
@@ -39,9 +39,7 @@ use Modules\ClientManagement\Models\NullClientL11nType;
 use Modules\Media\Models\MediaMapper;
 use Modules\Media\Models\PathSettings;
 use Modules\Organization\Models\UnitMapper;
-use Modules\Profile\Models\ContactElementMapper;
-use Modules\Profile\Models\Profile;
-use phpOMS\Api\EUVAT\EUVATBffOnline;
+use phpOMS\Api\EUVAT\EUVATVies;
 use phpOMS\Localization\BaseStringL11n;
 use phpOMS\Localization\ISO3166CharEnum;
 use phpOMS\Localization\ISO3166TwoEnum;
@@ -60,7 +58,7 @@ use phpOMS\Utils\StringUtils;
  * ClientManagement class.
  *
  * @package Modules\ClientManagement
- * @license OMS License 1.0
+ * @license OMS License 2.0
  * @link    https://jingga.app
  * @since   1.0.0
  */
@@ -93,7 +91,7 @@ final class ApiController extends Controller
 
         // Set VAT Id
         if ($request->hasData('vat_id')) {
-            /** @var \Modules\Admin\Models\Unit $unit */
+            /** @var \Modules\Organization\Models\Unit $unit */
             $unit = UnitMapper::get()
                 ->with('attributes')
                 ->execute();
@@ -101,7 +99,7 @@ final class ApiController extends Controller
             $validate = ['status' => -1];
 
             if (\in_array($client->mainAddress->getCountry(), ISO3166CharEnum::getRegion('eu'))) {
-                $validate = EUVATBffOnline::validateQualified(
+                $validate = EUVATVies::validateQualified(
                     $unit->getAttribute('vat_id')?->value->getValue() ?? '',
                     $request->getData('vat_id'),
                     $client->account->name1,
@@ -115,7 +113,7 @@ final class ApiController extends Controller
                 new NullAccount($request->header->account),
                 null,
                 (string) $validate['status'],
-                StringUtils::intHash(EUVATBffOnline::class),
+                StringUtils::intHash(EUVATVies::class),
                 'vat_validation',
                 self::NAME,
                 (string) $client->getId(),
@@ -125,11 +123,13 @@ final class ApiController extends Controller
 
             AuditMapper::create()->execute($audit);
 
-            if ($validate['status'] === 0) {
+            if ($validate['status'] === 0
+                && $validate['vat'] === true && $validate['name'] === true && $validate['city'] === true
+            ) {
                 /** @var \Modules\ClientManagement\Models\ClientAttributeType $type */
                 $type = ClientAttributeTypeMapper::get()->where('name', 'vat_id')->execute();
 
-                $internalRequest = new HttpRequest(new HttpUri(''));
+                $internalRequest  = new HttpRequest(new HttpUri(''));
                 $internalResponse = new HttpResponse();
 
                 $internalRequest->header->account = $request->header->account;
@@ -143,15 +143,15 @@ final class ApiController extends Controller
 
         // Find tax code
         if ($this->app->moduleManager->isActive('Billing')) {
-            /** @var \Modules\Admin\Models\Unit $unit */
+            /** @var \Modules\Organization\Models\Unit $unit */
             $unit = UnitMapper::get()->with('mainAddress')->where('id', $this->app->unitId)->execute();
 
             /** @var \Modules\ClientManagement\Models\ClientAttributeType $type */
             $type = ClientAttributeTypeMapper::get()->where('name', 'sales_tax_code')->execute();
 
-            $value = $this->app->moduleManager->get('Billing')->getClientTaxCode($client, $unit->mainAddress);
+            $value = $this->app->moduleManager->get('Billing', 'ApiTax')->getClientTaxCode($client, $unit->mainAddress);
 
-            $internalRequest = new HttpRequest(new HttpUri(''));
+            $internalRequest  = new HttpRequest(new HttpUri(''));
             $internalResponse = new HttpResponse();
 
             $internalRequest->header->account = $request->header->account;
@@ -179,25 +179,25 @@ final class ApiController extends Controller
         $account = null;
         if (!$request->hasData('account')) {
             $account        = new Account();
-            $account->name1 = (string) ($request->getData('name1') ?? '');
-            $account->name2 = (string) ($request->getData('name2') ?? '');
+            $account->name1 = $request->getDataString('name1') ?? '';
+            $account->name2 = $request->getDataString('name2') ?? '';
         } else {
             $account = new NullAccount((int) $request->getData('account'));
         }
 
         $client          = new Client();
-        $client->number  = (string) ($request->getData('number') ?? '');
+        $client->number  = $request->getDataString('number') ?? '';
         $client->account = $account;
 
         $addr          = new Address();
-        $addr->address = (string) ($request->getData('address') ?? '');
-        $addr->postal  = (string) ($request->getData('postal') ?? '');
-        $addr->city    = (string) ($request->getData('city') ?? '');
-        $addr->setCountry($request->getData('country') ?? ISO3166TwoEnum::_XXX);
-        $addr->state         = (string) ($request->getData('state') ?? '');
+        $addr->address = $request->getDataString('address') ?? '';
+        $addr->postal  = $request->getDataString('postal') ?? '';
+        $addr->city    = $request->getDataString('city') ?? '';
+        $addr->setCountry($request->getDataString('country') ?? ISO3166TwoEnum::_XXX);
+        $addr->state         = $request->getDataString('state') ?? '';
         $client->mainAddress = $addr;
 
-        $client->unit = $request->getData('unit', 'int');
+        $client->unit = $request->getDataInt('unit');
 
         return $client;
     }
@@ -262,12 +262,12 @@ final class ApiController extends Controller
     private function createClientL11nFromRequest(RequestAbstract $request) : ClientL11n
     {
         $clientL11n         = new ClientL11n();
-        $clientL11n->client = (int) ($request->getData('client') ?? 0);
-        $clientL11n->type   = new NullClientL11nType((int) ($request->getData('type') ?? 0));
-        $clientL11n->setLanguage((string) (
-            $request->getData('language') ?? $request->getLanguage()
-        ));
-        $clientL11n->description = (string) ($request->getData('description') ?? '');
+        $clientL11n->client = $request->getDataInt('client') ?? 0;
+        $clientL11n->type   = new NullClientL11nType($request->getDataInt('type') ?? 0);
+        $clientL11n->setLanguage(
+            $request->getDataString('language') ?? $request->getLanguage()
+        );
+        $clientL11n->description = $request->getDataString('description') ?? '';
 
         return $clientL11n;
     }
@@ -333,7 +333,7 @@ final class ApiController extends Controller
     private function createClientL11nTypeFromRequest(RequestAbstract $request) : ClientL11nType
     {
         $clientL11nType             = new ClientL11nType();
-        $clientL11nType->title      = (string) ($request->getData('title') ?? '');
+        $clientL11nType->title      = $request->getDataString('title') ?? '';
         $clientL11nType->isRequired = (bool) ($request->getData('is_required') ?? false);
 
         return $clientL11nType;
@@ -400,7 +400,7 @@ final class ApiController extends Controller
         $attribute->client = (int) $request->getData('client');
         $attribute->type   = new NullClientAttributeType((int) $request->getData('type'));
 
-        if ($request->getData('value') !== null) {
+        if ($request->hasData('value')) {
             $attribute->value = new NullClientAttributeValue((int) $request->getData('value'));
         } else {
             $newRequest = clone $request;
@@ -475,11 +475,11 @@ final class ApiController extends Controller
     private function createClientAttributeTypeL11nFromRequest(RequestAbstract $request) : BaseStringL11n
     {
         $attrL11n      = new BaseStringL11n();
-        $attrL11n->ref = (int) ($request->getData('type') ?? 0);
-        $attrL11n->setLanguage((string) (
-            $request->getData('language') ?? $request->getLanguage()
-        ));
-        $attrL11n->content = (string) ($request->getData('title') ?? '');
+        $attrL11n->ref = $request->getDataInt('type') ?? 0;
+        $attrL11n->setLanguage(
+            $request->getDataString('language') ?? $request->getLanguage()
+        );
+        $attrL11n->content = $request->getDataString('title') ?? '';
 
         return $attrL11n;
     }
@@ -544,13 +544,13 @@ final class ApiController extends Controller
      */
     private function createClientAttributeTypeFromRequest(RequestAbstract $request) : ClientAttributeType
     {
-        $attrType                    = new ClientAttributeType($request->getData('name') ?? '');
-        $attrType->datatype          = (int) ($request->getData('datatype') ?? 0);
-        $attrType->custom            = (bool) ($request->getData('custom') ?? false);
+        $attrType                    = new ClientAttributeType($request->getDataString('name') ?? '');
+        $attrType->datatype          = $request->getDataInt('datatype') ?? 0;
+        $attrType->custom            = $request->getDataBool('custom') ?? false;
         $attrType->isRequired        = (bool) ($request->getData('is_required') ?? false);
-        $attrType->validationPattern = (string) ($request->getData('validation_pattern') ?? '');
-        $attrType->setL11n((string) ($request->getData('title') ?? ''), $request->getData('language') ?? ISO639x1Enum::_EN);
-        $attrType->setFields((int) ($request->getData('fields') ?? 0));
+        $attrType->validationPattern = $request->getDataString('validation_pattern') ?? '';
+        $attrType->setL11n($request->getDataString('title') ?? '', $request->getDataString('language') ?? ISO639x1Enum::_EN);
+        $attrType->setFields($request->getDataInt('fields') ?? 0);
 
         return $attrType;
     }
@@ -626,15 +626,15 @@ final class ApiController extends Controller
     {
         /** @var ClientAttributeType $type */
         $type = ClientAttributeTypeMapper::get()
-            ->where('id', (int) ($request->getData('type') ?? 0))
+            ->where('id', $request->getDataInt('type') ?? 0)
             ->execute();
 
         $attrValue            = new ClientAttributeValue();
-        $attrValue->isDefault = (bool) ($request->getData('default') ?? false);
+        $attrValue->isDefault = $request->getDataBool('default') ?? false;
         $attrValue->setValue($request->getData('value'), $type->datatype);
 
-        if ($request->getData('title') !== null) {
-            $attrValue->setL11n($request->getData('title'), $request->getData('language') ?? ISO639x1Enum::_EN);
+        if ($request->hasData('title')) {
+            $attrValue->setL11n($request->getDataString('title') ?? '', $request->getDataString('language') ?? ISO639x1Enum::_EN);
         }
 
         return $attrValue;
@@ -700,11 +700,11 @@ final class ApiController extends Controller
     private function createClientAttributeValueL11nFromRequest(RequestAbstract $request) : BaseStringL11n
     {
         $attrL11n      = new BaseStringL11n();
-        $attrL11n->ref = (int) ($request->getData('value') ?? 0);
-        $attrL11n->setLanguage((string) (
-            $request->getData('language') ?? $request->getLanguage()
-        ));
-        $attrL11n->content = (string) ($request->getData('title') ?? '');
+        $attrL11n->ref = $request->getDataInt('value') ?? 0;
+        $attrL11n->setLanguage(
+            $request->getDataString('language') ?? $request->getLanguage()
+        );
+        $attrL11n->content = $request->getDataString('title') ?? '';
 
         return $attrL11n;
     }
@@ -769,7 +769,7 @@ final class ApiController extends Controller
                 $this->createModelRelation(
                     $request->header->account,
                     $file->getId(),
-                    $request->getData('type', 'int'),
+                    $request->getDataInt('type'),
                     MediaMapper::class,
                     'types',
                     '',

@@ -6,7 +6,7 @@
  *
  * @package   Modules\ItemManagement
  * @copyright Dennis Eichhorn
- * @license   OMS License 1.0
+ * @license   OMS License 2.0
  * @version   1.0.0
  * @link      https://jingga.app
  */
@@ -135,7 +135,7 @@ $items = $this->getData('items') ?? [];
                         }
 
                         ++$count;
-                        $url = UriFactory::build('{/lang}/{/app}/sales/item/profile?{?}&id=' . $value->getId());
+                        $url = UriFactory::build('{/base}/sales/item/profile?{?}&id=' . $value->getId());
                 ?>
                 <tr data-href="<?= $url; ?>">
                     <td><label class="checkbox" for="iSalesItemSelect-<?= $key; ?>">

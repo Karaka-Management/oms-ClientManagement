@@ -6,7 +6,7 @@
  *
  * @package   Modules\Billing
  * @copyright Dennis Eichhorn
- * @license   OMS License 1.0
+ * @license   OMS License 2.0
  * @version   1.0.0
  * @link      https://jingga.app
  */
@@ -166,7 +166,7 @@ $bills = $this->getData('newestInvoices') ?? [];
                 /** @var \Modules\Billing\Models\Bill $value */
                 foreach ($bills as $key => $value) :
                     ++$count;
-                    $url = UriFactory::build('{/lang}/{/app}/sales/bill?{?}&id=' . $value->getId());
+                    $url = UriFactory::build('{/base}/sales/bill?{?}&id=' . $value->getId());
                 ?>
                     <tr data-href="<?= $url; ?>">
                         <td><label class="checkbox" for="iBillSelect-<?= $key; ?>">
