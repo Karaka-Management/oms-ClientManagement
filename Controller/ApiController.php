@@ -94,6 +94,7 @@ final class ApiController extends Controller
             /** @var \Modules\Organization\Models\Unit $unit */
             $unit = UnitMapper::get()
                 ->with('attributes')
+                ->where('id', $this->app->unitId)
                 ->execute();
 
             $validate = ['status' => -1];
@@ -123,8 +124,11 @@ final class ApiController extends Controller
 
             AuditMapper::create()->execute($audit);
 
-            if ($validate['status'] === 0
-                && $validate['vat'] === true && $validate['name'] === true && $validate['city'] === true
+            if (($validate['status'] === 0
+                    && $validate['vat'] === true 
+                    && $validate['name'] === true 
+                    && $validate['city'] === true)
+                || $validate['status'] !== 0 // Api out of order -> accept it -> @todo: test it during invoice creation
             ) {
                 /** @var \Modules\ClientManagement\Models\ClientAttributeType $type */
                 $type = ClientAttributeTypeMapper::get()->where('name', 'vat_id')->execute();
@@ -144,10 +148,15 @@ final class ApiController extends Controller
         // Find tax code
         if ($this->app->moduleManager->isActive('Billing')) {
             /** @var \Modules\Organization\Models\Unit $unit */
-            $unit = UnitMapper::get()->with('mainAddress')->where('id', $this->app->unitId)->execute();
+            $unit = UnitMapper::get()
+                ->with('mainAddress')
+                ->where('id', $this->app->unitId)
+                ->execute();
 
             /** @var \Modules\ClientManagement\Models\ClientAttributeType $type */
-            $type = ClientAttributeTypeMapper::get()->where('name', 'sales_tax_code')->execute();
+            $type = ClientAttributeTypeMapper::get()
+                ->where('name', 'sales_tax_code')
+                ->execute();
 
             $value = $this->app->moduleManager->get('Billing', 'ApiTax')->getClientTaxCode($client, $unit->mainAddress);
 
