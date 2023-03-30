@@ -16,6 +16,7 @@ namespace Modules\ClientManagement\Controller;
 
 use Modules\Admin\Models\Account;
 use Modules\Admin\Models\Address;
+use Modules\Admin\Models\AddressMapper;
 use Modules\Admin\Models\NullAccount;
 use Modules\Auditor\Models\Audit;
 use Modules\Auditor\Models\AuditMapper;
@@ -125,8 +126,8 @@ final class ApiController extends Controller
             AuditMapper::create()->execute($audit);
 
             if (($validate['status'] === 0
-                    && $validate['vat'] === true 
-                    && $validate['name'] === true 
+                    && $validate['vat'] === true
+                    && $validate['name'] === true
                     && $validate['city'] === true)
                 || $validate['status'] !== 0 // Api out of order -> accept it -> @todo: test it during invoice creation
             ) {
@@ -230,6 +231,100 @@ final class ApiController extends Controller
         }
 
         return [];
+    }
+
+    /**
+     * Api method to update an account
+     *
+     * @param RequestAbstract  $request  Request
+     * @param ResponseAbstract $response Response
+     * @param mixed            $data     Generic data
+     *
+     * @return void
+     *
+     * @api
+     *
+     * @since 1.0.0
+     */
+    public function apiMainAddressUpdate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
+    {
+        if (!empty($val = $this->validateMainAddressUpdate($request))) {
+            $response->set('client_main_address', new FormValidation($val));
+            $response->header->status = RequestStatusCode::R_400;
+
+            return;
+        }
+
+        $clientMapper = $client = ClientMapper::get()
+            ->with('mainAddress');
+
+        if ($request->hasData('account')) {
+            $clientMapper->where('account', $request->getDataInt('account'))
+                ->where('unit', $request->getDataInt('unit'));
+        } elseif ($request->hasData('client')) {
+            $clientMapper->where('id', $request->getDataInt('client'));
+        } else {
+            $clientMapper->where('account', $request->header->account)
+                ->where('unit', $request->getDataInt('unit'));
+        }
+
+        $client = $clientMapper->execute();
+
+        $old = $client->mainAddress;
+
+        $new = $this->updateMainAddressFromRequest($request, clone $old);
+        $this->updateModel($request->header->account, $old, $new, AddressMapper::class, 'address', $request->getOrigin());
+
+        $this->fillJsonResponse(
+            $request,
+            $response,
+            NotificationLevel::OK,
+            '',
+            $this->app->l11nManager->getText($response->getLanguage(), '0', '0', 'SuccessfulUpdate'),
+            $new
+        );
+    }
+
+    /**
+     * Validate news create request
+     *
+     * @param RequestAbstract $request Request
+     *
+     * @return array<string, bool>
+     *
+     * @since 1.0.0
+     */
+    private function validateMainAddressUpdate(RequestAbstract $request) : array
+    {
+        $val = [];
+        if (($val['client'] = (empty($request->getData('client') && empty($request->getData('account')))))
+        ) {
+            return $val;
+        }
+
+        return [];
+    }
+
+    /**
+     * Method to update an account from a request
+     *
+     * @param RequestAbstract $request       Request
+     * @param Address         $address       Address
+     * @param bool            $allowPassword Allow to change password
+     *
+     * @return Address
+     *
+     * @since 1.0.0
+     */
+    private function updateMainAddressFromRequest(RequestAbstract $request, Address $address) : Address
+    {
+        $address->address = $request->getDataString('address') ?? $address->address;
+        $address->postal  = $request->getDataString('postal') ?? $address->postal;
+        $address->city    = $request->getDataString('city') ?? $address->city;
+        $address->setCountry($request->getDataString('country') ?? $address->getCountry());
+        $address->state = $request->getDataString('state') ?? $address->state;
+
+        return $address;
     }
 
     /**

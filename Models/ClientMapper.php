@@ -128,7 +128,6 @@ final class ClientMapper extends DataMapperFactory
             'mapper'      => ClientAttributeMapper::class,
             'table'       => 'clientmgmt_client_attr',
             'self'        => 'clientmgmt_client_attr_client',
-            'conditional' => true,
             'external'    => null,
         ],
     ];
