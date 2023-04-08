@@ -207,7 +207,7 @@ echo $this->getData('nav')->render();
                                         ?>
                                             <tr>
                                                 <td><?= $values['month'] . '/' . \substr((string) $values['year'], -2); ?>
-                                                <td><?= (new Money(((int) $values['net_sales']) / 1000))->getCurrency(); ?>
+                                                <td><?= (new Money(((int) $values['net_sales']) / 10000))->getCurrency(); ?>
                                                 <td><?= ((int) $values['customers']); ?>
                                         <?php endforeach; ?>
                                             <tr>
@@ -327,7 +327,7 @@ echo $this->getData('nav')->render();
                                         ?>
                                             <tr>
                                                 <td><?= (string) $values['year']; ?>
-                                                <td><?= (new Money(((int) $values['net_sales']) / 1000))->getCurrency(); ?>
+                                                <td><?= (new Money(((int) $values['net_sales']) / 10000))->getCurrency(); ?>
                                                 <td><?= ((int) $values['customers']); ?>
                                         <?php endforeach; ?>
                                 </table>
@@ -1329,7 +1329,7 @@ echo $this->getData('nav')->render();
                                         ?>
                                             <tr>
                                                 <td><?= $values['month'] . '/' . \substr((string) $values['year'], -2); ?>
-                                                <td><?= (new Money(((int) $values['net_sales']) / 1000))->getCurrency(); ?>
+                                                <td><?= (new Money(((int) $values['net_sales']) / 10000))->getCurrency(); ?>
                                                 <td><?= ((int) $values['customers']); ?>
                                         <?php endforeach; ?>
                                             <tr>
@@ -1449,7 +1449,7 @@ echo $this->getData('nav')->render();
                                         ?>
                                             <tr>
                                                 <td><?= (string) $values['year']; ?>
-                                                <td><?= (new Money(((int) $values['net_sales']) / 1000))->getCurrency(); ?>
+                                                <td><?= (new Money(((int) $values['net_sales']) / 10000))->getCurrency(); ?>
                                                 <td><?= ((int) $values['customers']); ?>
                                         <?php endforeach; ?>
                                 </table>
@@ -2394,7 +2394,7 @@ echo $this->getData('nav')->render();
                                         ?>
                                             <tr>
                                                 <td><?= $values['month'] . '/' . \substr((string) $values['year'], -2); ?>
-                                                <td><?= (new Money(((int) $values['net_sales']) / 1000))->getCurrency(); ?>
+                                                <td><?= (new Money(((int) $values['net_sales']) / 10000))->getCurrency(); ?>
                                                 <td><?= ((int) $values['customers']); ?>
                                         <?php endforeach; ?>
                                             <tr>
@@ -2514,7 +2514,7 @@ echo $this->getData('nav')->render();
                                         ?>
                                             <tr>
                                                 <td><?= (string) $values['year']; ?>
-                                                <td><?= (new Money(((int) $values['net_sales']) / 1000))->getCurrency(); ?>
+                                                <td><?= (new Money(((int) $values['net_sales']) / 10000))->getCurrency(); ?>
                                                 <td><?= ((int) $values['customers']); ?>
                                         <?php endforeach; ?>
                                 </table>
@@ -3476,7 +3476,7 @@ echo $this->getData('nav')->render();
                                         ?>
                                             <tr>
                                                 <td><?= $values['month'] . '/' . \substr((string) $values['year'], -2); ?>
-                                                <td><?= (new Money(((int) $values['net_sales']) / 1000))->getCurrency(); ?>
+                                                <td><?= (new Money(((int) $values['net_sales']) / 10000))->getCurrency(); ?>
                                                 <td><?= ((int) $values['customers']); ?>
                                                 <td><?= ((int) $values['customers']); ?>
                                         <?php endforeach; ?>
@@ -3599,7 +3599,7 @@ echo $this->getData('nav')->render();
                                         ?>
                                             <tr>
                                                 <td><?= (string) $values['year']; ?>
-                                                <td><?= (new Money(((int) $values['net_sales']) / 1000))->getCurrency(); ?>
+                                                <td><?= (new Money(((int) $values['net_sales']) / 10000))->getCurrency(); ?>
                                                 <td><?= ((int) $values['customers']); ?>
                                                 <td><?= ((int) $values['customers']); ?>
                                         <?php endforeach; ?>
@@ -4306,7 +4306,7 @@ echo $this->getData('nav')->render();
                                         ?>
                                             <tr>
                                                 <td><?= $values['month'] . '/' . \substr((string) $values['year'], -2); ?>
-                                                <td><?= (new Money(((int) $values['net_sales']) / 1000))->getCurrency(); ?>
+                                                <td><?= (new Money(((int) $values['net_sales']) / 10000))->getCurrency(); ?>
                                                 <td><?= ((int) $values['customers']); ?>
                                                 <td><?= ((int) $values['customers']); ?>
                                         <?php endforeach; ?>
@@ -4428,7 +4428,7 @@ echo $this->getData('nav')->render();
                                         ?>
                                             <tr>
                                                 <td><?= (string) $values['year']; ?>
-                                                <td><?= (new Money(((int) $values['net_sales']) / 1000))->getCurrency(); ?>
+                                                <td><?= (new Money(((int) $values['net_sales']) / 10000))->getCurrency(); ?>
                                                 <td><?= ((int) $values['customers']); ?>
                                                 <td><?= ((int) $values['customers']); ?>
                                         <?php endforeach; ?>

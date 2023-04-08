@@ -65,6 +65,21 @@ use phpOMS\Utils\StringUtils;
  */
 final class ApiController extends Controller
 {
+    public function findClientForAccount(int $account, int $unit = null) : ?Client
+    {
+        $clientMapper = ClientMapper::get()
+            ->where('account', $account);
+
+        if (!empty($unit)) {
+            $clientMapper->where('unit', $unit);
+        }
+
+        /** @var \Modules\ClientManagement\Models\Client $client */
+        $client = $clientMapper->execute();
+
+        return $client instanceof NullAccount ? null : $client;
+    }
+
     /**
      * Api method to create news article
      *
@@ -224,8 +239,8 @@ final class ApiController extends Controller
     private function validateClientCreate(RequestAbstract $request) : array
     {
         $val = [];
-        if (($val['number'] = empty($request->getData('number')))
-            || ($val['account'] = empty($request->getData('name1')) && empty($request->getData('account')))
+        if (($val['number'] = !$request->hasData('number'))
+            || ($val['account'] = !$request->hasData('name1') && !$request->hasData('account'))
         ) {
             return $val;
         }
@@ -297,7 +312,7 @@ final class ApiController extends Controller
     private function validateMainAddressUpdate(RequestAbstract $request) : array
     {
         $val = [];
-        if (($val['client'] = (empty($request->getData('client') && empty($request->getData('account')))))
+        if (($val['client'] = (!$request->hasData('client') && !$request->hasData('account')))
         ) {
             return $val;
         }
@@ -308,9 +323,8 @@ final class ApiController extends Controller
     /**
      * Method to update an account from a request
      *
-     * @param RequestAbstract $request       Request
-     * @param Address         $address       Address
-     * @param bool            $allowPassword Allow to change password
+     * @param RequestAbstract $request Request
+     * @param Address         $address Address
      *
      * @return Address
      *
@@ -321,8 +335,8 @@ final class ApiController extends Controller
         $address->address = $request->getDataString('address') ?? $address->address;
         $address->postal  = $request->getDataString('postal') ?? $address->postal;
         $address->city    = $request->getDataString('city') ?? $address->city;
+        $address->state   = $request->getDataString('state') ?? $address->state;
         $address->setCountry($request->getDataString('country') ?? $address->getCountry());
-        $address->state = $request->getDataString('state') ?? $address->state;
 
         return $address;
     }
@@ -388,9 +402,9 @@ final class ApiController extends Controller
     private function validateClientL11nCreate(RequestAbstract $request) : array
     {
         $val = [];
-        if (($val['client'] = empty($request->getData('client')))
-            || ($val['type'] = empty($request->getData('type')))
-            || ($val['description'] = empty($request->getData('description')))
+        if (($val['client'] = !$request->hasData('client'))
+            || ($val['type'] = !$request->hasData('type'))
+            || ($val['description'] = !$request->hasData('description'))
         ) {
             return $val;
         }
@@ -455,7 +469,7 @@ final class ApiController extends Controller
     private function validateClientL11nTypeCreate(RequestAbstract $request) : array
     {
         $val = [];
-        if (($val['title'] = empty($request->getData('title')))) {
+        if (($val['title'] = !$request->hasData('title'))) {
             return $val;
         }
 
@@ -530,9 +544,9 @@ final class ApiController extends Controller
     private function validateClientAttributeCreate(RequestAbstract $request) : array
     {
         $val = [];
-        if (($val['type'] = empty($request->getData('type')))
-            || ($val['value'] = (empty($request->getData('value')) && empty($request->getData('custom'))))
-            || ($val['client'] = empty($request->getData('client')))
+        if (($val['type'] = !$request->hasData('type'))
+            || ($val['value'] = (!$request->hasData('value') && !$request->hasData('custom')))
+            || ($val['client'] = !$request->hasData('client'))
         ) {
             return $val;
         }
@@ -600,8 +614,8 @@ final class ApiController extends Controller
     private function validateClientAttributeTypeL11nCreate(RequestAbstract $request) : array
     {
         $val = [];
-        if (($val['title'] = empty($request->getData('title')))
-            || ($val['type'] = empty($request->getData('type')))
+        if (($val['title'] = !$request->hasData('title'))
+            || ($val['type'] = !$request->hasData('type'))
         ) {
             return $val;
         }
@@ -671,8 +685,8 @@ final class ApiController extends Controller
     private function validateClientAttributeTypeCreate(RequestAbstract $request) : array
     {
         $val = [];
-        if (($val['title'] = empty($request->getData('title')))
-            || ($val['name'] = empty($request->getData('name')))
+        if (($val['title'] = !$request->hasData('title'))
+            || ($val['name'] = !$request->hasData('name'))
         ) {
             return $val;
         }
@@ -756,8 +770,8 @@ final class ApiController extends Controller
     private function validateClientAttributeValueCreate(RequestAbstract $request) : array
     {
         $val = [];
-        if (($val['type'] = empty($request->getData('type')))
-            || ($val['value'] = empty($request->getData('value')))
+        if (($val['type'] = !$request->hasData('type'))
+            || ($val['value'] = !$request->hasData('value'))
         ) {
             return $val;
         }
@@ -825,8 +839,8 @@ final class ApiController extends Controller
     private function validateClientAttributeValueL11nCreate(RequestAbstract $request) : array
     {
         $val = [];
-        if (($val['title'] = empty($request->getData('title')))
-            || ($val['value'] = empty($request->getData('value')))
+        if (($val['title'] = !$request->hasData('title'))
+            || ($val['value'] = !$request->hasData('value'))
         ) {
             return $val;
         }
