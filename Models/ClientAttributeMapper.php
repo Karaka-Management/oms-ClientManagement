@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace Modules\ClientManagement\Models;
 
+use Modules\Attribute\Models\Attribute;
 use phpOMS\DataStorage\Database\Mapper\DataMapperFactory;
 
 /**
@@ -34,7 +35,7 @@ final class ClientAttributeMapper extends DataMapperFactory
      */
     public const COLUMNS = [
         'clientmgmt_client_attr_id'      => ['name' => 'clientmgmt_client_attr_id',    'type' => 'int', 'internal' => 'id'],
-        'clientmgmt_client_attr_client'  => ['name' => 'clientmgmt_client_attr_client',  'type' => 'int', 'internal' => 'client'],
+        'clientmgmt_client_attr_client'  => ['name' => 'clientmgmt_client_attr_client',  'type' => 'int', 'internal' => 'ref'],
         'clientmgmt_client_attr_type'    => ['name' => 'clientmgmt_client_attr_type',  'type' => 'int', 'internal' => 'type'],
         'clientmgmt_client_attr_value'   => ['name' => 'clientmgmt_client_attr_value', 'type' => 'int', 'internal' => 'value'],
     ];
@@ -47,14 +48,22 @@ final class ClientAttributeMapper extends DataMapperFactory
      */
     public const OWNS_ONE = [
         'type' => [
-            'mapper'            => ClientAttributeTypeMapper::class,
-            'external'          => 'clientmgmt_client_attr_type',
+            'mapper'   => ClientAttributeTypeMapper::class,
+            'external' => 'clientmgmt_client_attr_type',
         ],
         'value' => [
-            'mapper'            => ClientAttributeValueMapper::class,
-            'external'          => 'clientmgmt_client_attr_value',
+            'mapper'   => ClientAttributeValueMapper::class,
+            'external' => 'clientmgmt_client_attr_value',
         ],
     ];
+
+    /**
+     * Model to use by the mapper.
+     *
+     * @var class-string
+     * @since 1.0.0
+     */
+    public const MODEL = Attribute::class;
 
     /**
      * Primary table.

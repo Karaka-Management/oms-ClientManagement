@@ -54,7 +54,7 @@ class Client
     /**
      * Attributes.
      *
-     * @var ClientAttribute[]
+     * @var \Modules\Attribute\Models\Attribute[]
      * @since 1.0.0
      */
     private array $attributes = [];
@@ -262,52 +262,6 @@ class Client
     }
 
     /**
-     * Add attribute to client
-     *
-     * @param ClientAttribute $attribute Attribute
-     *
-     * @return void
-     *
-     * @since 1.0.0
-     */
-    public function addAttribute(ClientAttribute $attribute) : void
-    {
-        $this->attributes[] = $attribute;
-    }
-
-    /**
-     * Get attributes
-     *
-     * @return ClientAttribute[]
-     *
-     * @since 1.0.0
-     */
-    public function getAttributes() : array
-    {
-        return $this->attributes;
-    }
-
-    /**
-     * Get attribute
-     *
-     * @param string $attrName Attribute name
-     *
-     * @return null|ClientAttribute
-     *
-     * @since 1.0.0
-     */
-    public function getAttribute(string $attrName) : ?ClientAttribute
-    {
-        foreach ($this->attributes as $attribute) {
-            if ($attribute->type->name === $attrName) {
-                return $attribute;
-            }
-        }
-
-        return null;
-    }
-
-    /**
      * Get payments
      *
      * @return Payment[]
@@ -478,4 +432,6 @@ class Client
     {
         return $this->toArray();
     }
+
+    use \Modules\Attribute\Models\AttributeHolderTrait;
 }

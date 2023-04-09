@@ -18,15 +18,17 @@ use Modules\Admin\Models\Account;
 use Modules\Admin\Models\Address;
 use Modules\Admin\Models\AddressMapper;
 use Modules\Admin\Models\NullAccount;
+use Modules\Attribute\Models\Attribute;
+use Modules\Attribute\Models\AttributeType;
+use Modules\Attribute\Models\AttributeValue;
+use Modules\Attribute\Models\NullAttributeType;
+use Modules\Attribute\Models\NullAttributeValue;
 use Modules\Auditor\Models\Audit;
 use Modules\Auditor\Models\AuditMapper;
 use Modules\ClientManagement\Models\Client;
-use Modules\ClientManagement\Models\ClientAttribute;
 use Modules\ClientManagement\Models\ClientAttributeMapper;
-use Modules\ClientManagement\Models\ClientAttributeType;
 use Modules\ClientManagement\Models\ClientAttributeTypeL11nMapper;
 use Modules\ClientManagement\Models\ClientAttributeTypeMapper;
-use Modules\ClientManagement\Models\ClientAttributeValue;
 use Modules\ClientManagement\Models\ClientAttributeValueL11nMapper;
 use Modules\ClientManagement\Models\ClientAttributeValueMapper;
 use Modules\ClientManagement\Models\ClientL11n;
@@ -34,8 +36,7 @@ use Modules\ClientManagement\Models\ClientL11nMapper;
 use Modules\ClientManagement\Models\ClientL11nType;
 use Modules\ClientManagement\Models\ClientL11nTypeMapper;
 use Modules\ClientManagement\Models\ClientMapper;
-use Modules\ClientManagement\Models\NullClientAttributeType;
-use Modules\ClientManagement\Models\NullClientAttributeValue;
+use Modules\ClientManagement\Models\NullClient;
 use Modules\ClientManagement\Models\NullClientL11nType;
 use Modules\Media\Models\MediaMapper;
 use Modules\Media\Models\PathSettings;
@@ -65,6 +66,16 @@ use phpOMS\Utils\StringUtils;
  */
 final class ApiController extends Controller
 {
+    /**
+     * Find client by account
+     *
+     * @param int $account Account id
+     * @param int $unit    Unit id
+     *
+     * @return null|Client
+     *
+     * @since 1.0.0
+     */
     public function findClientForAccount(int $account, int $unit = null) : ?Client
     {
         $clientMapper = ClientMapper::get()
@@ -77,7 +88,7 @@ final class ApiController extends Controller
         /** @var \Modules\ClientManagement\Models\Client $client */
         $client = $clientMapper->execute();
 
-        return $client instanceof NullAccount ? null : $client;
+        return $client instanceof NullClient ? null : $client;
     }
 
     /**
@@ -117,8 +128,8 @@ final class ApiController extends Controller
 
             if (\in_array($client->mainAddress->getCountry(), ISO3166CharEnum::getRegion('eu'))) {
                 $validate = EUVATVies::validateQualified(
+                    $request->getDataString('vat_id') ?? '',
                     $unit->getAttribute('vat_id')?->value->getValue() ?? '',
-                    $request->getData('vat_id'),
                     $client->account->name1,
                     $client->mainAddress->city,
                     $client->mainAddress->postal,
@@ -146,7 +157,7 @@ final class ApiController extends Controller
                     && $validate['city'] === true)
                 || $validate['status'] !== 0 // Api out of order -> accept it -> @todo: test it during invoice creation
             ) {
-                /** @var \Modules\ClientManagement\Models\ClientAttributeType $type */
+                /** @var \Modules\Attribute\Models\AttributeType $type */
                 $type = ClientAttributeTypeMapper::get()->where('name', 'vat_id')->execute();
 
                 $internalRequest  = new HttpRequest(new HttpUri(''));
@@ -169,7 +180,7 @@ final class ApiController extends Controller
                 ->where('id', $this->app->unitId)
                 ->execute();
 
-            /** @var \Modules\ClientManagement\Models\ClientAttributeType $type */
+            /** @var \Modules\Attribute\Models\AttributeType $type */
             $type = ClientAttributeTypeMapper::get()
                 ->where('name', 'sales_tax_code')
                 ->execute();
@@ -283,6 +294,7 @@ final class ApiController extends Controller
                 ->where('unit', $request->getDataInt('unit'));
         }
 
+        /** @var \Modules\ClientManagement\Models\Client $client */
         $client = $clientMapper->execute();
 
         $old = $client->mainAddress;
@@ -508,18 +520,18 @@ final class ApiController extends Controller
      *
      * @param RequestAbstract $request Request
      *
-     * @return ClientAttribute
+     * @return Attribute
      *
      * @since 1.0.0
      */
-    private function createClientAttributeFromRequest(RequestAbstract $request) : ClientAttribute
+    private function createClientAttributeFromRequest(RequestAbstract $request) : Attribute
     {
-        $attribute         = new ClientAttribute();
-        $attribute->client = (int) $request->getData('client');
-        $attribute->type   = new NullClientAttributeType((int) $request->getData('type'));
+        $attribute       = new Attribute();
+        $attribute->ref  = (int) $request->getData('client');
+        $attribute->type = new NullAttributeType((int) $request->getData('type'));
 
         if ($request->hasData('value')) {
-            $attribute->value = new NullClientAttributeValue((int) $request->getData('value'));
+            $attribute->value = new NullAttributeValue((int) $request->getData('value'));
         } else {
             $newRequest = clone $request;
             $newRequest->setData('value', $request->getData('custom'), true);
@@ -656,13 +668,13 @@ final class ApiController extends Controller
      *
      * @param RequestAbstract $request Request
      *
-     * @return ClientAttributeType
+     * @return AttributeType
      *
      * @since 1.0.0
      */
-    private function createClientAttributeTypeFromRequest(RequestAbstract $request) : ClientAttributeType
+    private function createClientAttributeTypeFromRequest(RequestAbstract $request) : AttributeType
     {
-        $attrType                    = new ClientAttributeType($request->getDataString('name') ?? '');
+        $attrType                    = new AttributeType($request->getDataString('name') ?? '');
         $attrType->datatype          = $request->getDataInt('datatype') ?? 0;
         $attrType->custom            = $request->getDataBool('custom') ?? false;
         $attrType->isRequired        = (bool) ($request->getData('is_required') ?? false);
@@ -736,18 +748,18 @@ final class ApiController extends Controller
      *
      * @param RequestAbstract $request Request
      *
-     * @return ClientAttributeValue
+     * @return AttributeValue
      *
      * @since 1.0.0
      */
-    private function createClientAttributeValueFromRequest(RequestAbstract $request) : ClientAttributeValue
+    private function createClientAttributeValueFromRequest(RequestAbstract $request) : AttributeValue
     {
-        /** @var ClientAttributeType $type */
+        /** @var AttributeType $type */
         $type = ClientAttributeTypeMapper::get()
             ->where('id', $request->getDataInt('type') ?? 0)
             ->execute();
 
-        $attrValue            = new ClientAttributeValue();
+        $attrValue            = new AttributeValue();
         $attrValue->isDefault = $request->getDataBool('default') ?? false;
         $attrValue->setValue($request->getData('value'), $type->datatype);
 

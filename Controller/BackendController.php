@@ -58,7 +58,7 @@ final class BackendController extends Controller
         $view->setTemplate('/Modules/ClientManagement/Theme/Backend/attribute-type-list');
         $view->addData('nav', $this->app->moduleManager->get('Navigation')->createNavigationMid(1004801001, $request, $response));
 
-        /** @var \Modules\ClientManagement\Models\ClientAttributeType[] $attributes */
+        /** @var \Modules\Attribute\Models\AttributeType[] $attributes */
         $attributes = ClientAttributeTypeMapper::getAll()
             ->with('l11n')
             ->where('l11n/language', $response->getLanguage())
@@ -87,7 +87,7 @@ final class BackendController extends Controller
         $view->setTemplate('/Modules/ClientManagement/Theme/Backend/attribute-value-list');
         $view->addData('nav', $this->app->moduleManager->get('Navigation')->createNavigationMid(1004801001, $request, $response));
 
-        /** @var \Modules\ClientManagement\Models\ClientAttributeValue[] $attributes */
+        /** @var \Modules\Attribute\Models\AttributeValue[] $attributes */
         $attributes = ClientAttributeValueMapper::getAll()
             ->with('l11n')
             ->where('l11n/language', $response->getLanguage())
@@ -116,7 +116,7 @@ final class BackendController extends Controller
         $view->setTemplate('/Modules/ClientManagement/Theme/Backend/attribute-type');
         $view->addData('nav', $this->app->moduleManager->get('Navigation')->createNavigationMid(1004801001, $request, $response));
 
-        /** @var \Modules\ClientManagement\Models\ClientAttributeType $attribute */
+        /** @var \Modules\Attribute\Models\AttributeType $attribute */
         $attribute = ClientAttributeTypeMapper::get()
             ->with('l11n')
             ->where('id', (int) $request->getData('id'))
