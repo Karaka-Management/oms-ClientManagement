@@ -129,7 +129,7 @@ final class ApiController extends Controller
             if (\in_array($client->mainAddress->getCountry(), ISO3166CharEnum::getRegion('eu'))) {
                 $validate = EUVATVies::validateQualified(
                     $request->getDataString('vat_id') ?? '',
-                    $unit->getAttribute('vat_id')?->value->getValue() ?? '',
+                    $unit->getAttribute('vat_id')?->value->valueStr ?? '',
                     $client->account->name1,
                     $client->mainAddress->city,
                     $client->mainAddress->postal,

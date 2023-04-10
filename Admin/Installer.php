@@ -53,7 +53,12 @@ final class Installer extends InstallerAbstract
             return;
         }
 
+        /** @var array $attributes */
         $attributes = \json_decode($fileContent, true);
+        if ($attributes === false) {
+            return;
+        }
+
         $attrTypes  = self::createClientAttributeTypes($app, $attributes);
         $attrValues = self::createClientAttributeValues($app, $attrTypes, $attributes);
 
@@ -63,8 +68,13 @@ final class Installer extends InstallerAbstract
             return;
         }
 
+        /** @var array $localizations */
         $localizations = \json_decode($fileContent, true);
-        $l11nTypes     = self::createClientL11nTypes($app, $localizations);
+        if ($localizations === false) {
+            return;
+        }
+
+        $l11nTypes = self::createClientL11nTypes($app, $localizations);
     }
 
     /**
