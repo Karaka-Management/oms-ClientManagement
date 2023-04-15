@@ -144,7 +144,7 @@ $items = $this->getData('items') ?? [];
                                 </label>
                     <td><a href="<?= $url; ?>"><?= $this->printHtml($value->itemNumber); ?></a>
                     <td><a href="<?= $url; ?>"><?= $this->printHtml($value->itemName); ?></a>
-                    <td><a href="<?= $url; ?>"><?= $this->printHtml((string) $value->quantity); ?></a>
+                    <td><a href="<?= $url; ?>"><?= $this->printHtml((string) $value->getQuantity()); ?></a>
                     <td><a href="<?= $url; ?>"><?= $this->printHtml($value->singleSalesPriceNet->getCurrency()); ?></a>
                     <td>
                     <td>

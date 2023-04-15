@@ -58,6 +58,15 @@ echo $this->getData('nav')->render();
         <div class="tab">
             <div class="row">
                 <div class="col-xs-12 col-lg-3 last-lg">
+                    <div class="box">
+                        <?php if(true) : ?>
+                        <a class="button" href="<?= UriFactory::build('{/base}/sales/bill/create?client=' . $client->getId()); ?>"><?= $this->getHtml('CreateBill', 'Billing'); ?></a>
+                        <?php endif; ?>
+                        <?php if (false) : ?>
+                            <a class="button"><?= $this->getHtml('ViewAccount', 'Accounting'); ?></a>
+                        <?php endif; ?>
+                    </div>
+
                     <section class="portlet">
                         <form>
                             <div class="portlet-body">
@@ -95,7 +104,7 @@ echo $this->getData('nav')->render();
                         </div>
                     </section>
 
-                    <section class="portlet">
+                    <section class="portlet map-small">
                         <div class="portlet-head">
                             <?= $this->getHtml('Address'); ?>
                             <span class="clickPopup floatRight">
@@ -133,14 +142,11 @@ echo $this->getData('nav')->render();
                                 <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->mainAddress->city); ?>" required>
                                 <tr><td><label for="iName1"><?= $this->getHtml('Country'); ?></label>
                                 <tr><td><select name="country">
-                                    <?php foreach ($countryCodes as $code3 => $code2) : ?>
-                                        <option value="<?= $this->printHtml($code2); ?>"<?= $this->printHtml($code2 === $client->mainAddress->getCountry() ? ' selected' : ''); ?>><?= $this->printHtml($countries[$code3]); ?>
-                                    <?php endforeach; ?>
-                                </select>
-                                <tr><td>
-                                    <?php if (\is_file(__DIR__ . '/../../../../phpOMS/Localization/Maps/svg/' . \strtolower($client->mainAddress->getCountry()) . '.svg')) : ?>
-                                    <img alt="<?= $this->getHtml('IMG_alt_map'); ?>" id="iMap" style="width: 100%;" src="<?= UriFactory::build('phpOMS/Localization/Maps/svg/' . \strtolower($client->mainAddress->getCountry()) . '.svg'); ?>">
-                                    <?php endif; ?>
+                                        <?php foreach ($countryCodes as $code3 => $code2) : ?>
+                                            <option value="<?= $this->printHtml($code2); ?>"<?= $this->printHtml($code2 === $client->mainAddress->getCountry() ? ' selected' : ''); ?>><?= $this->printHtml($countries[$code3]); ?>
+                                        <?php endforeach; ?>
+                                    </select>
+                                <tr><td><div id="clientMap" class="map"></div>
                             </table>
                         </div>
                     </section>
