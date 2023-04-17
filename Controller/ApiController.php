@@ -152,9 +152,9 @@ final class ApiController extends Controller
             AuditMapper::create()->execute($audit);
 
             if (($validate['status'] === 0
-                    && $validate['vat'] === true
-                    && $validate['name'] === true
-                    && $validate['city'] === true)
+                    && $validate['vat'] === 'A'
+                    && $validate['name'] === 'A'
+                    && $validate['city'] === 'A')
                 || $validate['status'] !== 0 // Api out of order -> accept it -> @todo: test it during invoice creation
             ) {
                 /** @var \Modules\Attribute\Models\AttributeType $type */

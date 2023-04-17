@@ -12,6 +12,7 @@
  */
 declare(strict_types=1);
 
+use Modules\Media\Models\NullMedia;
 use Modules\Profile\Models\ContactType;
 use phpOMS\Uri\UriFactory;
 
@@ -24,6 +25,8 @@ $countries    = \phpOMS\Localization\ISO3166NameEnum::getConstants();
 $client = $this->getData('client');
 $notes  = $client->getNotes();
 $files  = $client->getFiles();
+
+$clientImage = $this->getData('clientImage') ?? new NullMedia();
 
 $newestInvoices    = $this->getData('newestInvoices') ?? [];
 $monthlySalesCosts = $this->getData('monthlySalesCosts') ?? [];

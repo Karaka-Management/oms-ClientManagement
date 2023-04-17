@@ -18,8 +18,11 @@ use Modules\Billing\Models\SalesBillMapper;
 use Modules\ClientManagement\Models\ClientAttributeTypeMapper;
 use Modules\ClientManagement\Models\ClientAttributeValueMapper;
 use Modules\ClientManagement\Models\ClientMapper;
+use Modules\Media\Models\MediaMapper;
+use Modules\Media\Models\MediaTypeMapper;
 use phpOMS\Asset\AssetType;
 use phpOMS\Contract\RenderableInterface;
+use phpOMS\DataStorage\Database\Query\Builder;
 use phpOMS\DataStorage\Database\Query\OrderType;
 use phpOMS\Localization\ISO3166CharEnum;
 use phpOMS\Localization\ISO3166NameEnum;
@@ -218,6 +221,33 @@ final class BackendController extends Controller
             ->execute();
 
         $view->setData('client', $client);
+
+        // Get item profile image
+        // It might not be part of the 5 newest item files from above
+        // @todo: It would be nice to have something like this as a default method in the model e.g.
+        // ItemManagement::getRelations()->with('types')->where(...);
+        // This should return the relations and NOT the model itself
+        $query   = new Builder($this->app->dbPool->get());
+        $results = $query->selectAs(ClientMapper::HAS_MANY['files']['external'], 'file')
+            ->from(ClientMapper::TABLE)
+            ->leftJoin(ClientMapper::HAS_MANY['files']['table'])
+                ->on(ClientMapper::HAS_MANY['files']['table'] . '.' . ClientMapper::HAS_MANY['files']['self'], '=', ClientMapper::TABLE . '.' . ClientMapper::PRIMARYFIELD)
+            ->leftJoin(MediaMapper::TABLE)
+                ->on(ClientMapper::HAS_MANY['files']['table'] . '.' . ClientMapper::HAS_MANY['files']['external'], '=', MediaMapper::TABLE . '.' . MediaMapper::PRIMARYFIELD)
+             ->leftJoin(MediaMapper::HAS_MANY['types']['table'])
+                ->on(MediaMapper::TABLE . '.' . MediaMapper::PRIMARYFIELD, '=', MediaMapper::HAS_MANY['types']['table'] . '.' . MediaMapper::HAS_MANY['types']['self'])
+            ->leftJoin(MediaTypeMapper::TABLE)
+                ->on(MediaMapper::HAS_MANY['types']['table'] . '.' . MediaMapper::HAS_MANY['types']['external'], '=', MediaTypeMapper::TABLE . '.' . MediaTypeMapper::PRIMARYFIELD)
+            ->where(ClientMapper::HAS_MANY['files']['self'], '=', $client->getId())
+            ->where(MediaTypeMapper::TABLE . '.' . MediaTypeMapper::getColumnByMember('name'), '=', 'client_profile_image');
+
+        $clientImage = MediaMapper::get()
+            ->with('types')
+            ->where('id', $results)
+            ->limit(1)
+            ->execute();
+
+        $view->addData('clientImage', $clientImage);
 
         // stats
         if ($this->app->moduleManager->isActive('Billing')) {

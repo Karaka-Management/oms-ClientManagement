@@ -52,7 +52,7 @@ final class ClientTest extends \PHPUnit\Framework\TestCase
         self::assertEquals([], $this->client->getAddresses());
         self::assertEquals([], $this->client->getContactElements());
         self::assertEquals((new \DateTime('now'))->format('Y-m-d'), $this->client->createdAt->format('Y-m-d'));
-        self::assertInstanceOf('\Modules\Profile\Models\Profile', $this->client->profile);
+        self::assertInstanceOf('\Modules\Admin\Models\Account', $this->client->account);
         self::assertInstanceOf('\Modules\Admin\Models\Address', $this->client->mainAddress);
         self::assertInstanceOf('\Modules\Profile\Models\NullContactElement', $this->client->getMainContactElement(0));
     }
