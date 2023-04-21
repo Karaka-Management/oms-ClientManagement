@@ -12,8 +12,8 @@
  */
 declare(strict_types=1);
 
+use Modules\Admin\Models\ContactType;
 use Modules\Media\Models\NullMedia;
-use Modules\Profile\Models\ContactType;
 use phpOMS\Uri\UriFactory;
 
 $countryCodes = \phpOMS\Localization\ISO3166TwoEnum::getConstants();
