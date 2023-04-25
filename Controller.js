@@ -15,8 +15,8 @@ jsOMS.Modules.ClientManagement = class {
 
     bind (id)
     {
-        const charts    = typeof id === 'undefined' ? document.getElementsByTagName('canvas') : [document.getElementById(id)];
-        let length = charts.length;
+        const charts = typeof id === 'undefined' ? document.getElementsByTagName('canvas') : [document.getElementById(id)];
+        let length   = charts.length;
 
         for (let i = 0; i < length; ++i) {
             if (charts[i].getAttribute('data-chart') === null
@@ -28,8 +28,8 @@ jsOMS.Modules.ClientManagement = class {
             this.bindChart(charts[i]);
         }
 
-        const maps    = typeof id === 'undefined' ? document.getElementsByClassName('map') : [document.getElementById(id)];
-        length = maps.length;
+        const maps = typeof id === 'undefined' ? document.getElementsByClassName('map') : [document.getElementById(id)];
+        length     = maps.length;
 
         for (let i = 0; i < length; ++i) {
             this.bindMap(maps[i]);
