@@ -135,7 +135,7 @@ $items = $this->getData('items') ?? [];
                         }
 
                         ++$count;
-                        $url = UriFactory::build('{/base}/sales/item/profile?{?}&id=' . $value->getId());
+                        $url = UriFactory::build('{/base}/sales/item/profile?{?}&id=' . $value->id);
                 ?>
                 <tr data-href="<?= $url; ?>">
                     <td><label class="checkbox" for="iSalesItemSelect-<?= $key; ?>">

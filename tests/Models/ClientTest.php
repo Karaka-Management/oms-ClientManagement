@@ -41,7 +41,7 @@ final class ClientTest extends \PHPUnit\Framework\TestCase
      */
     public function testDefault() : void
     {
-        self::assertEquals(0, $this->client->getId());
+        self::assertEquals(0, $this->client->id);
         self::assertEquals('', $this->client->number);
         self::assertEquals('', $this->client->numberReverse);
         self::assertEquals('', $this->client->info);

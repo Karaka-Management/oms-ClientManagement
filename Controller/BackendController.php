@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace Modules\ClientManagement\Controller;
 
 use Modules\Billing\Models\SalesBillMapper;
+use Modules\ClientManagement\Models\ClientAttributeTypeL11nMapper;
 use Modules\ClientManagement\Models\ClientAttributeTypeMapper;
 use Modules\ClientManagement\Models\ClientAttributeValueMapper;
 use Modules\ClientManagement\Models\ClientMapper;
@@ -126,7 +127,12 @@ final class BackendController extends Controller
             ->where('l11n/language', $response->getLanguage())
             ->execute();
 
+        $l11ns = ClientAttributeTypeL11nMapper::getAll()
+            ->where('ref', $attribute->id)
+            ->execute();
+
         $view->addData('attribute', $attribute);
+        $view->addData('l11ns', $l11ns);
 
         return $view;
     }
@@ -238,7 +244,7 @@ final class BackendController extends Controller
                 ->on(MediaMapper::TABLE . '.' . MediaMapper::PRIMARYFIELD, '=', MediaMapper::HAS_MANY['types']['table'] . '.' . MediaMapper::HAS_MANY['types']['self'])
             ->leftJoin(MediaTypeMapper::TABLE)
                 ->on(MediaMapper::HAS_MANY['types']['table'] . '.' . MediaMapper::HAS_MANY['types']['external'], '=', MediaTypeMapper::TABLE . '.' . MediaTypeMapper::PRIMARYFIELD)
-            ->where(ClientMapper::HAS_MANY['files']['self'], '=', $client->getId())
+            ->where(ClientMapper::HAS_MANY['files']['self'], '=', $client->id)
             ->where(MediaTypeMapper::TABLE . '.' . MediaTypeMapper::getColumnByMember('name'), '=', 'client_profile_image');
 
         $clientImage = MediaMapper::get()
@@ -251,21 +257,21 @@ final class BackendController extends Controller
 
         // stats
         if ($this->app->moduleManager->isActive('Billing')) {
-            $ytd            = SalesBillMapper::getSalesByClientId($client->getId(), new SmartDateTime('Y-01-01'), new SmartDateTime('now'));
-            $mtd            = SalesBillMapper::getSalesByClientId($client->getId(), new SmartDateTime('Y-m-01'), new SmartDateTime('now'));
-            $lastOrder      = SalesBillMapper::getLastOrderDateByClientId($client->getId());
+            $ytd            = SalesBillMapper::getSalesByClientId($client->id, new SmartDateTime('Y-01-01'), new SmartDateTime('now'));
+            $mtd            = SalesBillMapper::getSalesByClientId($client->id, new SmartDateTime('Y-m-01'), new SmartDateTime('now'));
+            $lastOrder      = SalesBillMapper::getLastOrderDateByClientId($client->id);
             $newestInvoices = SalesBillMapper::getAll()
                 ->with('type')
                 ->with('type/l11n')
                 ->with('client')
-                ->where('client', $client->getId())
+                ->where('client', $client->id)
                 ->where('type/l11n/language', $response->getLanguage())
                 ->sort('id', OrderType::DESC)
                 ->limit(5)
                 ->execute();
 
-            $monthlySalesCosts = SalesBillMapper::getClientMonthlySalesCosts($client->getId(), (new SmartDateTime('now'))->createModify(-1), new SmartDateTime('now'));
-            $items             = SalesBillMapper::getClientItem($client->getId(), (new SmartDateTime('now'))->createModify(-1), new SmartDateTime('now'));
+            $monthlySalesCosts = SalesBillMapper::getClientMonthlySalesCosts($client->id, (new SmartDateTime('now'))->createModify(-1), new SmartDateTime('now'));
+            $items             = SalesBillMapper::getClientItem($client->id, (new SmartDateTime('now'))->createModify(-1), new SmartDateTime('now'));
         } else {
             $ytd               = new Money();
             $mtd               = new Money();

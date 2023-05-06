@@ -103,12 +103,12 @@ echo $this->getData('nav')->render(); ?>
                         </label>
                 <tbody>
                 <?php $count = 0; foreach ($clients as $key => $value) : ++$count;
-                 $url        = UriFactory::build('{/base}/sales/client/profile?{?}&id=' . $value->getId());
+                 $url        = UriFactory::build('{/base}/sales/client/profile?{?}&id=' . $value->id);
                  $image      = $value->getFileByTypeName('client_profile_image');
                  ?>
                 <tr data-href="<?= $url; ?>">
                     <td><a href="<?= $url; ?>"><img alt="<?= $this->getHtml('IMG_alt_client'); ?>" width="30" loading="lazy" class="item-image"
-                            src="<?= $image instanceof NullMedia
+                            src="<?= $image->id === 0
                                 ? 'Web/Backend/img/logo_grey.png'
                                 : UriFactory::build('{/base}/' . $image->getPath()); ?>"></a>
                     <td data-label="<?= $this->getHtml('ID', '0', '0'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->number); ?></a>

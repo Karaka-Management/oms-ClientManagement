@@ -34,15 +34,15 @@ use Modules\Profile\Models\Profile;
  */
 class Client
 {
-    protected int $id = 0;
+    public int $id = 0;
 
     public string $number = '';
 
     public string $numberReverse = '';
 
-    private int $status = ClientStatus::ACTIVE;
+    public int $status = ClientStatus::ACTIVE;
 
-    private int $type = 0;
+    public int $type = 0;
 
     public string $info = '';
 

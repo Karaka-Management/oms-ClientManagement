@@ -63,7 +63,7 @@ echo $this->getData('nav')->render();
                 <div class="col-xs-12 col-lg-3 last-lg">
                     <div class="box">
                         <?php if(true) : ?>
-                        <a class="button" href="<?= UriFactory::build('{/base}/sales/bill/create?client=' . $client->getId()); ?>"><?= $this->getHtml('CreateBill', 'Billing'); ?></a>
+                        <a class="button" href="<?= UriFactory::build('{/base}/sales/bill/create?client=' . $client->id); ?>"><?= $this->getHtml('CreateBill', 'Billing'); ?></a>
                         <?php endif; ?>
                         <?php if (false) : ?>
                             <a class="button"><?= $this->getHtml('ViewAccount', 'Accounting'); ?></a>
@@ -226,7 +226,7 @@ echo $this->getData('nav')->render();
                                         <td><?= $this->getHtml('CreatedAt'); ?>
                                     <tbody>
                                     <?php foreach ($notes as $note) :
-                                        $url = UriFactory::build('{/base}/editor/single?{?}&id=' . $note->getId());
+                                        $url = UriFactory::build('{/base}/editor/single?{?}&id=' . $note->id);
                                         ?>
                                     <tr data-href="<?= $url; ?>">
                                         <td><a href="<?= $url; ?>"><?= $note->title; ?></a>
@@ -249,7 +249,7 @@ echo $this->getData('nav')->render();
                                         <td><?= $this->getHtml('CreatedAt'); ?>
                                     <tbody>
                                     <?php foreach ($files as $file) :
-                                        $url = UriFactory::build('{/base}/media/single?{?}&id=' . $file->getId());
+                                        $url = UriFactory::build('{/base}/media/single?{?}&id=' . $file->id);
                                         ?>
                                     <tr data-href="<?= $url; ?>">
                                         <td><a href="<?= $url; ?>"><?= $file->name; ?></a>
@@ -278,7 +278,7 @@ echo $this->getData('nav')->render();
                                     <?php
                                     /** @var \Modules\Billing\Models\Bill $invoice */
                                     foreach ($newestInvoices as $invoice) :
-                                        $url = UriFactory::build('{/base}/sales/bill?{?}&id=' . $invoice->getId());
+                                        $url = UriFactory::build('{/base}/sales/bill?{?}&id=' . $invoice->id);
                                         ?>
                                     <tr data-href="<?= $url; ?>">
                                         <td><a href="<?= $url; ?>"><?= $invoice->getNumber(); ?></a>

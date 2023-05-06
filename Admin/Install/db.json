@@ -406,6 +406,30 @@
             }
         }
     },
+    "clientmgmt_client_account": {
+        "name": "clientmgmt_client_account",
+        "fields": {
+            "clientmgmt_client_account_id": {
+                "name": "clientmgmt_client_account_id",
+                "type": "INT",
+                "null": false,
+                "primary": true,
+                "autoincrement": true
+            },
+            "clientmgmt_client_account_account": {
+                "name": "clientmgmt_client_account_account",
+                "type": "VARCHAR(50)",
+                "null": false
+            },
+            "clientmgmt_client_account_client": {
+                "name": "clientmgmt_client_account_client",
+                "type": "INT(11)",
+                "null": false,
+                "foreignTable": "clientmgmt_client",
+                "foreignKey": "clientmgmt_client_id"
+            }
+        }
+    },
     "clientmgmt_client_media": {
         "name": "clientmgmt_client_media",
         "fields": {

@@ -88,7 +88,7 @@ final class ApiController extends Controller
         /** @var \Modules\ClientManagement\Models\Client $client */
         $client = $clientMapper->execute();
 
-        return $client instanceof NullClient ? null : $client;
+        return $client->id === 0 ? null : $client;
     }
 
     /**
@@ -129,7 +129,7 @@ final class ApiController extends Controller
             if (\in_array($client->mainAddress->getCountry(), ISO3166CharEnum::getRegion('eu'))) {
                 $validate = EUVATVies::validateQualified(
                     $request->getDataString('vat_id') ?? '',
-                    $unit->getAttribute('vat_id')?->value->valueStr ?? '',
+                    $unit->getAttribute('vat_id')->value->valueStr ?? '',
                     $client->account->name1,
                     $client->mainAddress->city,
                     $client->mainAddress->postal,
@@ -144,7 +144,7 @@ final class ApiController extends Controller
                 StringUtils::intHash(EUVATVies::class),
                 'vat_validation',
                 self::NAME,
-                (string) $client->getId(),
+                (string) $client->id,
                 \json_encode($validate),
                 (int) \ip2long($request->getOrigin())
             );
@@ -164,8 +164,8 @@ final class ApiController extends Controller
                 $internalResponse = new HttpResponse();
 
                 $internalRequest->header->account = $request->header->account;
-                $internalRequest->setData('client', $client->getId());
-                $internalRequest->setData('type',  $type->getId());
+                $internalRequest->setData('client', $client->id);
+                $internalRequest->setData('type',  $type->id);
                 $internalRequest->setData('custom',  $request->hasData('vat_id'));
 
                 $this->apiClientAttributeCreate($internalRequest, $internalResponse);
@@ -191,9 +191,9 @@ final class ApiController extends Controller
             $internalResponse = new HttpResponse();
 
             $internalRequest->header->account = $request->header->account;
-            $internalRequest->setData('client', $client->getId());
-            $internalRequest->setData('type',  $type->getId());
-            $internalRequest->setData('value', $value->getId());
+            $internalRequest->setData('client', $client->id);
+            $internalRequest->setData('type',  $type->id);
+            $internalRequest->setData('value', $value->id);
 
             $this->apiClientAttributeCreate($internalRequest, $internalResponse);
         }
@@ -735,7 +735,7 @@ final class ApiController extends Controller
             $this->createModelRelation(
                 $request->header->account,
                 (int) $request->getData('type'),
-                $attrValue->getId(),
+                $attrValue->id,
                 ClientAttributeTypeMapper::class, 'defaults', '', $request->getOrigin()
             );
         }
@@ -898,7 +898,7 @@ final class ApiController extends Controller
             foreach ($uploaded as $file) {
                 $this->createModelRelation(
                     $request->header->account,
-                    $file->getId(),
+                    $file->id,
                     $request->getDataInt('type'),
                     MediaMapper::class,
                     'types',
@@ -911,7 +911,7 @@ final class ApiController extends Controller
         $this->createModelRelation(
             $request->header->account,
             (int) $request->getData('client'),
-            \reset($uploaded)->getId(),
+            \reset($uploaded)->id,
             ClientMapper::class, 'files', '', $request->getOrigin()
         );
 
@@ -942,6 +942,6 @@ final class ApiController extends Controller
         }
 
         $model = $responseData['response'];
-        $this->createModelRelation($request->header->account, $request->getData('id'), $model->getId(), ClientMapper::class, 'notes', '', $request->getOrigin());
+        $this->createModelRelation($request->header->account, $request->getData('id'), $model->id, ClientMapper::class, 'notes', '', $request->getOrigin());
     }
 }
