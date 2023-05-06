@@ -56,6 +56,39 @@
         ]
     },
     {
+        "name": "bill_emails",
+        "l11n": {
+            "en": "Send bills as emails",
+            "de": "Sende Rechnungen als Email"
+        },
+        "value_type": 1,
+        "is_custom_allowed": false,
+        "validation_pattern": "",
+        "is_required": false,
+        "default_value": 1,
+        "values": [
+            {
+                "value": 0
+            },
+            {
+                "value": 1
+            }
+        ]
+    },
+    {
+        "name": "bill_email_address",
+        "l11n": {
+            "en": "Email address for billing",
+            "de": "Emailadresse für Rechnungen"
+        },
+        "value_type": 2,
+        "is_custom_allowed": true,
+        "validation_pattern": "",
+        "is_required": false,
+        "default_value": "",
+        "values": []
+    },
+    {
         "name": "group",
         "l11n": {
             "en": "Group",
