@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace Modules\ClientManagement\Models;
 
 use phpOMS\DataStorage\Database\Mapper\DataMapperFactory;
+use phpOMS\Localization\BaseStringL11n;
 
 /**
  * Client mapper class.
@@ -24,7 +25,7 @@ use phpOMS\DataStorage\Database\Mapper\DataMapperFactory;
  * @link    https://jingga.app
  * @since   1.0.0
  *
- * @template T of ClientL11n
+ * @template T of BaseStringL11n
  * @extends DataMapperFactory<T>
  */
 final class ClientL11nMapper extends DataMapperFactory
@@ -37,8 +38,8 @@ final class ClientL11nMapper extends DataMapperFactory
      */
     public const COLUMNS = [
         'clientmgmt_client_l11n_id'          => ['name' => 'clientmgmt_client_l11n_id',          'type' => 'int',    'internal' => 'id'],
-        'clientmgmt_client_l11n_description' => ['name' => 'clientmgmt_client_l11n_description', 'type' => 'string', 'internal' => 'description', 'autocomplete' => true],
-        'clientmgmt_client_l11n_client'        => ['name' => 'clientmgmt_client_l11n_client',        'type' => 'int',    'internal' => 'client'],
+        'clientmgmt_client_l11n_description' => ['name' => 'clientmgmt_client_l11n_description', 'type' => 'string', 'internal' => 'content', 'autocomplete' => true],
+        'clientmgmt_client_l11n_client'        => ['name' => 'clientmgmt_client_l11n_client',        'type' => 'int',    'internal' => 'ref'],
         'clientmgmt_client_l11n_lang'        => ['name' => 'clientmgmt_client_l11n_lang',        'type' => 'string', 'internal' => 'language'],
         'clientmgmt_client_l11n_typeref'     => ['name' => 'clientmgmt_client_l11n_typeref',     'type' => 'int',    'internal' => 'type'],
     ];
@@ -71,4 +72,12 @@ final class ClientL11nMapper extends DataMapperFactory
      * @since 1.0.0
      */
     public const PRIMARYFIELD = 'clientmgmt_client_l11n_id';
+
+    /**
+     * Model to use by the mapper.
+     *
+     * @var class-string<T>
+     * @since 1.0.0
+     */
+    public const MODEL = BaseStringL11n::class;
 }

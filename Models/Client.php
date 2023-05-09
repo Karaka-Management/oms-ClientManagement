@@ -18,7 +18,6 @@ use Modules\Admin\Models\Account;
 use Modules\Admin\Models\Address;
 use Modules\Admin\Models\NullAddress;
 use Modules\Editor\Models\EditorDoc;
-use Modules\Media\Models\Media;
 use Modules\Payment\Models\Payment;
 use Modules\Profile\Models\ContactElement;
 use Modules\Profile\Models\NullContactElement;

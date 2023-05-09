@@ -31,21 +31,19 @@ use Modules\ClientManagement\Models\ClientAttributeTypeL11nMapper;
 use Modules\ClientManagement\Models\ClientAttributeTypeMapper;
 use Modules\ClientManagement\Models\ClientAttributeValueL11nMapper;
 use Modules\ClientManagement\Models\ClientAttributeValueMapper;
-use Modules\ClientManagement\Models\ClientL11n;
 use Modules\ClientManagement\Models\ClientL11nMapper;
-use Modules\ClientManagement\Models\ClientL11nType;
 use Modules\ClientManagement\Models\ClientL11nTypeMapper;
 use Modules\ClientManagement\Models\ClientMapper;
-use Modules\ClientManagement\Models\NullClient;
-use Modules\ClientManagement\Models\NullClientL11nType;
 use Modules\Media\Models\MediaMapper;
 use Modules\Media\Models\PathSettings;
 use Modules\Organization\Models\UnitMapper;
 use phpOMS\Api\EUVAT\EUVATVies;
 use phpOMS\Localization\BaseStringL11n;
+use phpOMS\Localization\BaseStringL11nType;
 use phpOMS\Localization\ISO3166CharEnum;
 use phpOMS\Localization\ISO3166TwoEnum;
 use phpOMS\Localization\ISO639x1Enum;
+use phpOMS\Localization\NullBaseStringL11nType;
 use phpOMS\Message\Http\HttpRequest;
 use phpOMS\Message\Http\HttpResponse;
 use phpOMS\Message\Http\RequestStatusCode;
@@ -385,19 +383,19 @@ final class ApiController extends Controller
      *
      * @param RequestAbstract $request Request
      *
-     * @return ClientL11n
+     * @return BaseStringL11n
      *
      * @since 1.0.0
      */
-    private function createClientL11nFromRequest(RequestAbstract $request) : ClientL11n
+    private function createClientL11nFromRequest(RequestAbstract $request) : BaseStringL11n
     {
-        $clientL11n         = new ClientL11n();
-        $clientL11n->client = $request->getDataInt('client') ?? 0;
-        $clientL11n->type   = new NullClientL11nType($request->getDataInt('type') ?? 0);
+        $clientL11n         = new BaseStringL11n();
+        $clientL11n->ref = $request->getDataInt('client') ?? 0;
+        $clientL11n->type   = new NullBaseStringL11nType($request->getDataInt('type') ?? 0);
         $clientL11n->setLanguage(
             $request->getDataString('language') ?? $request->getLanguage()
         );
-        $clientL11n->description = $request->getDataString('description') ?? '';
+        $clientL11n->content = $request->getDataString('description') ?? '';
 
         return $clientL11n;
     }
@@ -456,13 +454,13 @@ final class ApiController extends Controller
      *
      * @param RequestAbstract $request Request
      *
-     * @return ClientL11nType
+     * @return BaseStringL11nType
      *
      * @since 1.0.0
      */
-    private function createClientL11nTypeFromRequest(RequestAbstract $request) : ClientL11nType
+    private function createClientL11nTypeFromRequest(RequestAbstract $request) : BaseStringL11nType
     {
-        $clientL11nType             = new ClientL11nType();
+        $clientL11nType             = new BaseStringL11nType();
         $clientL11nType->title      = $request->getDataString('title') ?? '';
         $clientL11nType->isRequired = (bool) ($request->getData('is_required') ?? false);
 
