@@ -15,6 +15,7 @@ declare(strict_types=1);
 return ['ClientManagement' => [
     'AttributeTypes'             => 'Attribute Types',
     'Accounting'             => 'Accounting',
+    'Map'               => 'Map',
     'Addition'               => 'Addition',
     'Address'                => 'Address',
     'Addresses'              => 'Addresses',

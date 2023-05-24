@@ -33,20 +33,68 @@ use Modules\Profile\Models\Profile;
  */
 class Client
 {
+    /**
+     * ID value.
+     *
+     * @var int
+     * @since 1.0.0
+     */
     public int $id = 0;
 
+    /**
+     * Number value.
+     *
+     * @var string
+     * @since 1.0.0
+     */
     public string $number = '';
 
+    /**
+     * Reversed number value.
+     *
+     * @var string
+     * @since 1.0.0
+     */
     public string $numberReverse = '';
 
+    /**
+     * Status value.
+     *
+     * @var int
+     * @since 1.0.0
+     */
     public int $status = ClientStatus::ACTIVE;
 
+    /**
+     * Type value.
+     *
+     * @var int
+     * @since 1.0.0
+     */
     public int $type = 0;
 
+    /**
+     * Additional information.
+     *
+     * @var string
+     * @since 1.0.0
+     */
     public string $info = '';
 
+    /**
+     * Creation date and time.
+     *
+     * @var \DateTimeImmutable
+     * @since 1.0.0
+     */
     public \DateTimeImmutable $createdAt;
 
+    /**
+     * Account associated with the client.
+     *
+     * @var Account
+     * @since 1.0.0
+     */
     public Account $account;
 
     /**
@@ -65,20 +113,68 @@ class Client
      */
     private array $notes = [];
 
+    /**
+     * Contact elements.
+     *
+     * @var array
+     * @since 1.0.0
+     */
     private array $contactElements = [];
 
+    /**
+     * Main address.
+     *
+     * @var Address
+     * @since 1.0.0
+     */
     public Address $mainAddress;
 
+    /**
+     * Address.
+     *
+     * @var array
+     * @since 1.0.0
+     */
     private array $address = [];
 
+    /**
+     * Partners.
+     *
+     * @var array
+     * @since 1.0.0
+     */
     private array $partners = [];
 
+    /**
+     * Sales representative.
+     *
+     * @var Profile|null
+     * @since 1.0.0
+     */
     public ?Profile $salesRep = null;
 
+    /**
+     * Advertisement material.
+     *
+     * @var int
+     * @since 1.0.0
+     */
     public int $advertisementMaterial = 0;
 
+    /**
+     * Default delivery address.
+     *
+     * @var Address|null
+     * @since 1.0.0
+     */
     public ?Address $defaultDeliveryAddress = null;
 
+    /**
+     * Default invoice address.
+     *
+     * @var Address|null
+     * @since 1.0.0
+     */
     public ?Address $defaultInvoiceAddress = null;
 
     /**

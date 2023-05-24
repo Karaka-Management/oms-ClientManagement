@@ -28,7 +28,6 @@ echo $this->getData('nav')->render(); ?>
             <table id="iSalesClientList" class="default sticky">
                 <thead>
                 <tr>
-                    <td>
                     <td><?= $this->getHtml('ID', '0', '0'); ?>
                         <label for="iSalesClientList-sort-1">
                             <input type="radio" name="iSalesClientList-sort" id="iSalesClientList-sort-1">
@@ -107,10 +106,6 @@ echo $this->getData('nav')->render(); ?>
                  $image      = $value->getFileByTypeName('client_profile_image');
                  ?>
                 <tr data-href="<?= $url; ?>">
-                    <td><a href="<?= $url; ?>"><img alt="<?= $this->getHtml('IMG_alt_client'); ?>" width="30" loading="lazy" class="item-image"
-                            src="<?= $image->id === 0
-                                ? 'Web/Backend/img/logo_grey.png'
-                                : UriFactory::build('{/base}/' . $image->getPath()); ?>"></a>
                     <td data-label="<?= $this->getHtml('ID', '0', '0'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->number); ?></a>
                     <td data-label="<?= $this->getHtml('Name'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->account->name1); ?> <?= $this->printHtml($value->account->name2); ?></a>
                     <td data-label="<?= $this->getHtml('City'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->mainAddress->city); ?></a>

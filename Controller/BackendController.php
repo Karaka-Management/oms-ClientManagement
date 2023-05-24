@@ -158,12 +158,8 @@ final class BackendController extends Controller
         /** @var \Modules\ClientManagement\Models\Client $client */
         $client = ClientMapper::getAll()
             ->with('account')
-            ->with('files')
-            ->with('files/type')
             ->with('mainAddress')
-            ->where('files/type/name', 'client_profile_image')
             ->limit(25)
-            ->limit(1, 'files/type')
             ->execute();
 
         $view->addData('client', $client);
@@ -209,7 +205,7 @@ final class BackendController extends Controller
         $head = $response->get('Content')->getData('head');
         $head->addAsset(AssetType::CSS, 'Resources/chartjs/Chartjs/chart.css');
         $head->addAsset(AssetType::JSLATE, 'Resources/chartjs/Chartjs/chart.js');
-        $head->addAsset(AssetType::JSLATE, 'Resources/OpenLayers/OpenLayers.light.js');
+        $head->addAsset(AssetType::JSLATE, 'Resources/OpenLayers/OpenLayers.js');
         $head->addAsset(AssetType::JSLATE, 'Modules/ClientManagement/Controller.js', ['type' => 'module']);
 
         $view = new View($this->app->l11nManager, $request, $response);

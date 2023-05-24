@@ -58,9 +58,7 @@ jsOMS.Modules.ClientManagement = class {
             return;
         }
 
-        const self = this;
-
-        map = new OpenLayers.Map(map.getAttribute('id'), {
+        const mapObj = new OpenLayers.Map(map.getAttribute('id'), {
             controls: [
                 new OpenLayers.Control.Navigation(
                     {
@@ -73,14 +71,19 @@ jsOMS.Modules.ClientManagement = class {
             ]
         });
 
-        var mapnik         = new OpenLayers.Layer.OSM();
-        var fromProjection = new OpenLayers.Projection("EPSG:4326");   // Transform from WGS 1984
-        var toProjection   = new OpenLayers.Projection("EPSG:900913"); // to Spherical Mercator Projection
-        var position       = new OpenLayers.LonLat(13.41,52.52).transform( fromProjection, toProjection);
-        var zoom           = 15;
+        mapObj.addLayer(new OpenLayers.Layer.OSM());
 
-        map.addLayer(mapnik);
-        map.setCenter(position, zoom );
+        const fromProjection = new OpenLayers.Projection("EPSG:4326");   // Transform from WGS 1984
+        const toProjection   = new OpenLayers.Projection("EPSG:900913"); // to Spherical Mercator Projection
+        const position       = new OpenLayers.LonLat(map.getAttribute('data-lon'), map.getAttribute('data-lat')).transform(fromProjection, toProjection);
+        const zoom           = 12;
+
+        const markers = new OpenLayers.Layer.Markers("Markers");
+        mapObj.addLayer(markers);
+
+        markers.addMarker(new OpenLayers.Marker(position));
+
+        mapObj.setCenter(position, zoom);
     };
 };
 

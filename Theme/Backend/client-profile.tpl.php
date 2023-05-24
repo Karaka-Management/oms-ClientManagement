@@ -145,12 +145,22 @@ echo $this->getData('nav')->render();
                                 <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->mainAddress->city); ?>" required>
                                 <tr><td><label for="iName1"><?= $this->getHtml('Country'); ?></label>
                                 <tr><td><select name="country">
-                                        <?php foreach ($countryCodes as $code3 => $code2) : ?>
-                                            <option value="<?= $this->printHtml($code2); ?>"<?= $this->printHtml($code2 === $client->mainAddress->getCountry() ? ' selected' : ''); ?>><?= $this->printHtml($countries[$code3]); ?>
+                                    <?php foreach ($countryCodes as $code3 => $code2) : ?>
+                                        <option value="<?= $this->printHtml($code2); ?>"<?= $this->printHtml($code2 === $client->mainAddress->getCountry() ? ' selected' : ''); ?>><?= $this->printHtml($countries[$code3]); ?>
                                         <?php endforeach; ?>
                                     </select>
-                                <tr><td><div id="clientMap" class="map"></div>
+                                <tr><td><label for="iName1"><?= $this->getHtml('Map'); ?></label>
+                                <tr><td><div id="clientMap" class="map" data-lat="<?= $client->mainAddress->lat; ?>" data-lon="<?= $client->mainAddress->lon; ?>"></div>
                             </table>
+                        </div>
+                    </section>
+
+                    <section class="portlet">
+                        <div class="portlet-body">
+                            <img alt="<?= $this->printHtml($clientImage->name); ?>" width="100%" loading="lazy" class="item-image"
+                                src="<?= $clientImage->id === 0
+                                    ? 'Web/Backend/img/logo_grey.png'
+                                    : UriFactory::build($clientImage->getPath()); ?>">
                         </div>
                     </section>
 
@@ -284,7 +294,7 @@ echo $this->getData('nav')->render();
                                         <td><a href="<?= $url; ?>"><?= $invoice->getNumber(); ?></a>
                                         <td><a href="<?= $url; ?>"><?= $invoice->type->getL11n(); ?></a>
                                         <td><a href="<?= $url; ?>"><?= $invoice->billTo; ?></a>
-                                        <td><a href="<?= $url; ?>"><?= $invoice->netSales->getCurrency(); ?></a>
+                                        <td><a href="<?= $url; ?>"><?= $this->getCurrency($invoice->netSales); ?></a>
                                         <td><a href="<?= $url; ?>"><?= $invoice->createdAt->format('Y-m-d'); ?></a>
                                     <?php endforeach; ?>
                                 </table>
@@ -329,7 +339,7 @@ echo $this->getData('nav')->render();
                                                             ?>
                                                             <?= \implode(',', $temp); ?>
                                                         ],
-                                                        "yAxisID": "axis-2",
+                                                        "yAxisID": "axis2",
                                                         "fill": false,
                                                         "borderColor": "rgb(255, 99, 132)",
                                                         "backgroundColor": "rgb(255, 99, 132)"
@@ -341,43 +351,42 @@ echo $this->getData('nav')->render();
                                                             <?php
                                                                 $temp = [];
                                                                 foreach ($monthlySalesCosts as $monthly) {
-                                                                    $temp[] = ((int) $monthly['net_sales']) / 1000;
+                                                                    $temp[] = (float) (((int) $monthly['net_sales']) / 1000);
                                                                 }
                                                             ?>
                                                             <?= \implode(',', $temp); ?>
                                                         ],
-                                                        "yAxisID": "axis-1",
+                                                        "yAxisID": "axis1",
                                                         "backgroundColor": "rgb(54, 162, 235)"
                                                     }
                                                 ]
                                             },
                                             "options": {
+                                                "responsive": true,
                                                 "scales": {
-                                                    "yAxes": [
-                                                        {
-                                                            "id": "axis-1",
+                                                    "axis1": {
+                                                        "id": "axis1",
+                                                        "display": true,
+                                                        "position": "left"
+                                                    },
+                                                    "axis2": {
+                                                        "id": "axis2",
+                                                        "display": true,
+                                                        "position": "right",
+                                                        "title": {
                                                             "display": true,
-                                                            "position": "left"
+                                                            "text": "<?= $this->getHtml('Margin'); ?> %"
                                                         },
-                                                        {
-                                                            "id": "axis-2",
-                                                            "display": true,
-                                                            "position": "right",
-                                                            "scaleLabel": {
-                                                                "display": true,
-                                                                "labelString": "<?= $this->getHtml('Margin'); ?> %"
-                                                            },
-                                                            "gridLines": {
-                                                                "display": false
-                                                            },
-                                                            "beginAtZero": true,
-                                                            "ticks": {
-                                                                "min": 0,
-                                                                "max": 100,
-                                                                "stepSize": 10
-                                                            }
+                                                        "grid": {
+                                                            "display": false
+                                                        },
+                                                        "beginAtZero": true,
+                                                        "ticks": {
+                                                            "min": 0,
+                                                            "max": 100,
+                                                            "stepSize": 10
                                                         }
-                                                    ]
+                                                    }
                                                 }
                                             }
                                     }'></canvas>

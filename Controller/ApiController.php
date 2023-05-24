@@ -38,6 +38,7 @@ use Modules\Media\Models\MediaMapper;
 use Modules\Media\Models\PathSettings;
 use Modules\Organization\Models\UnitMapper;
 use phpOMS\Api\EUVAT\EUVATVies;
+use phpOMS\Api\Geocoding\Nominatim;
 use phpOMS\Localization\BaseStringL11n;
 use phpOMS\Localization\BaseStringL11nType;
 use phpOMS\Localization\ISO3166CharEnum;
@@ -229,6 +230,15 @@ final class ApiController extends Controller
         $addr->city    = $request->getDataString('city') ?? '';
         $addr->setCountry($request->getDataString('country') ?? ISO3166TwoEnum::_XXX);
         $addr->state         = $request->getDataString('state') ?? '';
+
+        $geocoding = Nominatim::geocoding($addr->country, $addr->city, $addr->address);
+        if ($geocoding === ['lat' => 0.0, 'lon' => 0.0]) {
+            $geocoding = Nominatim::geocoding($addr->country, $addr->city);
+        }
+
+        $addr->lat = $geocoding['lat'];
+        $addr->lon = $geocoding['lon'];
+
         $client->mainAddress = $addr;
 
         $client->unit = $request->getDataInt('unit');
