@@ -63,8 +63,8 @@ final class ClientTest extends \PHPUnit\Framework\TestCase
      */
     public function testStatusInputOutput() : void
     {
-    	$this->client->setStatus(ClientStatus::INACTIVE);
-    	self::assertEquals(ClientStatus::INACTIVE, $this->client->getStatus());
+        $this->client->setStatus(ClientStatus::INACTIVE);
+        self::assertEquals(ClientStatus::INACTIVE, $this->client->getStatus());
     }
 
     /**
