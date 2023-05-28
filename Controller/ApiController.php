@@ -229,7 +229,7 @@ final class ApiController extends Controller
         $addr->postal  = $request->getDataString('postal') ?? '';
         $addr->city    = $request->getDataString('city') ?? '';
         $addr->setCountry($request->getDataString('country') ?? ISO3166TwoEnum::_XXX);
-        $addr->state         = $request->getDataString('state') ?? '';
+        $addr->state = $request->getDataString('state') ?? '';
 
         $geocoding = Nominatim::geocoding($addr->country, $addr->city, $addr->address);
         if ($geocoding === ['lat' => 0.0, 'lon' => 0.0]) {
@@ -399,9 +399,9 @@ final class ApiController extends Controller
      */
     private function createClientL11nFromRequest(RequestAbstract $request) : BaseStringL11n
     {
-        $clientL11n         = new BaseStringL11n();
-        $clientL11n->ref    = $request->getDataInt('client') ?? 0;
-        $clientL11n->type   = new NullBaseStringL11nType($request->getDataInt('type') ?? 0);
+        $clientL11n       = new BaseStringL11n();
+        $clientL11n->ref  = $request->getDataInt('client') ?? 0;
+        $clientL11n->type = new NullBaseStringL11nType($request->getDataInt('type') ?? 0);
         $clientL11n->setLanguage(
             $request->getDataString('language') ?? $request->getLanguage()
         );
