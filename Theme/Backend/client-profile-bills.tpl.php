@@ -21,7 +21,7 @@ $bills = $this->getData('newestInvoices') ?? [];
 <div class="row">
     <div class="col-xs-12">
         <div class="portlet">
-            <div class="portlet-head"><?= $this->getHtml('Bills'); ?><i class="fa fa-download floatRight download btn"></i></div>
+            <div class="portlet-head"><?= $this->getHtml('Bills'); ?><i class="lni lni-download download btn end-xs"></i></div>
             <table id="billList" class="default">
                 <thead>
                 <tr>

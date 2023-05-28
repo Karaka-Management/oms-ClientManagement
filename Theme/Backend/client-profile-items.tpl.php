@@ -22,7 +22,7 @@ $items = $this->getData('items') ?? [];
 <div class="row">
     <div class="col-xs-12">
         <section class="portlet">
-            <div class="portlet-head"><?= $this->getHtml('Items'); ?><i class="fa fa-download floatRight download btn"></i></div>
+            <div class="portlet-head"><?= $this->getHtml('Items'); ?><i class="lni lni-download download btn end-xs"></i></div>
             <table id="iSalesItemList" class="default">
                 <thead>
                 <tr>
