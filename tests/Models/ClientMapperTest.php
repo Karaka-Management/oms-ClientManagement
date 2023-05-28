@@ -17,7 +17,6 @@ namespace Modules\ClientManagement\tests\Models;
 use Modules\Admin\Models\NullAccount;
 use Modules\ClientManagement\Models\Client;
 use Modules\ClientManagement\Models\ClientMapper;
-use Modules\Profile\Models\NullProfile;
 use Modules\Profile\Models\Profile;
 use Modules\Profile\Models\ProfileMapper;
 

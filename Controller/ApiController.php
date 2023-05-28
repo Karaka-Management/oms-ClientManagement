@@ -400,7 +400,7 @@ final class ApiController extends Controller
     private function createClientL11nFromRequest(RequestAbstract $request) : BaseStringL11n
     {
         $clientL11n         = new BaseStringL11n();
-        $clientL11n->ref = $request->getDataInt('client') ?? 0;
+        $clientL11n->ref    = $request->getDataInt('client') ?? 0;
         $clientL11n->type   = new NullBaseStringL11nType($request->getDataInt('type') ?? 0);
         $clientL11n->setLanguage(
             $request->getDataString('language') ?? $request->getLanguage()

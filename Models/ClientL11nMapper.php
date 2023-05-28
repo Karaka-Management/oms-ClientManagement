@@ -37,11 +37,11 @@ final class ClientL11nMapper extends DataMapperFactory
      * @since 1.0.0
      */
     public const COLUMNS = [
-        'clientmgmt_client_l11n_id'          => ['name' => 'clientmgmt_client_l11n_id',          'type' => 'int',    'internal' => 'id'],
-        'clientmgmt_client_l11n_description' => ['name' => 'clientmgmt_client_l11n_description', 'type' => 'string', 'internal' => 'content', 'autocomplete' => true],
+        'clientmgmt_client_l11n_id'            => ['name' => 'clientmgmt_client_l11n_id',          'type' => 'int',    'internal' => 'id'],
+        'clientmgmt_client_l11n_description'   => ['name' => 'clientmgmt_client_l11n_description', 'type' => 'string', 'internal' => 'content', 'autocomplete' => true],
         'clientmgmt_client_l11n_client'        => ['name' => 'clientmgmt_client_l11n_client',        'type' => 'int',    'internal' => 'ref'],
-        'clientmgmt_client_l11n_lang'        => ['name' => 'clientmgmt_client_l11n_lang',        'type' => 'string', 'internal' => 'language'],
-        'clientmgmt_client_l11n_typeref'     => ['name' => 'clientmgmt_client_l11n_typeref',     'type' => 'int',    'internal' => 'type'],
+        'clientmgmt_client_l11n_lang'          => ['name' => 'clientmgmt_client_l11n_lang',        'type' => 'string', 'internal' => 'language'],
+        'clientmgmt_client_l11n_typeref'       => ['name' => 'clientmgmt_client_l11n_typeref',     'type' => 'int',    'internal' => 'type'],
     ];
 
     /**

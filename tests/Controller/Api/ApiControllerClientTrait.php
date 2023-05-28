@@ -14,7 +14,6 @@ declare(strict_types=1);
 
 namespace Modules\ClientManagement\tests\Controller\Api;
 
-use Modules\Profile\Models\ContactType;
 use phpOMS\Localization\ISO3166TwoEnum;
 use phpOMS\Message\Http\HttpRequest;
 use phpOMS\Message\Http\HttpResponse;
