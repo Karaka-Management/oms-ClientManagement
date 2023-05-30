@@ -48,7 +48,7 @@ final class ClientTest extends \PHPUnit\Framework\TestCase
         self::assertEquals(ClientStatus::ACTIVE, $this->client->getStatus());
         self::assertEquals(0, $this->client->getType());
         self::assertEquals([], $this->client->getNotes());
-        self::assertEquals([], $this->client->getFiles());
+        self::assertEquals([], $this->client->files);
         self::assertEquals([], $this->client->getAddresses());
         self::assertEquals([], $this->client->getContactElements());
         self::assertEquals((new \DateTime('now'))->format('Y-m-d'), $this->client->createdAt->format('Y-m-d'));
@@ -84,7 +84,7 @@ final class ClientTest extends \PHPUnit\Framework\TestCase
     public function testFileInputOutput() : void
     {
         $this->client->addFile($temp = new Media());
-        self::assertCount(1, $this->client->getFiles());
+        self::assertCount(1, $this->client->files);
     }
 
     /**

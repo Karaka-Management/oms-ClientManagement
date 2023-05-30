@@ -24,7 +24,7 @@ $countries    = \phpOMS\Localization\ISO3166NameEnum::getConstants();
  */
 $client = $this->getData('client');
 $notes  = $client->getNotes();
-$files  = $client->getFiles();
+$files  = $client->files;
 
 $clientImage = $this->getData('clientImage') ?? new NullMedia();
 
