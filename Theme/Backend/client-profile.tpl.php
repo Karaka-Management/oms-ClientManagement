@@ -22,19 +22,19 @@ $countries    = \phpOMS\Localization\ISO3166NameEnum::getConstants();
 /**
  * @var \Modules\ClientManagement\Models\Client $client
  */
-$client = $this->getData('client');
+$client = $this->data['client'];
 $notes  = $client->getNotes();
 $files  = $client->files;
 
 $clientImage = $this->getData('clientImage') ?? new NullMedia();
 
-$newestInvoices    = $this->getData('newestInvoices') ?? [];
-$monthlySalesCosts = $this->getData('monthlySalesCosts') ?? [];
+$newestInvoices    = $this->data['newestInvoices'] ?? [];
+$monthlySalesCosts = $this->data['monthlySalesCosts'] ?? [];
 
 /**
  * @var \phpOMS\Views\View $this
  */
-echo $this->getData('nav')->render();
+echo $this->data['nav']->render();
 ?>
 <div class="tabview tab-2">
     <div class="box">

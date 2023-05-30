@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 use phpOMS\Uri\UriFactory;
 
-$bills = $this->getData('newestInvoices') ?? [];
+$bills = $this->data['newestInvoices'] ?? [];
 
 ?>
 

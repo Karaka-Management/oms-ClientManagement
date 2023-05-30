@@ -15,7 +15,7 @@ declare(strict_types=1);
 /**
  * @var \phpOMS\Views\View $this
  */
-echo $this->getData('nav')->render(); ?>
+echo $this->data['nav']->render(); ?>
 
 <div class="tabview tab-2">
     <div class="box">

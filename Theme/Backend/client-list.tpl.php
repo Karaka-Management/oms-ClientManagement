@@ -16,9 +16,9 @@ declare(strict_types=1);
 use phpOMS\Uri\UriFactory;
 
 /** @var \phpOMS\Views\View $this */
-$clients = $this->getData('client');
+$clients = $this->data['client'];
 
-echo $this->getData('nav')->render(); ?>
+echo $this->data['nav']->render(); ?>
 <div class="row">
     <div class="col-xs-12">
         <section class="portlet">

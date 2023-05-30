@@ -60,7 +60,7 @@ final class BackendController extends Controller
     {
         $view = new View($this->app->l11nManager, $request, $response);
         $view->setTemplate('/Modules/ClientManagement/Theme/Backend/attribute-type-list');
-        $view->addData('nav', $this->app->moduleManager->get('Navigation')->createNavigationMid(1004801001, $request, $response));
+        $view->data['nav'] = $this->app->moduleManager->get('Navigation')->createNavigationMid(1004801001, $request, $response);
 
         /** @var \Modules\Attribute\Models\AttributeType[] $attributes */
         $attributes = ClientAttributeTypeMapper::getAll()
@@ -68,7 +68,7 @@ final class BackendController extends Controller
             ->where('l11n/language', $response->header->l11n->language)
             ->execute();
 
-        $view->addData('attributes', $attributes);
+        $view->data['attributes'] = $attributes;
 
         return $view;
     }
@@ -89,7 +89,7 @@ final class BackendController extends Controller
     {
         $view = new View($this->app->l11nManager, $request, $response);
         $view->setTemplate('/Modules/ClientManagement/Theme/Backend/attribute-value-list');
-        $view->addData('nav', $this->app->moduleManager->get('Navigation')->createNavigationMid(1004801001, $request, $response));
+        $view->data['nav'] = $this->app->moduleManager->get('Navigation')->createNavigationMid(1004801001, $request, $response);
 
         /** @var \Modules\Attribute\Models\AttributeValue[] $attributes */
         $attributes = ClientAttributeValueMapper::getAll()
@@ -97,7 +97,7 @@ final class BackendController extends Controller
             ->where('l11n/language', $response->header->l11n->language)
             ->execute();
 
-        $view->addData('attributes', $attributes);
+        $view->data['attributes'] = $attributes;
 
         return $view;
     }
@@ -118,7 +118,7 @@ final class BackendController extends Controller
     {
         $view = new View($this->app->l11nManager, $request, $response);
         $view->setTemplate('/Modules/ClientManagement/Theme/Backend/attribute-type');
-        $view->addData('nav', $this->app->moduleManager->get('Navigation')->createNavigationMid(1004801001, $request, $response));
+        $view->data['nav'] = $this->app->moduleManager->get('Navigation')->createNavigationMid(1004801001, $request, $response);
 
         /** @var \Modules\Attribute\Models\AttributeType $attribute */
         $attribute = ClientAttributeTypeMapper::get()
@@ -131,8 +131,8 @@ final class BackendController extends Controller
             ->where('ref', $attribute->id)
             ->execute();
 
-        $view->addData('attribute', $attribute);
-        $view->addData('l11ns', $l11ns);
+        $view->data['attribute'] = $attribute;
+        $view->data['l11ns'] = $l11ns;
 
         return $view;
     }
@@ -153,7 +153,7 @@ final class BackendController extends Controller
     {
         $view = new View($this->app->l11nManager, $request, $response);
         $view->setTemplate('/Modules/ClientManagement/Theme/Backend/client-list');
-        $view->addData('nav', $this->app->moduleManager->get('Navigation')->createNavigationMid(1003102001, $request, $response));
+        $view->data['nav'] = $this->app->moduleManager->get('Navigation')->createNavigationMid(1003102001, $request, $response);
 
         /** @var \Modules\ClientManagement\Models\Client $client */
         $client = ClientMapper::getAll()
@@ -162,7 +162,7 @@ final class BackendController extends Controller
             ->limit(25)
             ->execute();
 
-        $view->addData('client', $client);
+        $view->data['client'] = $client;
 
         return $view;
     }
@@ -183,7 +183,7 @@ final class BackendController extends Controller
     {
         $view = new View($this->app->l11nManager, $request, $response);
         $view->setTemplate('/Modules/ClientManagement/Theme/Backend/client-create');
-        $view->addData('nav', $this->app->moduleManager->get('Navigation')->createNavigationMid(1003102001, $request, $response));
+        $view->data['nav'] = $this->app->moduleManager->get('Navigation')->createNavigationMid(1003102001, $request, $response);
 
         return $view;
     }
@@ -202,7 +202,7 @@ final class BackendController extends Controller
      */
     public function viewClientManagementClientProfile(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : RenderableInterface
     {
-        $head = $response->get('Content')->getData('head');
+        $head = $response->get('Content')->head;
         $head->addAsset(AssetType::CSS, 'Resources/chartjs/Chartjs/chart.css');
         $head->addAsset(AssetType::JSLATE, 'Resources/chartjs/Chartjs/chart.js');
         $head->addAsset(AssetType::JSLATE, 'Resources/OpenLayers/OpenLayers.js');
@@ -210,7 +210,7 @@ final class BackendController extends Controller
 
         $view = new View($this->app->l11nManager, $request, $response);
         $view->setTemplate('/Modules/ClientManagement/Theme/Backend/client-profile');
-        $view->addData('nav', $this->app->moduleManager->get('Navigation')->createNavigationMid(1003102001, $request, $response));
+        $view->data['nav'] = $this->app->moduleManager->get('Navigation')->createNavigationMid(1003102001, $request, $response);
 
         /** @var \Modules\ClientManagement\Models\Client $client */
         $client = ClientMapper::get()
@@ -222,7 +222,7 @@ final class BackendController extends Controller
             ->where('id', (int) $request->getData('id'))
             ->execute();
 
-        $view->setData('client', $client);
+        $view->data['client'] = $client;
 
         // Get item profile image
         // It might not be part of the 5 newest item files from above
@@ -249,7 +249,7 @@ final class BackendController extends Controller
             ->limit(1)
             ->execute();
 
-        $view->addData('clientImage', $clientImage);
+        $view->data['clientImage'] = $clientImage;
 
         // stats
         if ($this->app->moduleManager->isActive('Billing')) {
@@ -277,12 +277,12 @@ final class BackendController extends Controller
             $items             = [];
         }
 
-        $view->addData('ytd', $ytd);
-        $view->addData('mtd', $mtd);
-        $view->addData('lastOrder', $lastOrder);
-        $view->addData('newestInvoices', $newestInvoices);
-        $view->addData('monthlySalesCosts', $monthlySalesCosts);
-        $view->addData('items', $items);
+        $view->data['ytd'] = $ytd;
+        $view->data['mtd'] = $mtd;
+        $view->data['lastOrder'] = $lastOrder;
+        $view->data['newestInvoices'] = $newestInvoices;
+        $view->data['monthlySalesCosts'] = $monthlySalesCosts;
+        $view->data['items'] = $items;
 
         return $view;
     }
@@ -320,14 +320,14 @@ final class BackendController extends Controller
      */
     public function viewClientAnalysis(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : RenderableInterface
     {
-        $head = $response->get('Content')->getData('head');
+        $head = $response->get('Content')->head;
         $head->addAsset(AssetType::CSS, 'Resources/chartjs/Chartjs/chart.css');
         $head->addAsset(AssetType::JSLATE, 'Resources/chartjs/Chartjs/chart.js');
         $head->addAsset(AssetType::JSLATE, 'Modules/ClientManagement/Controller.js', ['type' => 'module']);
 
         $view = new View($this->app->l11nManager, $request, $response);
         $view->setTemplate('/Modules/ClientManagement/Theme/Backend/client-analysis');
-        $view->addData('nav', $this->app->moduleManager->get('Navigation')->createNavigationMid(1001602001, $request, $response));
+        $view->data['nav'] = $this->app->moduleManager->get('Navigation')->createNavigationMid(1001602001, $request, $response);
 
         $monthlySalesCosts = [];
         for ($i = 1; $i < 13; ++$i) {
@@ -339,7 +339,7 @@ final class BackendController extends Controller
             ];
         }
 
-        $view->addData('monthlySalesCosts', $monthlySalesCosts);
+        $view->data['monthlySalesCosts'] = $monthlySalesCosts;
 
         /////
         $monthlySalesCustomer = [];
@@ -352,7 +352,7 @@ final class BackendController extends Controller
             ];
         }
 
-        $view->addData('monthlySalesCustomer', $monthlySalesCustomer);
+        $view->data['monthlySalesCustomer'] = $monthlySalesCustomer;
 
         $annualSalesCustomer = [];
         for ($i = 1; $i < 11; ++$i) {
@@ -363,7 +363,7 @@ final class BackendController extends Controller
             ];
         }
 
-        $view->addData('annualSalesCustomer', $annualSalesCustomer);
+        $view->data['annualSalesCustomer'] = $annualSalesCustomer;
 
         /////
         $monthlyCustomerRetention = [];
@@ -374,7 +374,7 @@ final class BackendController extends Controller
             ];
         }
 
-        $view->addData('monthlyCustomerRetention', $monthlyCustomerRetention);
+        $view->data['monthlyCustomerRetention'] = $monthlyCustomerRetention;
 
         /////
         $currentCustomerRegion = [
@@ -386,7 +386,7 @@ final class BackendController extends Controller
             'Other'   => (int) (\mt_rand(200, 400) / 4),
         ];
 
-        $view->addData('currentCustomerRegion', $currentCustomerRegion);
+        $view->data['currentCustomerRegion'] = $currentCustomerRegion;
 
         $annualCustomerRegion = [];
         for ($i = 1; $i < 11; ++$i) {
@@ -402,7 +402,7 @@ final class BackendController extends Controller
             ];
         }
 
-        $view->addData('annualCustomerRegion', $annualCustomerRegion);
+        $view->data['annualCustomerRegion'] = $annualCustomerRegion;
 
         /////
         $currentCustomersRep = [];
@@ -416,7 +416,7 @@ final class BackendController extends Controller
             return $b['customers'] <=> $a['customers'];
         });
 
-        $view->addData('currentCustomersRep', $currentCustomersRep);
+        $view->data['currentCustomersRep'] = $currentCustomersRep;
 
         $annualCustomersRep = [];
         for ($i = 1; $i < 13; ++$i) {
@@ -430,7 +430,7 @@ final class BackendController extends Controller
             }
         }
 
-        $view->addData('annualCustomersRep', $annualCustomersRep);
+        $view->data['annualCustomersRep'] = $annualCustomersRep;
 
         /////
         $currentCustomersCountry = [];
@@ -445,7 +445,7 @@ final class BackendController extends Controller
             return $b['customers'] <=> $a['customers'];
         });
 
-        $view->addData('currentCustomersCountry', $currentCustomersCountry);
+        $view->data['currentCustomersCountry'] = $currentCustomersCountry;
 
         $annualCustomersCountry = [];
         for ($i = 1; $i < 51; ++$i) {
@@ -463,7 +463,7 @@ final class BackendController extends Controller
             }
         }
 
-        $view->addData('annualCustomersCountry', $annualCustomersCountry);
+        $view->data['annualCustomersCountry'] = $annualCustomersCountry;
 
         /////
         $customerGroups = [];
@@ -473,7 +473,7 @@ final class BackendController extends Controller
             ];
         }
 
-        $view->addData('customerGroups', $customerGroups);
+        $view->data['customerGroups'] = $customerGroups;
 
         return $view;
     }

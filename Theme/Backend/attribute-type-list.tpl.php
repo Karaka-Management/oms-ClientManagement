@@ -15,9 +15,9 @@ declare(strict_types=1);
 use phpOMS\Uri\UriFactory;
 
 /** @var \phpOMS\Views\View $this */
-$attributes = $this->getData('attributes');
+$attributes = $this->data['attributes'];
 
-echo $this->getData('nav')->render(); ?>
+echo $this->data['nav']->render(); ?>
 
 <div class="row">
     <div class="col-xs-12">
