@@ -65,7 +65,7 @@ final class BackendController extends Controller
         /** @var \Modules\Attribute\Models\AttributeType[] $attributes */
         $attributes = ClientAttributeTypeMapper::getAll()
             ->with('l11n')
-            ->where('l11n/language', $response->getLanguage())
+            ->where('l11n/language', $response->header->l11n->language)
             ->execute();
 
         $view->addData('attributes', $attributes);
@@ -94,7 +94,7 @@ final class BackendController extends Controller
         /** @var \Modules\Attribute\Models\AttributeValue[] $attributes */
         $attributes = ClientAttributeValueMapper::getAll()
             ->with('l11n')
-            ->where('l11n/language', $response->getLanguage())
+            ->where('l11n/language', $response->header->l11n->language)
             ->execute();
 
         $view->addData('attributes', $attributes);
@@ -124,7 +124,7 @@ final class BackendController extends Controller
         $attribute = ClientAttributeTypeMapper::get()
             ->with('l11n')
             ->where('id', (int) $request->getData('id'))
-            ->where('l11n/language', $response->getLanguage())
+            ->where('l11n/language', $response->header->l11n->language)
             ->execute();
 
         $l11ns = ClientAttributeTypeL11nMapper::getAll()
@@ -261,7 +261,7 @@ final class BackendController extends Controller
                 ->with('type/l11n')
                 ->with('client')
                 ->where('client', $client->id)
-                ->where('type/l11n/language', $response->getLanguage())
+                ->where('type/l11n/language', $response->header->l11n->language)
                 ->sort('id', OrderType::DESC)
                 ->limit(5)
                 ->execute();

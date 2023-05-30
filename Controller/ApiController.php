@@ -315,7 +315,7 @@ final class ApiController extends Controller
             $response,
             NotificationLevel::OK,
             '',
-            $this->app->l11nManager->getText($response->getLanguage(), '0', '0', 'SuccessfulUpdate'),
+            $this->app->l11nManager->getText($response->header->l11n->language, '0', '0', 'SuccessfulUpdate'),
             $new
         );
     }
@@ -403,7 +403,7 @@ final class ApiController extends Controller
         $clientL11n->ref  = $request->getDataInt('client') ?? 0;
         $clientL11n->type = new NullBaseStringL11nType($request->getDataInt('type') ?? 0);
         $clientL11n->setLanguage(
-            $request->getDataString('language') ?? $request->getLanguage()
+            $request->getDataString('language') ?? $request->header->l11n->language
         );
         $clientL11n->content = $request->getDataString('description') ?? '';
 
@@ -615,7 +615,7 @@ final class ApiController extends Controller
         $attrL11n      = new BaseStringL11n();
         $attrL11n->ref = $request->getDataInt('type') ?? 0;
         $attrL11n->setLanguage(
-            $request->getDataString('language') ?? $request->getLanguage()
+            $request->getDataString('language') ?? $request->header->l11n->language
         );
         $attrL11n->content = $request->getDataString('title') ?? '';
 
@@ -840,7 +840,7 @@ final class ApiController extends Controller
         $attrL11n      = new BaseStringL11n();
         $attrL11n->ref = $request->getDataInt('value') ?? 0;
         $attrL11n->setLanguage(
-            $request->getDataString('language') ?? $request->getLanguage()
+            $request->getDataString('language') ?? $request->header->l11n->language
         );
         $attrL11n->content = $request->getDataString('title') ?? '';
 
