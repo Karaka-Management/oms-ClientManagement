@@ -145,11 +145,11 @@ $items = $this->data['items'] ?? [];
                     <td><a href="<?= $url; ?>"><?= $this->printHtml($value->itemNumber); ?></a>
                     <td><a href="<?= $url; ?>"><?= $this->printHtml($value->itemName); ?></a>
                     <td><a href="<?= $url; ?>"><?= $this->printHtml((string) $value->getQuantity()); ?></a>
-                    <td><a href="<?= $url; ?>"><?= $this->printHtml($value->singleSalesPriceNet->getCurrency()); ?></a>
+                    <td><a href="<?= $url; ?>"><?= $this->getcurrency($value->singleSalesPriceNet); ?></a>
                     <td>
                     <td>
                     <td>
-                    <td><a href="<?= $url; ?>"><?= $this->printHtml($value->totalSalesPriceNet->getCurrency()); ?></a>
+                    <td><a href="<?= $url; ?>"><?= $this->getcurrency($value->totalSalesPriceNet); ?></a>
                 <?php endforeach; ?>
                 <?php if ($count === 0) : ?>
                     <tr><td colspan="9" class="empty"><?= $this->getHtml('Empty', '0', '0'); ?>

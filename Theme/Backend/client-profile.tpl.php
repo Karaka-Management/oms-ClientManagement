@@ -43,7 +43,7 @@ echo $this->data['nav']->render();
             <li><label for="c-tab-3"><?= $this->getHtml('Addresses'); ?></label></li>
             <li><label for="c-tab-5"><?= $this->getHtml('Payment'); ?></label></li>
             <li><label for="c-tab-6"><?= $this->getHtml('Prices'); ?></label></li>
-            <li><label for="c-tab-7"><?= $this->getHtml('Attributes'); ?></label></li>
+            <li><label for="c-tab-7"><?= $this->getHtml('Attributes', 'Attribute', 'Backend'); ?></label></li>
             <li><label for="c-tab-8"><?= $this->getHtml('Files'); ?></label></li>
             <li><label for="c-tab-9"><?= $this->getHtml('Invoices'); ?></label>
             <li><label for="c-tab-10"><?= $this->getHtml('Articles'); ?></label>
@@ -93,7 +93,7 @@ echo $this->data['nav']->render();
                     <section class="portlet">
                         <div class="portlet-head">
                             <?= $this->getHtml('Contact'); ?>
-                            <a class="floatRight" href=""><i class="fa fa-envelope-o btn"></i></a>
+                            <a class="end-xs" href=""><i class="fa fa-envelope-o btn"></i></a>
                         </div>
                         <div class="portlet-body">
                             <table class="layout wf-100">
@@ -110,7 +110,7 @@ echo $this->data['nav']->render();
                     <section class="portlet map-small">
                         <div class="portlet-head">
                             <?= $this->getHtml('Address'); ?>
-                            <span class="clickPopup floatRight">
+                            <span class="clickPopup end-xs">
                                 <label for="addressDropdown"><i class="fa fa-print btn"></i></label>
                                 <input id="addressDropdown" name="addressDropdown" type="checkbox">
                                 <div class="popup">

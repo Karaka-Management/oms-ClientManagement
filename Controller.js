@@ -53,7 +53,7 @@ jsOMS.Modules.ClientManagement = class {
     bindMap (map)
     {
         if (typeof map === 'undefined' || !map) {
-            jsOMS.Log.Logger.instance.error('Invalid map: ' + map, 'ClientManager');
+            jsOMS.Log.Logger.instance.error('Invalid map: ' + map, 'ClientManagement');
 
             return;
         }
