@@ -106,14 +106,6 @@ class Client
     private array $payments = [];
 
     /**
-     * Files.
-     *
-     * @var EditorDoc[]
-     * @since 1.0.0
-     */
-    private array $notes = [];
-
-    /**
      * Contact elements.
      *
      * @var array
@@ -446,5 +438,6 @@ class Client
     }
 
     use \Modules\Media\Models\MediaListTrait;
+    use \Modules\Editor\Models\EditorDocListTrait;
     use \Modules\Attribute\Models\AttributeHolderTrait;
 }
