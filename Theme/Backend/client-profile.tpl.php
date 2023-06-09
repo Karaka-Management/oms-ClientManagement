@@ -609,7 +609,7 @@ echo $this->data['nav']->render();
             ?>
                     <div class="box wf-100">
                         <table class="default">
-                            <caption><?= $this->getHtml('Logs'); ?><i class="fa fa-download floatRight download btn"></i></caption>
+                            <caption><?= $this->getHtml('Logs'); ?><i class="fa fa-download end-xs download btn"></i></caption>
                             <thead>
                             <tr>
                                 <td>IP

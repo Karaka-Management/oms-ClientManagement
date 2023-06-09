@@ -49,7 +49,7 @@ echo $this->data['nav']->render(); ?>
 
                 <div class="form-group">
                     <label for="iPattern"><?= $this->getHtml('Pattern', 'Attribute', 'Backend'); ?></label>
-                    <input id="iPattern" type="text" value="<?= $this->printHtml($attribute->validationPAttern); ?>">
+                    <input id="iPattern" type="text" value="<?= $this->printHtml($attribute->validationPattern); ?>">
                 </div>
 
                 <div class="form-group">
