@@ -116,6 +116,7 @@ final class ApiController extends Controller
         $this->createModel($request->header->account, $client, ClientMapper::class, 'client', $request->getOrigin());
 
         // Set VAT Id
+        // @todo: move to separate function
         if ($request->hasData('vat_id')) {
             /** @var \Modules\Organization\Models\Unit $unit */
             $unit = UnitMapper::get()
