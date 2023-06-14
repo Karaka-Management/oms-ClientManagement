@@ -23,7 +23,7 @@ $countries    = \phpOMS\Localization\ISO3166NameEnum::getConstants();
  * @var \Modules\ClientManagement\Models\Client $client
  */
 $client = $this->data['client'];
-$notes  = $client->getNotes();
+$notes  = $client->notes;
 $files  = $client->files;
 
 $clientImage = $this->getData('clientImage') ?? new NullMedia();
