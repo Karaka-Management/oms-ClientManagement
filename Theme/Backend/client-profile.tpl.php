@@ -171,9 +171,22 @@ echo $this->data['nav']->render();
                     </section>
                 </div>
                 <div class="col-xs-12 col-lg-9 plain-grid">
+                    <?php if (true) : ?>
+                    <!-- If note warning exists -->
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <section class="portlet highlight-1">
+                                <div class="portlet-body">
+                                    Warning
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                    <?php endif; ?>
+
                     <div class="row">
                         <div class="col-xs-12 col-lg-4">
-                            <section class="portlet highlight-1">
+                            <section class="portlet highlight-7">
                                 <div class="portlet-body">
                                     <table class="wf-100">
                                         <tr><td><?= $this->getHtml('YTDSales'); ?>:
