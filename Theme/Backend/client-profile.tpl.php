@@ -171,14 +171,12 @@ echo $this->data['nav']->render();
                     </section>
                 </div>
                 <div class="col-xs-12 col-lg-9 plain-grid">
-                    <?php if (true) : ?>
+                    <?php if (!empty($notes) && ($warning = $client->getEditorDocByTypeName('client_backend_warning'))->id !== 0) : ?>
                     <!-- If note warning exists -->
                     <div class="row">
                         <div class="col-xs-12">
                             <section class="portlet highlight-1">
-                                <div class="portlet-body">
-                                    Warning
-                                </div>
+                                <div class="portlet-body"><?= $this->printHtml($warning->plain); ?></div>
                             </section>
                         </div>
                     </div>

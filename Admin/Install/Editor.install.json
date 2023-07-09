@@ -1,0 +1,10 @@
+[
+    {
+        "type": "type",
+        "name": "client_backend_warning",
+        "l11n": {
+            "en": "Backend warning",
+            "de": "Backend Warnung"
+        }
+    }
+]

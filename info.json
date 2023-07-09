@@ -24,6 +24,7 @@
     },
     "providing": {
         "Navigation": "*",
+        "Editor": "*",
         "Media": "*"
     },
     "load": [
