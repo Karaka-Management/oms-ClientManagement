@@ -133,8 +133,8 @@ final class Installer extends InstallerAbstract
         /** @var array<string, array> $clientAttrType */
         $clientAttrType = [];
 
-        /** @var \Modules\ClientManagement\Controller\ApiController $module */
-        $module = $app->moduleManager->getModuleInstance('ClientManagement');
+        /** @var \Modules\ClientManagement\Controller\ApiAttributeController $module */
+        $module = $app->moduleManager->getModuleInstance('ClientManagement', 'ApiAttribute');
 
         /** @var array $attribute */
         foreach ($attributes as $attribute) {
@@ -199,8 +199,8 @@ final class Installer extends InstallerAbstract
         /** @var array<string, array> $clientAttrValue */
         $clientAttrValue = [];
 
-        /** @var \Modules\ClientManagement\Controller\ApiController $module */
-        $module = $app->moduleManager->getModuleInstance('ClientManagement');
+        /** @var \Modules\ClientManagement\Controller\ApiAttributeController $module */
+        $module = $app->moduleManager->getModuleInstance('ClientManagement', 'ApiAttribute');
 
         foreach ($attributes as $attribute) {
             $clientAttrValue[$attribute['name']] = [];

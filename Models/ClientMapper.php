@@ -16,6 +16,7 @@ namespace Modules\ClientManagement\Models;
 
 use Modules\Admin\Models\AccountMapper;
 use Modules\Admin\Models\AddressMapper;
+use Modules\ClientManagement\Models\Attribute\ClientAttributeMapper;
 use Modules\Editor\Models\EditorDocMapper;
 use Modules\Media\Models\MediaMapper;
 use Modules\Payment\Models\PaymentMapper;
