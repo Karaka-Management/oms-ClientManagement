@@ -15,9 +15,9 @@ declare(strict_types=1);
 namespace Modules\ClientManagement\Controller;
 
 use Modules\Billing\Models\SalesBillMapper;
-use Modules\ClientManagement\Models\ClientAttributeTypeL11nMapper;
-use Modules\ClientManagement\Models\ClientAttributeTypeMapper;
-use Modules\ClientManagement\Models\ClientAttributeValueMapper;
+use Modules\ClientManagement\Models\Attribute\ClientAttributeTypeL11nMapper;
+use Modules\ClientManagement\Models\Attribute\ClientAttributeTypeMapper;
+use Modules\ClientManagement\Models\Attribute\ClientAttributeValueMapper;
 use Modules\ClientManagement\Models\ClientMapper;
 use Modules\Media\Models\MediaMapper;
 use Modules\Media\Models\MediaTypeMapper;

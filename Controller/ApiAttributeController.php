@@ -327,7 +327,7 @@ final class ApiAttributeController extends Controller
             return;
         }
 
-        /** @var \Modules\ClientManagement\Models\ClientAttributeTypeL11n $clientAttributeTypeL11n */
+        /** @var BaseStringL11n $clientAttributeTypeL11n */
         $clientAttributeTypeL11n = ClientAttributeTypeL11nMapper::get()->where('id', (int) $request->getData('id'))->execute();
         $this->deleteModel($request->header->account, $clientAttributeTypeL11n, ClientAttributeTypeL11nMapper::class, 'client_attribute_type_l11n', $request->getOrigin());
         $this->createStandardDeleteResponse($request, $response, $clientAttributeTypeL11n);
@@ -387,7 +387,7 @@ final class ApiAttributeController extends Controller
             return;
         }
 
-        /** @var \Modules\ClientManagement\Models\ClientAttributeType $clientAttributeType */
+        /** @var AttributeType $clientAttributeType */
         $clientAttributeType = ClientAttributeTypeMapper::get()->where('id', (int) $request->getData('id'))->execute();
         $this->deleteModel($request->header->account, $clientAttributeType, ClientAttributeTypeMapper::class, 'client_attribute_type', $request->getOrigin());
         $this->createStandardDeleteResponse($request, $response, $clientAttributeType);
@@ -418,7 +418,7 @@ final class ApiAttributeController extends Controller
         /** @var AttributeValue $old */
         $old = ClientAttributeValueMapper::get()->where('id', (int) $request->getData('id'))->execute();
 
-        /** @var \Modules\Attribute\Models\Attribute $type */
+        /** @var \Modules\Attribute\Models\Attribute $attr */
         $attr = ClientAttributeMapper::get()
             ->with('type')
             ->where('id', $request->getDataInt('attribute') ?? 0)
@@ -514,7 +514,7 @@ final class ApiAttributeController extends Controller
             return;
         }
 
-        /** @var \Modules\ClientManagement\Models\ClientAttributeValueL11n $clientAttributeValueL11n */
+        /** @var BaseStringL11n $clientAttributeValueL11n */
         $clientAttributeValueL11n = ClientAttributeValueL11nMapper::get()->where('id', (int) $request->getData('id'))->execute();
         $this->deleteModel($request->header->account, $clientAttributeValueL11n, ClientAttributeValueL11nMapper::class, 'client_attribute_value_l11n', $request->getOrigin());
         $this->createStandardDeleteResponse($request, $response, $clientAttributeValueL11n);

@@ -135,7 +135,7 @@ final class ApiController extends Controller
                 'vat_validation',
                 self::NAME,
                 (string) $client->id,
-                \json_encode($validate),
+                (string) \json_encode($validate),
                 (int) \ip2long($request->getOrigin())
             );
 
