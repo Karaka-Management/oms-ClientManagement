@@ -231,7 +231,9 @@ final class ApiAttributeController extends Controller
 
         $this->updateModel($request->header->account, $old, $new, ClientAttributeMapper::class, 'client_attribute', $request->getOrigin());
 
-        if ($new->value->getValue() !== $old->value->getValue()) {
+        if ($new->value->getValue() !== $old->value->getValue()
+            && $new->type->custom
+        ) {
             $this->updateModel($request->header->account, $old->value, $new->value, ClientAttributeValueMapper::class, 'attribute_value', $request->getOrigin());
         }
 
