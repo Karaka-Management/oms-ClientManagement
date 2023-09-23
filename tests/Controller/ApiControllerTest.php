@@ -45,6 +45,8 @@ final class ApiControllerTest extends \PHPUnit\Framework\TestCase
      */
     protected ModuleAbstract $module;
 
+    protected ModuleAbstract $attrModule;
+
     /**
      * {@inheritdoc}
      */
@@ -86,8 +88,10 @@ final class ApiControllerTest extends \PHPUnit\Framework\TestCase
         $this->app->router = new WebRouter();
 
         $this->module = $this->app->moduleManager->get('ClientManagement');
+        $this->attrModule = $this->app->moduleManager->get('ClientManagement');
 
         TestUtils::setMember($this->module, 'app', $this->app);
+        TestUtils::setMember($this->attrModule, 'app', $this->app);
     }
 
     use ApiControllerClientTrait;

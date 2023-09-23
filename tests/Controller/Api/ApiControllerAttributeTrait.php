@@ -37,7 +37,7 @@ trait ApiControllerAttributeTrait
         $request->setData('name', 'test_name');
         $request->setData('language', ISO639x1Enum::_EN);
 
-        $this->module->apiClientAttributeTypeCreate($request, $response);
+        $this->attrModule->apiClientAttributeTypeCreate($request, $response);
         self::assertGreaterThan(0, $response->get('')['response']->id);
     }
 
@@ -55,7 +55,7 @@ trait ApiControllerAttributeTrait
         $request->setData('type', '1');
         $request->setData('language', ISO639x1Enum::_DE);
 
-        $this->module->apiClientAttributeTypeL11nCreate($request, $response);
+        $this->attrModule->apiClientAttributeTypeL11nCreate($request, $response);
         self::assertGreaterThan(0, $response->get('')['response']->id);
     }
 
@@ -75,7 +75,7 @@ trait ApiControllerAttributeTrait
         $request->setData('language', ISO639x1Enum::_DE);
         $request->setData('country', ISO3166TwoEnum::_DEU);
 
-        $this->module->apiClientAttributeValueCreate($request, $response);
+        $this->attrModule->apiClientAttributeValueCreate($request, $response);
         self::assertGreaterThan(0, $response->get('')['response']->id);
     }
 
@@ -94,7 +94,7 @@ trait ApiControllerAttributeTrait
         $request->setData('language', ISO639x1Enum::_DE);
         $request->setData('country', ISO3166TwoEnum::_DEU);
 
-        $this->module->apiClientAttributeValueCreate($request, $response);
+        $this->attrModule->apiClientAttributeValueCreate($request, $response);
         self::assertGreaterThan(0, $response->get('')['response']->id);
     }
 
@@ -113,7 +113,7 @@ trait ApiControllerAttributeTrait
         $request->setData('language', ISO639x1Enum::_DE);
         $request->setData('country', ISO3166TwoEnum::_DEU);
 
-        $this->module->apiClientAttributeValueCreate($request, $response);
+        $this->attrModule->apiClientAttributeValueCreate($request, $response);
         self::assertGreaterThan(0, $response->get('')['response']->id);
     }
 
@@ -132,7 +132,7 @@ trait ApiControllerAttributeTrait
         $request->setData('language', ISO639x1Enum::_DE);
         $request->setData('country', ISO3166TwoEnum::_DEU);
 
-        $this->module->apiClientAttributeValueCreate($request, $response);
+        $this->attrModule->apiClientAttributeValueCreate($request, $response);
         self::assertGreaterThan(0, $response->get('')['response']->id);
     }
 
@@ -150,7 +150,7 @@ trait ApiControllerAttributeTrait
         $request->setData('value', '1');
         $request->setData('type', '1');
 
-        $this->module->apiClientAttributeCreate($request, $response);
+        $this->attrModule->apiClientAttributeCreate($request, $response);
         self::assertGreaterThan(0, $response->get('')['response']->id);
     }
 
@@ -166,7 +166,7 @@ trait ApiControllerAttributeTrait
         $request->header->account = 1;
         $request->setData('invalid', '1');
 
-        $this->module->apiClientAttributeValueCreate($request, $response);
+        $this->attrModule->apiClientAttributeValueCreate($request, $response);
         self::assertEquals(RequestStatusCode::R_400, $response->header->status);
     }
 
@@ -182,7 +182,7 @@ trait ApiControllerAttributeTrait
         $request->header->account = 1;
         $request->setData('invalid', '1');
 
-        $this->module->apiClientAttributeTypeCreate($request, $response);
+        $this->attrModule->apiClientAttributeTypeCreate($request, $response);
         self::assertEquals(RequestStatusCode::R_400, $response->header->status);
     }
 
@@ -198,7 +198,7 @@ trait ApiControllerAttributeTrait
         $request->header->account = 1;
         $request->setData('invalid', '1');
 
-        $this->module->apiClientAttributeTypeL11nCreate($request, $response);
+        $this->attrModule->apiClientAttributeTypeL11nCreate($request, $response);
         self::assertEquals(RequestStatusCode::R_400, $response->header->status);
     }
 
@@ -214,7 +214,7 @@ trait ApiControllerAttributeTrait
         $request->header->account = 1;
         $request->setData('invalid', '1');
 
-        $this->module->apiClientAttributeCreate($request, $response);
+        $this->attrModule->apiClientAttributeCreate($request, $response);
         self::assertEquals(RequestStatusCode::R_400, $response->header->status);
     }
 }

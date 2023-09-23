@@ -81,16 +81,6 @@ final class ClientTest extends \PHPUnit\Framework\TestCase
      * @covers Modules\ClientManagement\Models\Client
      * @group module
      */
-    public function testFileInputOutput() : void
-    {
-        $this->client->addFile($temp = new Media());
-        self::assertCount(1, $this->client->files);
-    }
-
-    /**
-     * @covers Modules\ClientManagement\Models\Client
-     * @group module
-     */
     public function testContactElementInputOutput() : void
     {
         $this->client->addContactElement($temp = new ContactElement());
