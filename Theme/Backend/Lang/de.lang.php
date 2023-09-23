@@ -13,7 +13,6 @@
 declare(strict_types=1);
 
 return ['ClientManagement' => [
-    'AttributeTypes'             => 'Attributtypen',
     'Accounting'     => 'Buchhaltung',
     'Addition'       => 'Zusatz',
     'Address'        => 'Adresse',
@@ -27,6 +26,7 @@ return ['ClientManagement' => [
     'Articles'       => 'Artikel',
     'Asia'           => 'Asien',
     'Attribute'      => 'Attribute',
+    'AttributeTypes' => 'Attributtypen',
     'Attributes'     => 'Attribute',
     'Balance'        => 'Gleichgewicht',
     'BaseTime'       => 'Basiszeit',
@@ -65,6 +65,7 @@ return ['ClientManagement' => [
     'Freightage'     => 'Fracht',
     'Group'          => 'Gruppe',
     'ID'             => 'ID',
+    'IMG_alt_map'    => 'Karte',
     'Info'           => 'Die Info',
     'Invoice'        => 'Rechnung',
     'Invoices'       => 'Rechnungen',
@@ -77,6 +78,7 @@ return ['ClientManagement' => [
     'LostCustomers'  => 'Verlorene Kunden',
     'MRR'            => 'Mrr.',
     'MTDSales'       => 'MTD-Verkäufe.',
+    'Map'            => '',
     'Margin'         => 'Rand',
     'Messages'       => 'Mitteilungen',
     'Modified'       => 'Geändert',
@@ -124,5 +126,4 @@ return ['ClientManagement' => [
     'Wire'           => 'Kabel',
     'YTDSales'       => 'Ytd Sales.',
     'Zip'            => 'Reißverschluss',
-    'IMG_alt_map'                => 'Karte',
 ]];
