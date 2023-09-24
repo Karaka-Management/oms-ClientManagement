@@ -110,9 +110,9 @@ final class Installer extends InstallerAbstract
                 continue;
             }
 
-            $l11nTypes[] = !\is_array($responseData['response'])
-                ? $responseData['response']->toArray()
-                : $responseData['response'];
+            $l11nTypes[] = \is_array($responseData['response'])
+                ? $responseData['response']
+                : $responseData['response']->toArray();
         }
 
         return $l11nTypes;
@@ -157,9 +157,9 @@ final class Installer extends InstallerAbstract
                 continue;
             }
 
-            $clientAttrType[$attribute['name']] = !\is_array($responseData['response'])
-                ? $responseData['response']->toArray()
-                : $responseData['response'];
+            $clientAttrType[$attribute['name']] = \is_array($responseData['response'])
+                ? $responseData['response']
+                : $responseData['response']->toArray();
 
             $isFirst = true;
             foreach ($attribute['l11n'] as $language => $l11n) {
@@ -228,9 +228,9 @@ final class Installer extends InstallerAbstract
                     continue;
                 }
 
-                $attrValue = !\is_array($responseData['response'])
-                    ? $responseData['response']->toArray()
-                    : $responseData['response'];
+                $attrValue = \is_array($responseData['response'])
+                    ? $responseData['response']
+                    : $responseData['response']->toArray();
 
                 $clientAttrValue[$attribute['name']][] = $attrValue;
 
