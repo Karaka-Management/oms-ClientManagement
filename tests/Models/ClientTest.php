@@ -17,7 +17,6 @@ namespace Modules\ClientManagement\tests\Models;
 use Modules\ClientManagement\Models\Client;
 use Modules\ClientManagement\Models\ClientStatus;
 use Modules\Editor\Models\EditorDoc;
-use Modules\Media\Models\Media;
 use Modules\Profile\Models\ContactElement;
 
 /**
