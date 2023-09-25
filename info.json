@@ -30,7 +30,7 @@
     "load": [
         {
             "pid": [
-                "/sales/customer"
+                "/sales/client"
             ],
             "type": 4,
             "for": 0,
