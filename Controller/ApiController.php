@@ -85,7 +85,7 @@ final class ApiController extends Controller
      *
      * @param RequestAbstract  $request  Request
      * @param ResponseAbstract $response Response
-     * @param mixed            $data     Generic data
+     * @param array            $data     Generic data
      *
      * @return void
      *
@@ -93,7 +93,7 @@ final class ApiController extends Controller
      *
      * @since 1.0.0
      */
-    public function apiClientCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
+    public function apiClientCreate(RequestAbstract $request, ResponseAbstract $response, array $data = []) : void
     {
         if (!empty($val = $this->validateClientCreate($request))) {
             $response->header->status = RequestStatusCode::R_400;
@@ -266,7 +266,7 @@ final class ApiController extends Controller
      *
      * @param RequestAbstract  $request  Request
      * @param ResponseAbstract $response Response
-     * @param mixed            $data     Generic data
+     * @param array            $data     Generic data
      *
      * @return void
      *
@@ -274,7 +274,7 @@ final class ApiController extends Controller
      *
      * @since 1.0.0
      */
-    public function apiMainAddressUpdate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
+    public function apiMainAddressUpdate(RequestAbstract $request, ResponseAbstract $response, array $data = []) : void
     {
         if (!empty($val = $this->validateMainAddressUpdate($request))) {
             $response->data['client_main_address'] = new FormValidation($val);
@@ -352,7 +352,7 @@ final class ApiController extends Controller
      *
      * @param RequestAbstract  $request  Request
      * @param ResponseAbstract $response Response
-     * @param mixed            $data     Generic data
+     * @param array            $data     Generic data
      *
      * @return void
      *
@@ -360,7 +360,7 @@ final class ApiController extends Controller
      *
      * @since 1.0.0
      */
-    public function apiClientL11nCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
+    public function apiClientL11nCreate(RequestAbstract $request, ResponseAbstract $response, array $data = []) : void
     {
         if (!empty($val = $this->validateClientL11nCreate($request))) {
             $response->header->status = RequestStatusCode::R_400;
@@ -423,7 +423,7 @@ final class ApiController extends Controller
      *
      * @param RequestAbstract  $request  Request
      * @param ResponseAbstract $response Response
-     * @param mixed            $data     Generic data
+     * @param array            $data     Generic data
      *
      * @return void
      *
@@ -431,7 +431,7 @@ final class ApiController extends Controller
      *
      * @since 1.0.0
      */
-    public function apiClientL11nTypeCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
+    public function apiClientL11nTypeCreate(RequestAbstract $request, ResponseAbstract $response, array $data = []) : void
     {
         if (!empty($val = $this->validateClientL11nTypeCreate($request))) {
             $response->header->status = RequestStatusCode::R_400;
@@ -487,7 +487,7 @@ final class ApiController extends Controller
      *
      * @param RequestAbstract  $request  Request
      * @param ResponseAbstract $response Response
-     * @param mixed            $data     Generic data
+     * @param array            $data     Generic data
      *
      * @return void
      *
@@ -495,7 +495,7 @@ final class ApiController extends Controller
      *
      * @since 1.0.0
      */
-    public function apiFileCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
+    public function apiFileCreate(RequestAbstract $request, ResponseAbstract $response, array $data = []) : void
     {
         $uploadedFiles = $request->files;
 
@@ -551,7 +551,7 @@ final class ApiController extends Controller
      *
      * @param RequestAbstract  $request  Request
      * @param ResponseAbstract $response Response
-     * @param mixed            $data     Generic data
+     * @param array            $data     Generic data
      *
      * @return void
      *
@@ -559,7 +559,7 @@ final class ApiController extends Controller
      *
      * @since 1.0.0
      */
-    public function apiNoteCreate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
+    public function apiNoteCreate(RequestAbstract $request, ResponseAbstract $response, array $data = []) : void
     {
         $request->setData('virtualpath', '/Modules/ClientManagement/' . $request->getData('id'), true);
         $this->app->moduleManager->get('Editor')->apiEditorCreate($request, $response, $data);
@@ -578,7 +578,7 @@ final class ApiController extends Controller
      *
      * @param RequestAbstract  $request  Request
      * @param ResponseAbstract $response Response
-     * @param mixed            $data     Generic data
+     * @param array            $data     Generic data
      *
      * @return void
      *
@@ -586,7 +586,7 @@ final class ApiController extends Controller
      *
      * @since 1.0.0
      */
-    public function apiNoteUpdate(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
+    public function apiNoteUpdate(RequestAbstract $request, ResponseAbstract $response, array $data = []) : void
     {
         // @todo: check permissions
         $this->app->moduleManager->get('Editor', 'Api')->apiEditorDocUpdate($request, $response, $data);
@@ -597,7 +597,7 @@ final class ApiController extends Controller
      *
      * @param RequestAbstract  $request  Request
      * @param ResponseAbstract $response Response
-     * @param mixed            $data     Generic data
+     * @param array            $data     Generic data
      *
      * @return void
      *
@@ -605,7 +605,7 @@ final class ApiController extends Controller
      *
      * @since 1.0.0
      */
-    public function apiNoteDelete(RequestAbstract $request, ResponseAbstract $response, mixed $data = null) : void
+    public function apiNoteDelete(RequestAbstract $request, ResponseAbstract $response, array $data = []) : void
     {
         // @todo: check permissions
         $this->app->moduleManager->get('Editor', 'Api')->apiEditorDocDelete($request, $response, $data);
