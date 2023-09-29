@@ -146,7 +146,7 @@ trait ApiControllerAttributeTrait
         $request  = new HttpRequest(new HttpUri(''));
 
         $request->header->account = 1;
-        $request->setData('client', '1');
+        $request->setData('ref', '1');
         $request->setData('value', '1');
         $request->setData('type', '1');
 
