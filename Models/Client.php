@@ -103,7 +103,7 @@ class Client
      * @var Payment[]
      * @since 1.0.0
      */
-    private array $payments = [];
+    public array $payments = [];
 
     /**
      * Contact elements.
@@ -111,7 +111,7 @@ class Client
      * @var array
      * @since 1.0.0
      */
-    private array $contactElements = [];
+    public array $contactElements = [];
 
     /**
      * Main address.
@@ -127,7 +127,7 @@ class Client
      * @var array
      * @since 1.0.0
      */
-    private array $address = [];
+    public array $address = [];
 
     /**
      * Partners.
@@ -135,7 +135,7 @@ class Client
      * @var array
      * @since 1.0.0
      */
-    private array $partners = [];
+    public array $partners = [];
 
     /**
      * Sales representative.
