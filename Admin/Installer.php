@@ -105,7 +105,7 @@ final class Installer extends InstallerAbstract
 
             $module->apiClientL11nTypeCreate($request, $response);
 
-            $responseData = $response->get('');
+            $responseData = $response->getData('');
             if (!\is_array($responseData)) {
                 continue;
             }
@@ -152,7 +152,7 @@ final class Installer extends InstallerAbstract
 
             $module->apiClientAttributeTypeCreate($request, $response);
 
-            $responseData = $response->get('');
+            $responseData = $response->getData('');
             if (!\is_array($responseData)) {
                 continue;
             }
@@ -223,7 +223,7 @@ final class Installer extends InstallerAbstract
 
                 $module->apiClientAttributeValueCreate($request, $response);
 
-                $responseData = $response->get('');
+                $responseData = $response->getData('');
                 if (!\is_array($responseData)) {
                     continue;
                 }

@@ -55,7 +55,7 @@ trait ApiControllerClientTrait
         $request->setData('country', ISO3166TwoEnum::_USA);
 
         $this->module->apiClientCreate($request, $response);
-        self::assertGreaterThan(0, $response->get('')['response']->id);
+        self::assertGreaterThan(0, $response->getDataArray('')['response']->id);
     }
 
     /**
@@ -101,7 +101,7 @@ trait ApiControllerClientTrait
         ]);
 
         $this->module->apiFileCreate($request, $response);
-        $file = $response->get('')['response'];
+        $file = $response->getDataArray('')['response'];
         self::assertGreaterThan(0, \reset($file)->id);
     }
 
@@ -131,7 +131,7 @@ trait ApiControllerClientTrait
         ]);
 
         $this->module->apiFileCreate($request, $response);
-        $file = $response->get('')['response'];
+        $file = $response->getDataArray('')['response'];
         self::assertGreaterThan(0, \reset($file)->id);
     }
 
@@ -153,7 +153,7 @@ trait ApiControllerClientTrait
         $request->setData('plain', \preg_replace('/^.+\n/', '', $MARKDOWN));
 
         $this->module->apiNoteCreate($request, $response);
-        self::assertGreaterThan(0, $response->get('')['response']->id);
+        self::assertGreaterThan(0, $response->getDataArray('')['response']->id);
     }
 
     /**

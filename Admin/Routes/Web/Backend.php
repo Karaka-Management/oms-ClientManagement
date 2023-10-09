@@ -84,15 +84,4 @@ return [
             ],
         ],
     ],
-    '^.*/sales/analysis/client(\?.*|$)$' => [
-        [
-            'dest'       => '\Modules\ClientManagement\Controller\BackendController:viewClientAnalysis',
-            'verb'       => RouteVerb::GET,
-            'permission' => [
-                'module' => BackendController::NAME,
-                'type'   => PermissionType::READ,
-                'state'  => PermissionCategory::ANALYSIS,
-            ],
-        ],
-    ],
 ];

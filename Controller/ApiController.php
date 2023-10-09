@@ -155,8 +155,8 @@ final class ApiController extends Controller
 
                 $internalRequest->header->account = $request->header->account;
                 $internalRequest->setData('ref', $client->id);
-                $internalRequest->setData('type',  $type->id);
-                $internalRequest->setData('custom',  $request->hasData('vat_id'));
+                $internalRequest->setData('type', $type->id);
+                $internalRequest->setData('value', $request->getDataString('vat_id'));
 
                 $this->app->moduleManager->get('ClientManagement', 'ApiAttribute')
                     ->apiClientAttributeCreate($internalRequest, $internalResponse);
@@ -561,16 +561,16 @@ final class ApiController extends Controller
      */
     public function apiNoteCreate(RequestAbstract $request, ResponseAbstract $response, array $data = []) : void
     {
-        $request->setData('virtualpath', '/Modules/ClientManagement/' . $request->getData('id'), true);
+        $request->setData('virtualpath', '/Modules/ClientManagement/' . ((int) $request->getData('id')), true);
         $this->app->moduleManager->get('Editor')->apiEditorCreate($request, $response, $data);
 
-        $responseData = $response->get($request->uri->__toString());
+        $responseData = $response->getDataArray($request->uri->__toString());
         if (!\is_array($responseData)) {
             return;
         }
 
         $model = $responseData['response'];
-        $this->createModelRelation($request->header->account, $request->getData('id'), $model->id, ClientMapper::class, 'notes', '', $request->getOrigin());
+        $this->createModelRelation($request->header->account, (int) $request->getData('id'), $model->id, ClientMapper::class, 'notes', '', $request->getOrigin());
     }
 
     /**

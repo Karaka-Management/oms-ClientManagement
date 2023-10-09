@@ -38,7 +38,7 @@ trait ApiControllerAttributeTrait
         $request->setData('language', ISO639x1Enum::_EN);
 
         $this->attrModule->apiClientAttributeTypeCreate($request, $response);
-        self::assertGreaterThan(0, $response->get('')['response']->id);
+        self::assertGreaterThan(0, $response->getDataArray('')['response']->id);
     }
 
     /**
@@ -56,7 +56,7 @@ trait ApiControllerAttributeTrait
         $request->setData('language', ISO639x1Enum::_DE);
 
         $this->attrModule->apiClientAttributeTypeL11nCreate($request, $response);
-        self::assertGreaterThan(0, $response->get('')['response']->id);
+        self::assertGreaterThan(0, $response->getDataArray('')['response']->id);
     }
 
     /**
@@ -76,7 +76,7 @@ trait ApiControllerAttributeTrait
         $request->setData('country', ISO3166TwoEnum::_DEU);
 
         $this->attrModule->apiClientAttributeValueCreate($request, $response);
-        self::assertGreaterThan(0, $response->get('')['response']->id);
+        self::assertGreaterThan(0, $response->getDataArray('')['response']->id);
     }
 
     /**
@@ -95,7 +95,7 @@ trait ApiControllerAttributeTrait
         $request->setData('country', ISO3166TwoEnum::_DEU);
 
         $this->attrModule->apiClientAttributeValueCreate($request, $response);
-        self::assertGreaterThan(0, $response->get('')['response']->id);
+        self::assertGreaterThan(0, $response->getDataArray('')['response']->id);
     }
 
     /**
@@ -114,7 +114,7 @@ trait ApiControllerAttributeTrait
         $request->setData('country', ISO3166TwoEnum::_DEU);
 
         $this->attrModule->apiClientAttributeValueCreate($request, $response);
-        self::assertGreaterThan(0, $response->get('')['response']->id);
+        self::assertGreaterThan(0, $response->getDataArray('')['response']->id);
     }
 
     /**
@@ -133,7 +133,7 @@ trait ApiControllerAttributeTrait
         $request->setData('country', ISO3166TwoEnum::_DEU);
 
         $this->attrModule->apiClientAttributeValueCreate($request, $response);
-        self::assertGreaterThan(0, $response->get('')['response']->id);
+        self::assertGreaterThan(0, $response->getDataArray('')['response']->id);
     }
 
     /**
@@ -151,7 +151,7 @@ trait ApiControllerAttributeTrait
         $request->setData('type', '1');
 
         $this->attrModule->apiClientAttributeCreate($request, $response);
-        self::assertGreaterThan(0, $response->get('')['response']->id);
+        self::assertGreaterThan(0, $response->getDataArray('')['response']->id);
     }
 
     /**

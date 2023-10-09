@@ -1,8 +1,9 @@
+import { jsOMS }      from '../../jsOMS/Utils/oLib.js';
 import { Autoloader } from '../../jsOMS/Autoloader.js';
 
-Autoloader.defineNamespace('jsOMS.Modules');
+Autoloader.defineNamespace('omsApp.Modules');
 
-jsOMS.Modules.ClientManagement = class {
+omsApp.Modules.ClientManagement = class {
     /**
      * @constructor
      *
@@ -48,6 +49,7 @@ jsOMS.Modules.ClientManagement = class {
         const data = JSON.parse(chart.getAttribute('data-chart'));
 
         const myChart = new Chart(chart.getContext('2d'), data);
+
     };
 
     bindMap (map)
