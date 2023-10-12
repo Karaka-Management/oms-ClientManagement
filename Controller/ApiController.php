@@ -145,10 +145,10 @@ final class ApiController extends Controller
                     && $validate['vat'] === 'A'
                     && $validate['name'] === 'A'
                     && $validate['city'] === 'A')
-                || $validate['status'] !== 0 // Api out of order -> accept it -> @todo: test it during invoice creation
+                || $validate['status'] !== 0 // Api out of order -> accept it -> test it during invoice creation
             ) {
                 /** @var \Modules\Attribute\Models\AttributeType $type */
-                $type = ClientAttributeTypeMapper::get()->where('name', 'vat_id')->execute();
+                $type = ClientAttributeTypeMapper::get()->with('defaults')->where('name', 'vat_id')->execute();
 
                 $internalRequest  = new HttpRequest(new HttpUri(''));
                 $internalResponse = new HttpResponse();

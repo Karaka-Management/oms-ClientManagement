@@ -61,7 +61,7 @@ final class ApiAttributeController extends Controller
             return;
         }
 
-        $type      = ClientAttributeTypeMapper::get()->where('id', (int) $request->getData('type'))->execute();
+        $type      = ClientAttributeTypeMapper::get()->with('defaults')->where('id', (int) $request->getData('type'))->execute();
         $attribute = $this->createAttributeFromRequest($request, $type);
         $this->createModel($request->header->account, $attribute, ClientAttributeMapper::class, 'attribute', $request->getOrigin());
         $this->createStandardCreateResponse($request, $response, $attribute);
@@ -359,7 +359,7 @@ final class ApiAttributeController extends Controller
         }
 
         /** @var AttributeType $old */
-        $old = ClientAttributeTypeMapper::get()->where('id', (int) $request->getData('id'))->execute();
+        $old = ClientAttributeTypeMapper::get()->with('defaults')->where('id', (int) $request->getData('id'))->execute();
         $new = $this->updateAttributeTypeFromRequest($request, clone $old);
 
         $this->updateModel($request->header->account, $old, $new, ClientAttributeTypeMapper::class, 'client_attribute_type', $request->getOrigin());
@@ -391,7 +391,7 @@ final class ApiAttributeController extends Controller
         }
 
         /** @var AttributeType $clientAttributeType */
-        $clientAttributeType = ClientAttributeTypeMapper::get()->where('id', (int) $request->getData('id'))->execute();
+        $clientAttributeType = ClientAttributeTypeMapper::get()->with('defaults')->where('id', (int) $request->getData('id'))->execute();
         $this->deleteModel($request->header->account, $clientAttributeType, ClientAttributeTypeMapper::class, 'client_attribute_type', $request->getOrigin());
         $this->createStandardDeleteResponse($request, $response, $clientAttributeType);
     }
