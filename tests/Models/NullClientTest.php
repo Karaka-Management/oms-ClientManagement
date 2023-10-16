@@ -23,7 +23,7 @@ final class NullClientTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @covers Modules\ClientManagement\Models\NullClient
-     * @group framework
+     * @group module
      */
     public function testNull() : void
     {
@@ -32,7 +32,7 @@ final class NullClientTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @covers Modules\ClientManagement\Models\NullClient
-     * @group framework
+     * @group module
      */
     public function testId() : void
     {
