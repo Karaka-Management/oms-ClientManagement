@@ -73,7 +73,7 @@ echo $this->data['nav']->render(); ?>
 
     <div class="col-xs-12 col-md-6">
         <div class="portlet">
-            <div class="portlet-head"><?= $this->getHtml('Language', '0', '0'); ?><i class="lni lni-download download btn end-xs"></i></div>
+            <div class="portlet-head"><?= $this->getHtml('Language', '0', '0'); ?><i class="g-icon download btn end-xs">download</i></div>
             <table class="default">
                 <thead>
                     <tr>
@@ -84,8 +84,8 @@ echo $this->data['nav']->render(); ?>
                 <tbody>
                     <?php $c = 0; foreach ($l11ns as $key => $value) : ++$c; ?>
                     <tr>
-                        <td><a href="#"><i class="fa fa-times"></i></a>
-                        <td><a href="#"><i class="fa fa-cogs"></i></a>
+                        <td><a href="#"><i class="g-icon">close</i></a>
+                        <td><a href="#"><i class="g-icon">settings</i></a>
                         <td><?= ISO639Enum::getByName('_' . \strtoupper($value->getLanguage())); ?>
                         <td><?= $value->content; ?>
                     <?php endforeach; ?>

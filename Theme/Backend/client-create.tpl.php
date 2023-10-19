@@ -42,7 +42,7 @@ echo $this->data['nav']->render(); ?>
                             <form>
                                 <table class="layout wf-100">
                                     <tr><td><label for="iId"><?= $this->getHtml('ID', '0', '0'); ?></label>
-                                    <tr><td><span class="input"><button type="button" formaction=""><i class="fa fa-book"></i></button><input type="number" id="iId" min="1" name="id" required></span>
+                                    <tr><td><span class="input"><button type="button" formaction=""><i class="g-icon">book</i></button><input type="number" id="iId" min="1" name="id" required></span>
                                     <tr><td><label for="iName1"><?= $this->getHtml('Name1'); ?></label>
                                     <tr><td><input type="text" id="iName1" name="name1" placeholder="&#xf040;" required>
                                     <tr><td><label for="iName2"><?= $this->getHtml('Name2'); ?></label>
@@ -134,7 +134,7 @@ echo $this->data['nav']->render(); ?>
                             <form>
                                 <table class="layout wf-100">
                                     <tr><td><label for="iSource"><?= $this->getHtml('ID'); ?></label>
-                                    <tr><td><span class="input"><button type="button" formaction=""><i class="fa fa-book"></i></button><input id="iSource" name="source" type="text" placeholder=""></span>
+                                    <tr><td><span class="input"><button type="button" formaction=""><i class="g-icon">book</i></button><input id="iSource" name="source" type="text" placeholder=""></span>
                                     <tr><td><label for="iSegment"><?= $this->getHtml('Segment'); ?></label>
                                     <tr><td><input id="iSegment" name="segment" type="text" placeholder="">
                                     <tr><td><label for="iProductgroup"><?= $this->getHtml('Productgroup'); ?></label>
@@ -193,7 +193,7 @@ echo $this->data['nav']->render(); ?>
                                                 <option>
                                             </select><td>
                                     <tr><td><label for="iSource"><?= $this->getHtml('ID'); ?></label>
-                                    <tr><td><span class="input"><button type="button" formaction=""><i class="fa fa-book"></i></button><input id="iSource" name="source" type="text" placeholder=""></span>
+                                    <tr><td><span class="input"><button type="button" formaction=""><i class="g-icon">book</i></button><input id="iSource" name="source" type="text" placeholder=""></span>
                                     <tr><td><label for="iSegment"><?= $this->getHtml('Segment'); ?></label>
                                     <tr><td><input id="iSegment" name="segment" type="text" placeholder="">
                                     <tr><td><label for="iProductgroup"><?= $this->getHtml('Productgroup'); ?></label>
@@ -231,9 +231,9 @@ echo $this->data['nav']->render(); ?>
                                 <table class="layout wf-100">
                                     <tbody>
                                     <tr><td><label for="iManager"><?= $this->getHtml('AreaManager'); ?></label>
-                                    <tr><td><span class="input"><button type="button" formaction=""><i class="fa fa-book"></i></button><input id="iManager" name="source" type="text" placeholder=""></span>
+                                    <tr><td><span class="input"><button type="button" formaction=""><i class="g-icon">book</i></button><input id="iManager" name="source" type="text" placeholder=""></span>
                                     <tr><td><label for="iSource"><?= $this->getHtml('ID'); ?></label>
-                                    <tr><td><span class="input"><button type="button" formaction=""><i class="fa fa-book"></i></button><input id="iSource" name="source" type="text" placeholder=""></span>
+                                    <tr><td><span class="input"><button type="button" formaction=""><i class="g-icon">book</i></button><input id="iSource" name="source" type="text" placeholder=""></span>
                                     <tr><td><label for="iSegment"><?= $this->getHtml('Segment'); ?></label>
                                     <tr><td><input id="iSegment" name="segment" type="text" placeholder="">
                                     <tr><td><label for="iProductgroup"><?= $this->getHtml('Productgroup'); ?></label>
@@ -265,7 +265,7 @@ echo $this->data['nav']->render(); ?>
             ?>
                     <div class="box wf-100">
                         <table class="default">
-                            <caption><?= $this->getHtml('Logs'); ?><i class="fa fa-download end-xs download btn"></i></caption>
+                            <caption><?= $this->getHtml('Logs'); ?><i class="g-icon end-xs download btn">download</i></caption>
                             <thead>
                             <tr>
                                 <td>IP
