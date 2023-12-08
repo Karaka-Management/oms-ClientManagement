@@ -15,7 +15,6 @@ declare(strict_types=1);
 namespace Modules\ClientManagement\Controller;
 
 use Modules\Admin\Models\Account;
-use Modules\Admin\Models\Address;
 use Modules\Admin\Models\AddressMapper;
 use Modules\Admin\Models\NullAccount;
 use Modules\Auditor\Models\Audit;
@@ -25,9 +24,11 @@ use Modules\ClientManagement\Models\Client;
 use Modules\ClientManagement\Models\ClientL11nMapper;
 use Modules\ClientManagement\Models\ClientL11nTypeMapper;
 use Modules\ClientManagement\Models\ClientMapper;
+use Modules\ClientManagement\Models\PermissionCategory;
 use Modules\Media\Models\MediaMapper;
 use Modules\Media\Models\PathSettings;
 use Modules\Organization\Models\UnitMapper;
+use phpOMS\Account\PermissionType;
 use phpOMS\Api\EUVAT\EUVATVies;
 use phpOMS\Api\Geocoding\Nominatim;
 use phpOMS\Localization\BaseStringL11n;
@@ -42,6 +43,7 @@ use phpOMS\Message\NotificationLevel;
 use phpOMS\Message\RequestAbstract;
 use phpOMS\Message\ResponseAbstract;
 use phpOMS\Model\Message\FormValidation;
+use phpOMS\Stdlib\Base\Address;
 use phpOMS\Uri\HttpUri;
 use phpOMS\Utils\StringUtils;
 
@@ -106,7 +108,7 @@ final class ApiController extends Controller
         $this->createModel($request->header->account, $client, ClientMapper::class, 'client', $request->getOrigin());
 
         // Set VAT Id
-        // @todo: move to separate function
+        // @todo move to separate function
         if ($request->hasData('vat_id')) {
             /** @var \Modules\Organization\Models\Unit $unit */
             $unit = UnitMapper::get()
@@ -338,7 +340,10 @@ final class ApiController extends Controller
      */
     private function updateMainAddressFromRequest(RequestAbstract $request, Address $address) : Address
     {
+        $address->name = $request->getDataString('name') ?? $address->name;
+        $address->fao = $request->getDataString('fao') ?? $address->fao;
         $address->address = $request->getDataString('address') ?? $address->address;
+        $address->addressAddition = $request->getDataString('addition') ?? $address->addressAddition;
         $address->postal  = $request->getDataString('postal') ?? $address->postal;
         $address->city    = $request->getDataString('city') ?? $address->city;
         $address->state   = $request->getDataString('state') ?? $address->state;
@@ -588,8 +593,17 @@ final class ApiController extends Controller
      */
     public function apiNoteUpdate(RequestAbstract $request, ResponseAbstract $response, array $data = []) : void
     {
-        // @todo: check permissions
-        $this->app->moduleManager->get('Editor', 'Api')->apiEditorDocUpdate($request, $response, $data);
+        $accountId = $request->header->account;
+        if (!$this->app->accountManager->get($accountId)->hasPermission(
+            PermissionType::MODIFY, $this->app->unitId, $this->app->appId, self::NAME, PermissionCategory::CLIENT_NOTE, $request->getDataInt('id'))
+        ) {
+            $this->fillJsonResponse($request, $response, NotificationLevel::HIDDEN, '', '', []);
+            $response->header->status = RequestStatusCode::R_403;
+
+            return;
+        }
+
+        $this->app->moduleManager->get('Editor', 'Api')->apiEditorUpdate($request, $response, $data);
     }
 
     /**
@@ -607,7 +621,16 @@ final class ApiController extends Controller
      */
     public function apiNoteDelete(RequestAbstract $request, ResponseAbstract $response, array $data = []) : void
     {
-        // @todo: check permissions
-        $this->app->moduleManager->get('Editor', 'Api')->apiEditorDocDelete($request, $response, $data);
+        $accountId = $request->header->account;
+        if (!$this->app->accountManager->get($accountId)->hasPermission(
+            PermissionType::DELETE, $this->app->unitId, $this->app->appId, self::NAME, PermissionCategory::CLIENT_NOTE, $request->getDataInt('id'))
+        ) {
+            $this->fillJsonResponse($request, $response, NotificationLevel::HIDDEN, '', '', []);
+            $response->header->status = RequestStatusCode::R_403;
+
+            return;
+        }
+
+        $this->app->moduleManager->get('Editor', 'Api')->apiEditorDelete($request, $response, $data);
     }
 }

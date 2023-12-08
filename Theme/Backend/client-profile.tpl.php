@@ -133,24 +133,28 @@ echo $this->data['nav']->render();
                         </div>
                         <div class="portlet-body">
                             <table class="layout wf-100">
-                                <?php if (!empty($client->mainAddress->addition)) : ?>
-                                    <tr><td><label for="iName1"><?= $this->getHtml('Addition'); ?></label>
-                                <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->mainAddress->addition); ?>">
+                                <?php if (!empty($client->mainAddress->fao)) : ?>
+                                    <tr><td><label for="iFAO"><?= $this->getHtml('FAO'); ?></label>
+                                    <tr><td><input type="text" id="iFAO" name="fao" value="<?= $this->printHtml($client->mainAddress->fao); ?>">
                                 <?php endif; ?>
-                                <tr><td><label for="iName1"><?= $this->getHtml('Address'); ?></label>
-                                <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->mainAddress->address); ?>" required>
-                                <tr><td><label for="iName1"><?= $this->getHtml('Postal'); ?></label>
-                                <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->mainAddress->postal); ?>" required>
-                                <tr><td><label for="iName1"><?= $this->getHtml('City'); ?></label>
-                                <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->mainAddress->city); ?>" required>
-                                <tr><td><label for="iName1"><?= $this->getHtml('Country'); ?></label>
-                                <tr><td><select name="country">
+                                <tr><td><label for="iAddress"><?= $this->getHtml('Address'); ?></label>
+                                <tr><td><input type="text" id="iAddress" name="address" value="<?= $this->printHtml($client->mainAddress->address); ?>" required>
+                                <?php if (!empty($client->mainAddress->addressAddition)) : ?>
+                                    <tr><td><label for="iAddition"><?= $this->getHtml('Addition'); ?></label>
+                                    <tr><td><input type="text" id="iAddition" name="addition" value="<?= $this->printHtml($client->mainAddress->addressAddition); ?>">
+                                <?php endif; ?>
+                                <tr><td><label for="iPostal"><?= $this->getHtml('Postal'); ?></label>
+                                <tr><td><input type="text" id="iPostal" name="postal" value="<?= $this->printHtml($client->mainAddress->postal); ?>" required>
+                                <tr><td><label for="iCity"><?= $this->getHtml('City'); ?></label>
+                                <tr><td><input type="text" id="iCity" name="city" value="<?= $this->printHtml($client->mainAddress->city); ?>" required>
+                                <tr><td><label for="iCountry"><?= $this->getHtml('Country'); ?></label>
+                                <tr><td><select id="iCountry" name="country">
                                     <?php foreach ($countryCodes as $code3 => $code2) : ?>
                                         <option value="<?= $this->printHtml($code2); ?>"<?= $this->printHtml($code2 === $client->mainAddress->getCountry() ? ' selected' : ''); ?>><?= $this->printHtml($countries[$code3]); ?>
                                         <?php endforeach; ?>
                                     </select>
-                                <tr><td><label for="iName1"><?= $this->getHtml('Map'); ?></label>
-                                <tr><td><div id="clientMap" class="map" data-lat="<?= $client->mainAddress->lat; ?>" data-lon="<?= $client->mainAddress->lon; ?>"></div>
+                                <tr><td><label for="iClientMap"><?= $this->getHtml('Map'); ?></label>
+                                <tr><td><div id="iClientMap" class="map" data-lat="<?= $client->mainAddress->lat; ?>" data-lon="<?= $client->mainAddress->lon; ?>"></div>
                             </table>
                         </div>
                     </section>
