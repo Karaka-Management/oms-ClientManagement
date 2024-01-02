@@ -20,14 +20,14 @@ echo $this->data['nav']->render(); ?>
 <div class="tabview tab-2">
     <div class="box">
         <ul class="tab-links">
-            <li><label for="c-tab-1"><?= $this->getHtml('Profile'); ?></label></li>
-            <li><label for="c-tab-2"><?= $this->getHtml('Contact'); ?></label></li>
-            <li><label for="c-tab-3"><?= $this->getHtml('Addresses'); ?></label></li>
-            <li><label for="c-tab-4"><?= $this->getHtml('PaymentTerm'); ?></label></li>
-            <li><label for="c-tab-5"><?= $this->getHtml('Payment'); ?></label></li>
-            <li><label for="c-tab-6"><?= $this->getHtml('Prices'); ?></label></li>
-            <li><label for="c-tab-7"><?= $this->getHtml('AreaManager'); ?></label></li>
-            <li><label for="c-tab-8"><?= $this->getHtml('Files'); ?></label></li>
+            <li><label for="c-tab-1"><?= $this->getHtml('Profile'); ?></label>
+            <li><label for="c-tab-2"><?= $this->getHtml('Contact'); ?></label>
+            <li><label for="c-tab-3"><?= $this->getHtml('Addresses'); ?></label>
+            <li><label for="c-tab-4"><?= $this->getHtml('PaymentTerm'); ?></label>
+            <li><label for="c-tab-5"><?= $this->getHtml('Payment'); ?></label>
+            <li><label for="c-tab-6"><?= $this->getHtml('Prices'); ?></label>
+            <li><label for="c-tab-7"><?= $this->getHtml('AreaManager'); ?></label>
+            <li><label for="c-tab-8"><?= $this->getHtml('Files'); ?></label>
             <li><label for="c-tab-9"><?= $this->getHtml('Logs'); ?></label>
         </ul>
     </div>
@@ -44,11 +44,11 @@ echo $this->data['nav']->render(); ?>
                                     <tr><td><label for="iId"><?= $this->getHtml('ID', '0', '0'); ?></label>
                                     <tr><td><span class="input"><button type="button" formaction=""><i class="g-icon">book</i></button><input type="number" id="iId" min="1" name="id" required></span>
                                     <tr><td><label for="iName1"><?= $this->getHtml('Name1'); ?></label>
-                                    <tr><td><input type="text" id="iName1" name="name1" placeholder="&#xf040;" required>
+                                    <tr><td><input type="text" id="iName1" name="name1" placeholder="" required>
                                     <tr><td><label for="iName2"><?= $this->getHtml('Name2'); ?></label>
-                                    <tr><td><input type="text" id="iName2" name="name2" placeholder="&#xf040;">
+                                    <tr><td><input type="text" id="iName2" name="name2" placeholder="">
                                     <tr><td><label for="iName3"><?= $this->getHtml('Name3'); ?></label>
-                                    <tr><td><input type="text" id="iName3" name="name3" placeholder="&#xf040;">
+                                    <tr><td><input type="text" id="iName3" name="name3" placeholder="">
                                     <tr><td colspan="2"><input type="submit" value="<?= $this->getHtml('Create', '0', '0'); ?>" name="create-client">
                                 </table>
                             </form>
@@ -264,7 +264,7 @@ echo $this->data['nav']->render(); ?>
             $footerView->setPage(1);
             ?>
                     <div class="box wf-100">
-                        <table class="default">
+                        <table class="default sticky">
                             <caption><?= $this->getHtml('Logs'); ?><i class="g-icon end-xs download btn">download</i></caption>
                             <thead>
                             <tr>

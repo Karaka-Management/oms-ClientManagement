@@ -1,0 +1,10 @@
+[
+    {
+        "description": "Default client segmentation (segment, section, sales group, product group)",
+        "type": "setting",
+        "name": "1003100001",
+        "content": "[\"segment\":1, \"section\":1, \"client_group\":1]",
+        "pattern": "",
+        "module": "ClientManagement"
+    }
+]

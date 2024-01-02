@@ -17,18 +17,14 @@ namespace Modules\ClientManagement\Models;
 use phpOMS\Stdlib\Base\Enum;
 
 /**
- * Permission category enum.
+ * Default settings enum.
  *
  * @package Modules\ClientManagement\Models
  * @license OMS License 2.0
  * @link    https://jingga.app
  * @since   1.0.0
  */
-abstract class PermissionCategory extends Enum
+abstract class SettingsEnum extends Enum
 {
-    public const CLIENT = 1;
-
-    public const ANALYSIS = 2;
-
-    public const CLIENT_NOTE = 3;
+    public const DEFAULT_SEGMENTATION = '1003100001';
 }

@@ -22,6 +22,8 @@ use Modules\Media\Models\MediaMapper;
 use Modules\Payment\Models\PaymentMapper;
 use Modules\Profile\Models\ContactElementMapper;
 use phpOMS\DataStorage\Database\Mapper\DataMapperFactory;
+use phpOMS\DataStorage\Database\Query\Builder;
+use phpOMS\Stdlib\Base\FloatInt;
 
 /**
  * Client mapper class.

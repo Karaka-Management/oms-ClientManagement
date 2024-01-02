@@ -13,7 +13,12 @@
 declare(strict_types=1);
 
 use Modules\Admin\Models\ContactType;
+use Modules\Billing\Models\SalesBillMapper;
 use Modules\Media\Models\NullMedia;
+use phpOMS\DataStorage\Database\Query\OrderType;
+use phpOMS\Localization\ISO639Enum;
+use phpOMS\Message\Http\HttpHeader;
+use phpOMS\Stdlib\Base\SmartDateTime;
 use phpOMS\Uri\UriFactory;
 
 $countryCodes = \phpOMS\Localization\ISO3166TwoEnum::getConstants();
@@ -28,8 +33,9 @@ $files  = $client->files;
 
 $clientImage = $this->getData('clientImage') ?? new NullMedia();
 
-$newestInvoices    = $this->data['newestInvoices'] ?? [];
-$monthlySalesCosts = $this->data['monthlySalesCosts'] ?? [];
+$attributeView     = $this->data['attributeView'];
+
+$languages = ISO639Enum::getConstants();
 
 /**
  * @var \phpOMS\Views\View $this
@@ -39,21 +45,16 @@ echo $this->data['nav']->render();
 <div class="tabview tab-2">
     <div class="box">
         <ul class="tab-links">
-            <li><label for="c-tab-1"><?= $this->getHtml('Profile'); ?></label></li>
-            <li><label for="c-tab-3"><?= $this->getHtml('Addresses'); ?></label></li>
-            <li><label for="c-tab-5"><?= $this->getHtml('Payment'); ?></label></li>
-            <li><label for="c-tab-6"><?= $this->getHtml('Prices'); ?></label></li>
-            <li><label for="c-tab-7"><?= $this->getHtml('Attributes', 'Attribute', 'Backend'); ?></label></li>
-            <li><label for="c-tab-8"><?= $this->getHtml('Files'); ?></label></li>
+            <li><label for="c-tab-1"><?= $this->getHtml('Profile'); ?></label>
+            <li><label for="c-tab-3"><?= $this->getHtml('Addresses'); ?></label>
+            <li><label for="c-tab-5"><?= $this->getHtml('Payment'); ?></label>
+            <li><label for="c-tab-6"><?= $this->getHtml('Prices'); ?></label>
+            <li><label for="c-tab-7"><?= $this->getHtml('Attributes', 'Attribute', 'Backend'); ?></label>
+            <li><label for="c-tab-8"><?= $this->getHtml('Files'); ?></label>
             <li><label for="c-tab-9"><?= $this->getHtml('Invoices'); ?></label>
             <li><label for="c-tab-10"><?= $this->getHtml('Articles'); ?></label>
-            <li><label for="c-tab-11"><?= $this->getHtml('Messages'); ?></label><!-- incl. support -->
-            <li><label for="c-tab-11"><?= $this->getHtml('Accounting'); ?></label>
-            <li><label for="c-tab-11"><?= $this->getHtml('Notes'); ?></label>
-            <li><label for="c-tab-11"><?= $this->getHtml('Tags'); ?></label>
-            <li><label for="c-tab-11"><?= $this->getHtml('Calendar'); ?></label>
-            <li><label for="c-tab-11"><?= $this->getHtml('Permission'); ?></label>
-            <li><label for="c-tab-12"><?= $this->getHtml('Logs'); ?></label>
+            <li><label for="c-tab-13"><?= $this->getHtml('Notes'); ?></label>
+            <li><label for="c-tab-17"><?= $this->getHtml('Logs'); ?></label>
         </ul>
     </div>
     <div class="tab-content">
@@ -73,16 +74,25 @@ echo $this->data['nav']->render();
                     <section class="portlet">
                         <form>
                             <div class="portlet-body">
-                                <table class="layout wf-100">
-                                    <tr><td><label for="iId"><?= $this->getHtml('ID', '0', '0'); ?></label>
-                                    <tr><td><span class="input"><button type="button" formaction=""><i class="g-icon">book</i></button><input type="number" id="iId" min="1" name="id" value="<?= $this->printHtml($client->number); ?>" disabled></span>
-                                    <tr><td><label for="iName1"><?= $this->getHtml('Name1'); ?></label>
-                                    <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->account->name1); ?>" required>
-                                    <tr><td><label for="iName2"><?= $this->getHtml('Name2'); ?></label>
-                                    <tr><td><input type="text" id="iName2" name="name2" value="<?= $this->printHtml($client->account->name2); ?>">
-                                    <tr><td><label for="iName3"><?= $this->getHtml('Name3'); ?></label>
-                                    <tr><td><input type="text" id="iName3" name="name3" value="<?= $this->printHtml($client->account->name3); ?>">
-                                </table>
+                                <div class="form-group">
+                                    <label for="iId"><?= $this->getHtml('ID', '0', '0'); ?></label>
+                                    <span class="input"><button type="button" formaction=""><i class="g-icon">book</i></button><input type="number" id="iId" min="1" name="id" value="<?= $this->printHtml($client->number); ?>" disabled></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="iName1"><?= $this->getHtml('Name1'); ?></label>
+                                    <input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->account->name1); ?>" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="iName2"><?= $this->getHtml('Name2'); ?></label>
+                                    <input type="text" id="iName2" name="name2" value="<?= $this->printHtml($client->account->name2); ?>">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="iName3"><?= $this->getHtml('Name3'); ?></label>
+                                    <input type="text" id="iName3" name="name3" value="<?= $this->printHtml($client->account->name3); ?>">
+                                </div>
                             </div>
                             <div class="portlet-foot">
                                 <input type="submit" value="<?= $this->getHtml('Save', '0', '0'); ?>" name="save-client-profile"> <input type="submit" value="<?= $this->getHtml('Delete', '0', '0'); ?>" name="delete-client-profile">
@@ -96,14 +106,20 @@ echo $this->data['nav']->render();
                             <a class="end-xs" href=""><i class="g-icon btn">mail</i></a>
                         </div>
                         <div class="portlet-body">
-                            <table class="layout wf-100">
-                                <tr><td><label for="iName1"><?= $this->getHtml('Phone'); ?></label>
-                                <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->getMainContactElement(ContactType::PHONE)->content); ?>">
-                                <tr><td><label for="iName1"><?= $this->getHtml('Email'); ?></label>
-                                <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->getMainContactElement(ContactType::EMAIL)->content); ?>">
-                                <tr><td><label for="iName1"><?= $this->getHtml('Website'); ?></label>
-                                <tr><td><input type="text" id="iName1" name="name1" value="<?= $this->printHtml($client->getMainContactElement(ContactType::WEBSITE)->content); ?>">
-                            </table>
+                            <div class="form-group">
+                                <label for="iPhone"><?= $this->getHtml('Phone'); ?></label>
+                                <input type="text" id="iPhone" name="name1" value="<?= $this->printHtml($client->getMainContactElement(ContactType::PHONE)->content); ?>">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="iEmail"><?= $this->getHtml('Email'); ?></label>
+                                <input type="text" id="iEmail" name="name1" value="<?= $this->printHtml($client->getMainContactElement(ContactType::EMAIL)->content); ?>">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="iWebsite"><?= $this->getHtml('Website'); ?></label>
+                                <input type="text" id="iWebsite" name="name1" value="<?= $this->printHtml($client->getMainContactElement(ContactType::WEBSITE)->content); ?>">
+                            </div>
                         </div>
                     </section>
 
@@ -132,30 +148,48 @@ echo $this->data['nav']->render();
                             </span>
                         </div>
                         <div class="portlet-body">
-                            <table class="layout wf-100">
-                                <?php if (!empty($client->mainAddress->fao)) : ?>
-                                    <tr><td><label for="iFAO"><?= $this->getHtml('FAO'); ?></label>
-                                    <tr><td><input type="text" id="iFAO" name="fao" value="<?= $this->printHtml($client->mainAddress->fao); ?>">
-                                <?php endif; ?>
-                                <tr><td><label for="iAddress"><?= $this->getHtml('Address'); ?></label>
-                                <tr><td><input type="text" id="iAddress" name="address" value="<?= $this->printHtml($client->mainAddress->address); ?>" required>
-                                <?php if (!empty($client->mainAddress->addressAddition)) : ?>
-                                    <tr><td><label for="iAddition"><?= $this->getHtml('Addition'); ?></label>
-                                    <tr><td><input type="text" id="iAddition" name="addition" value="<?= $this->printHtml($client->mainAddress->addressAddition); ?>">
-                                <?php endif; ?>
-                                <tr><td><label for="iPostal"><?= $this->getHtml('Postal'); ?></label>
-                                <tr><td><input type="text" id="iPostal" name="postal" value="<?= $this->printHtml($client->mainAddress->postal); ?>" required>
-                                <tr><td><label for="iCity"><?= $this->getHtml('City'); ?></label>
-                                <tr><td><input type="text" id="iCity" name="city" value="<?= $this->printHtml($client->mainAddress->city); ?>" required>
-                                <tr><td><label for="iCountry"><?= $this->getHtml('Country'); ?></label>
-                                <tr><td><select id="iCountry" name="country">
+                            <?php if (!empty($client->mainAddress->fao)) : ?>
+                            <div class="form-group">
+                                <label for="iFAO"><?= $this->getHtml('FAO'); ?></label>
+                                <input type="text" id="iFAO" name="fao" value="<?= $this->printHtml($client->mainAddress->fao); ?>">
+                            </div>
+                            <?php endif; ?>
+
+                            <div class="form-group">
+                                <label for="iAddress"><?= $this->getHtml('Address'); ?></label>
+                                <input type="text" id="iAddress" name="address" value="<?= $this->printHtml($client->mainAddress->address); ?>" required>
+                            </div>
+
+                            <?php if (!empty($client->mainAddress->addressAddition)) : ?>
+                            <div class="form-group">
+                                <label for="iAddition"><?= $this->getHtml('Addition'); ?></label>
+                                <input type="text" id="iAddition" name="addition" value="<?= $this->printHtml($client->mainAddress->addressAddition); ?>">
+                            </div>
+                            <?php endif; ?>
+
+                            <div class="form-group">
+                                <label for="iPostal"><?= $this->getHtml('Postal'); ?></label>
+                                <input type="text" id="iPostal" name="postal" value="<?= $this->printHtml($client->mainAddress->postal); ?>" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="iCity"><?= $this->getHtml('City'); ?></label>
+                                <input type="text" id="iCity" name="city" value="<?= $this->printHtml($client->mainAddress->city); ?>" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="iCountry"><?= $this->getHtml('Country'); ?></label>
+                                <select id="iCountry" name="country">
                                     <?php foreach ($countryCodes as $code3 => $code2) : ?>
-                                        <option value="<?= $this->printHtml($code2); ?>"<?= $this->printHtml($code2 === $client->mainAddress->getCountry() ? ' selected' : ''); ?>><?= $this->printHtml($countries[$code3]); ?>
-                                        <?php endforeach; ?>
-                                    </select>
-                                <tr><td><label for="iClientMap"><?= $this->getHtml('Map'); ?></label>
-                                <tr><td><div id="iClientMap" class="map" data-lat="<?= $client->mainAddress->lat; ?>" data-lon="<?= $client->mainAddress->lon; ?>"></div>
-                            </table>
+                                    <option value="<?= $this->printHtml($code2); ?>"<?= $this->printHtml($code2 === $client->mainAddress->getCountry() ? ' selected' : ''); ?>><?= $this->printHtml($countries[$code3]); ?>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="iClientMap"><?= $this->getHtml('Map'); ?></label>
+                                <div id="iClientMap" class="map" data-lat="<?= $client->mainAddress->lat; ?>" data-lon="<?= $client->mainAddress->lon; ?>"></div>
+                            </div>
                         </div>
                     </section>
 
@@ -186,19 +220,18 @@ echo $this->data['nav']->render();
                     </div>
                     <?php endif; ?>
 
+                    <?php if ($this->data['hasBilling']) : ?>
                     <div class="row">
                         <div class="col-xs-12 col-lg-4">
                             <section class="portlet highlight-7">
                                 <div class="portlet-body">
                                     <table class="wf-100">
                                         <tr><td><?= $this->getHtml('YTDSales'); ?>:
-                                            <td>
+                                            <td><?= $this->getCurrency(SalesBillMapper::getClientNetSales($client->id, SmartDateTime::startOfYear($this->data['business_start']), new \DateTime('now')), format: 'medium'); ?>
                                         <tr><td><?= $this->getHtml('MTDSales'); ?>:
-                                            <td>
+                                            <td><?= $this->getCurrency(SalesBillMapper::getClientNetSales($client->id, SmartDateTime::startOfMonth(), new \DateTime('now')), format: 'medium'); ?>
                                         <tr><td><?= $this->getHtml('CLV'); ?>:
-                                            <td>
-                                        <tr><td><?= $this->getHtml('MRR'); ?>:
-                                            <td>
+                                            <td><?= $this->getCurrency(SalesBillMapper::getCLVHistoric($client->id), format: 'medium'); ?>
                                     </table>
                                 </div>
                             </section>
@@ -209,13 +242,11 @@ echo $this->data['nav']->render();
                                 <div class="portlet-body">
                                     <table class="wf-100">
                                         <tr><td><?= $this->getHtml('LastContact'); ?>:
-                                            <td>
+                                            <td><?= SalesBillMapper::getClientLastOrder($client->id)?->format('Y-m-d'); ?>
                                         <tr><td><?= $this->getHtml('LastOrder'); ?>:
-                                            <td>
+                                            <td><?= SalesBillMapper::getClientLastOrder($client->id)?->format('Y-m-d'); ?>
                                         <tr><td><?= $this->getHtml('Created'); ?>:
-                                            <td>
-                                        <tr><td><?= $this->getHtml('Modified'); ?>:
-                                            <td>
+                                            <td><?= $client->createdAt->format('Y-m-d H:i'); ?>
                                     </table>
                                 </div>
                             </section>
@@ -226,25 +257,24 @@ echo $this->data['nav']->render();
                                 <div class="portlet-body">
                                     <table class="wf-100">
                                         <tr><td><?= $this->getHtml('DSO'); ?>:
-                                            <td>
+                                            <td>TBD
                                         <tr><td><?= $this->getHtml('Due'); ?>:
-                                            <td>
+                                            <td>TBD
                                         <tr><td><?= $this->getHtml('Balance'); ?>:
-                                            <td>
-                                        <tr><td><?= $this->getHtml('CreditRating'); ?>:
-                                            <td>
+                                            <td>TBD
                                     </table>
                                 </div>
                             </section>
                         </div>
                     </div>
+                    <?php endif; ?>
 
                     <div class="row">
                         <div class="col-xs-12 col-md-6">
                             <section class="portlet">
                                 <div class="portlet-head"><?= $this->getHtml('Notes'); ?></div>
                                 <div class="slider">
-                                <table id="iNotesItemList" class="default">
+                                <table id="iNotesItemList" class="default sticky">
                                     <thead>
                                     <tr>
                                         <td class="wf-100"><?= $this->getHtml('Title'); ?>
@@ -266,7 +296,7 @@ echo $this->data['nav']->render();
                             <section class="portlet">
                                 <div class="portlet-head"><?= $this->getHtml('Documents'); ?></div>
                                 <div class="slider">
-                                <table id="iFilesClientList" class="default">
+                                <table id="iFilesClientList" class="default sticky">
                                     <thead>
                                     <tr>
                                         <td class="wf-100"><?= $this->getHtml('Title'); ?>
@@ -287,11 +317,12 @@ echo $this->data['nav']->render();
                         </div>
                     </div>
 
+                    <?php if ($this->data['hasBilling']) : ?>
                     <div class="row">
                         <div class="col-xs-12">
                             <section class="portlet">
                                 <div class="portlet-head"><?= $this->getHtml('RecentInvoices'); ?></div>
-                                <table id="iSalesItemList" class="default">
+                                <table id="iSalesItemList" class="default sticky">
                                     <thead>
                                     <tr>
                                         <td><?= $this->getHtml('Number'); ?>
@@ -301,6 +332,16 @@ echo $this->data['nav']->render();
                                         <td><?= $this->getHtml('Date'); ?>
                                     <tbody>
                                     <?php
+                                    $newestInvoices = SalesBillMapper::getAll()
+                                        ->with('type')
+                                        ->with('type/l11n')
+                                        ->with('client')
+                                        ->where('client', $client->id)
+                                        ->where('type/l11n/language', $this->response->header->l11n->language)
+                                        ->sort('id', OrderType::DESC)
+                                        ->limit(5)
+                                        ->execute();
+
                                     /** @var \Modules\Billing\Models\Bill $invoice */
                                     foreach ($newestInvoices as $invoice) :
                                         $url = UriFactory::build('{/base}/sales/bill?{?}&id=' . $invoice->id);
@@ -316,7 +357,11 @@ echo $this->data['nav']->render();
                             </section>
                         </div>
                     </div>
+                    <?php endif; ?>
 
+                    <?php if ($this->data['hasBilling']) :
+                        $monthlySalesCosts = SalesBillMapper::getClientMonthlySalesCosts($client->id, (new SmartDateTime('now'))->createModify(-1), new SmartDateTime('now'));
+                    ?>
                     <div class="row">
                         <div class="col-xs-12 col-md-6">
                             <section class="portlet">
@@ -409,6 +454,7 @@ echo $this->data['nav']->render();
                             </section>
                         </div>
                     </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -416,9 +462,9 @@ echo $this->data['nav']->render();
         <div class="tab">
             <div class="row">
                 <div class="col-xs-12 col-md-6 col-lg-4">
-                    <section class="box wf-100">
-                        <header><h1><?= $this->getHtml('Address'); ?></h1></header>
-                        <div class="inner">
+                    <section class="portlet">
+                        <div class="portlet-head"><?= $this->getHtml('Address'); ?></div>
+                        <div class="portlet-body">
                             <form>
                                 <table class="layout wf-100">
                                     <tr><td><label for="iAType"><?= $this->getHtml('Type'); ?></label>
@@ -446,9 +492,9 @@ echo $this->data['nav']->render();
 
             <div class="row">
                 <div class="col-xs-12 col-md-6 col-lg-4">
-                    <section class="box wf-100">
-                        <header><h1><?= $this->getHtml('Contact'); ?></h1></header>
-                        <div class="inner">
+                    <section class="portlet">
+                        <div class="portlet-head"><?= $this->getHtml('Contact'); ?></div>
+                        <div class="portlet-body">
                             <form>
                                 <table class="layout wf-100">
                                     <tr><td><label for="iCType"><?= $this->getHtml('Type'); ?></label>
@@ -481,9 +527,9 @@ echo $this->data['nav']->render();
         <div class="tab">
             <div class="row">
                 <div class="col-xs-12 col-md-6 col-lg-4">
-                    <section class="box wf-100">
-                        <header><h1><?= $this->getHtml('Payment'); ?></h1></header>
-                        <div class="inner">
+                    <section class="portlet">
+                        <div class="portlet-head"><?= $this->getHtml('Payment'); ?></div>
+                        <div class="portlet-body">
                             <form>
                                 <table class="layout wf-100">
                                     <tr><td><label for="iACType"><?= $this->getHtml('Type'); ?></label>
@@ -501,9 +547,9 @@ echo $this->data['nav']->render();
 
             <div class="row">
                 <div class="col-xs-12 col-md-6 col-lg-4">
-                    <section class="box wf-100">
-                        <header><h1><?= $this->getHtml('PaymentTerm'); ?></h1></header>
-                        <div class="inner">
+                    <section class="portlet">
+                        <div class="portlet-head"><?= $this->getHtml('PaymentTerm'); ?></div>
+                        <div class="portlet-body">
                             <form>
                                 <table class="layout wf-100">
                                     <tr><td><label for="iSource"><?= $this->getHtml('ID'); ?></label>
@@ -532,117 +578,248 @@ echo $this->data['nav']->render();
         <input type="radio" id="c-tab-6" name="tabular-2"<?= $this->request->uri->fragment === 'c-tab-6' ? ' checked' : ''; ?>>
         <div class="tab">
             <div class="row">
-                <div class="col-xs-12 col-md-6 col-lg-4">
-                    <section class="box wf-100">
-                        <header><h1><?= $this->getHtml('Price'); ?></h1></header>
-                        <div class="inner">
-                            <form action="<?= UriFactory::build('{/api}...'); ?>" method="post">
-                                <table class="layout wf-100">
-                                    <tbody>
-                                    <tr><td colspan="2"><label for="iPType"><?= $this->getHtml('Type'); ?></label>
-                                    <tr><td><select id="iPType" name="ptye">
-                                                <option>
-                                            </select><td>
-                                    <tr><td><label for="iSource"><?= $this->getHtml('ID'); ?></label>
-                                    <tr><td><span class="input"><button type="button" formaction=""><i class="g-icon">book</i></button><input id="iSource" name="source" type="text" placeholder=""></span>
-                                    <tr><td><label for="iSegment"><?= $this->getHtml('Segment'); ?></label>
-                                    <tr><td><input id="iSegment" name="segment" type="text" placeholder="">
-                                    <tr><td><label for="iProductgroup"><?= $this->getHtml('Productgroup'); ?></label>
-                                    <tr><td><input id="iProductgroup" name="productgroup" type="text" placeholder="">
-                                    <tr><td><label for="iGroup"><?= $this->getHtml('Group'); ?></label>
-                                    <tr><td><input id="iGroup" name="group" type="text" placeholder="">
-                                    <tr><td><label for="iArticlegroup"><?= $this->getHtml('Articlegroup'); ?></label>
-                                    <tr><td><input id="iArticlegroup" name="articlegroup" type="text" placeholder="">
-                                    <tr><td><label for="iPQuantity"><?= $this->getHtml('Quantity'); ?></label>
-                                    <tr><td><input id="iPQuantity" name="quantity" type="text" placeholder=""><td>
-                                    <tr><td><label for="iPrice"><?= $this->getHtml('Price'); ?></label>
-                                    <tr><td><input id="iPrice" name="price" type="number" step="any" min="0" placeholder=""><td>
-                                    <tr><td><label for="iDiscount"><?= $this->getHtml('Discount'); ?></label>
-                                    <tr><td><input id="iDiscount" name="discount" type="number" step="any" min="0" placeholder=""><td>
-                                    <tr><td><label for="iDiscount"><?= $this->getHtml('DiscountP'); ?></label>
-                                    <tr><td><input id="iDiscountP" name="discountp" type="number" step="any" min="0" placeholder=""><td>
-                                    <tr><td><label for="iBonus"><?= $this->getHtml('Bonus'); ?></label>
-                                    <tr><td><input id="iBonus" name="bonus" type="number" step="any" min="0" placeholder=""><td>
-                                    <tr><td><input type="submit" value="<?= $this->getHtml('Add', '0', '0'); ?>">
-                                </table>
-                            </form>
+                <div class="col-xs-12 col-md-6">
+                    <section class="portlet">
+                        <form id="item-edit" action="<?= UriFactory::build('{/api}sales/client'); ?>" method="post">
+                            <div class="portlet-head"><?= $this->getHtml('Pricing'); ?><i class="g-icon download btn end-xs">download</i></div>
+                            <div class="portlet-body">
+                                <div class="form-group">
+                                    <label for="iPriceClient"><?= $this->getHtml('Customer'); ?></label>
+                                    <input id="iPriceClient" name="client" type="text" value="<?= $client->id; ?>" disabled>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="iPriceItem"><?= $this->getHtml('Item'); ?></label>
+                                    <input id="iPriceItem" name="item" type="text" value="">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="iGeneralPriceStart"><?= $this->getHtml('Start'); ?></label>
+                                    <input id="iGeneralPriceStart" name="generalpricestart" type="datetime-local" value="<?= $this->printHtml(''); ?>">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="iGeneralPriceEnd"><?= $this->getHtml('End'); ?></label>
+                                    <input id="iGeneralPriceEnd" name="generalpriceend" type="datetime-local" value="<?= $this->printHtml(''); ?>">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="iPQuantity"><?= $this->getHtml('Quantity'); ?></label>
+                                    <input id="iPQuantity" name="quantity" type="text" placeholder="">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="iGeneralPrice"><?= $this->getHtml('Price'); ?></label>
+                                    <input id="iGeneralPrice" name="generalprice" type="number" step="0.0001" value="<?= $this->printHtml('0.00'); ?>">
+                                    <!-- @todo maybe add promotion key/password here for online shop to provide special prices for certain customer groups -->
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="iDiscount"><?= $this->getHtml('Discount'); ?></label>
+                                    <input id="iDiscount" name="discount" type="number" step="any" min="0" placeholder="">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="iDiscountP"><?= $this->getHtml('DiscountP'); ?></label>
+                                    <input id="iDiscountP" name="discountp" type="number" step="any" min="0" placeholder="">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="iBonus"><?= $this->getHtml('Bonus'); ?></label>
+                                    <input id="iBonus" name="bonus" type="number" step="any" min="0" placeholder="">
+                                </div>
+                            </div>
+                            <div class="portlet-foot">
+                                <input type="submit" value="<?= $this->getHtml('Add', '0', '0'); ?>">
+                            </div>
+                        </form>
+                    </section>
+                </div>
+
+                <div class="col-xs-12">
+                    <section class="portlet">
+                        <div class="portlet-head"><?= $this->getHtml('Prices'); ?><i class="g-icon download btn end-xs">download</i></div>
+                        <div class="slider">
+                        <table id="iSalesItemList" class="default sticky">
+                            <thead>
+                                <tr>
+                                    <td>
+                                    <td><?= $this->getHtml('ID', '0', '0'); ?><i class="sort-asc g-icon">expand_less</i><i class="sort-desc g-icon">expand_more</i>
+                                    <td><?= $this->getHtml('Name'); ?><i class="sort-asc g-icon">expand_less</i><i class="sort-desc g-icon">expand_more</i>
+                                    <td><?= $this->getHtml('Price'); ?>
+                                    <td><?= $this->getHtml('Quantity'); ?>
+                                    <td><?= $this->getHtml('Discount'); ?>
+                                    <td><?= $this->getHtml('DiscountP'); ?>
+                                    <td><?= $this->getHtml('Bonus'); ?>
+                                    <td><?= $this->getHtml('ItemGroup'); ?>
+                                    <td><?= $this->getHtml('ItemSegment'); ?>
+                                    <td><?= $this->getHtml('ItemSection'); ?>
+                                    <td><?= $this->getHtml('ItemType'); ?>
+                                    <td><?= $this->getHtml('ClientGroup'); ?>
+                                    <td><?= $this->getHtml('ClientSegment'); ?>
+                                    <td><?= $this->getHtml('ClientSection'); ?>
+                                    <td><?= $this->getHtml('ClientType'); ?>
+                                    <td><?= $this->getHtml('Country'); ?>
+                                    <td><?= $this->getHtml('Start'); ?>
+                                    <td><?= $this->getHtml('End'); ?>
+                            <tbody>
+                                <?php
+                                $c      = 0;
+                                $prices = $this->data['prices'];
+                                foreach ($prices as $key => $value) : ++$c;
+                                    $url = UriFactory::build('{/base}/admin/group/settings?{?}&id=' . $value->id); ?>
+                                    <tr data-href="<?= $url; ?>">
+                                        <td><a href="#"><i class="g-icon">close</i></a>
+                                        <td><a href="<?= $url; ?>"><?= $value->id; ?></a>
+                                        <td><a href="<?= $url; ?>"><?= $this->printHtml($value->name); ?></a>
+                                        <td><a href="<?= $url; ?>"><?= $this->printHtml($value->price->getAmount()); ?></a>
+                                        <td><a href="<?= $url; ?>"><?= $this->printHtml((string) $value->quantity); ?></a>
+                                        <td><a href="<?= $url; ?>"><?= $this->printHtml((string) $value->discount); ?></a>
+                                        <td><a href="<?= $url; ?>"><?= $this->printHtml((string) $value->discountPercentage); ?></a>
+                                        <td><a href="<?= $url; ?>"><?= $this->printHtml((string) $value->bonus); ?></a>
+                                        <td><a href="<?= $url; ?>"><?= $this->printHtml((string) $value->itemgroup->getL11n()); ?></a>
+                                        <td><a href="<?= $url; ?>"><?= $this->printHtml((string) $value->itemsegment->getL11n()); ?></a>
+                                        <td><a href="<?= $url; ?>"><?= $this->printHtml((string) $value->itemsection->getL11n()); ?></a>
+                                        <td><a href="<?= $url; ?>"><?= $this->printHtml((string) $value->itemtype->getL11n()); ?></a>
+                                        <td><a href="<?= $url; ?>"><?= $this->printHtml((string) $value->clientgroup->getL11n()); ?></a>
+                                        <td><a href="<?= $url; ?>"><?= $this->printHtml((string) $value->clientsegment->getL11n()); ?></a>
+                                        <td><a href="<?= $url; ?>"><?= $this->printHtml((string) $value->clientsection->getL11n()); ?></a>
+                                        <td><a href="<?= $url; ?>"><?= $this->printHtml((string) $value->clienttype->getL11n()); ?></a>
+                                        <td><a href="<?= $url; ?>"><?= $this->printHtml((string) $value->clientcountry); ?></a>
+                                        <td><a href="<?= $url; ?>"><?= $this->printHtml((string) $value->start?->format('Y-m-d')); ?></a>
+                                        <td><a href="<?= $url; ?>"><?= $this->printHtml((string) $value->end?->format('Y-m-d')); ?></a>
+                                <?php endforeach; ?>
+                                <?php if ($c === 0) : ?>
+                                    <tr>
+                                        <td colspan="5" class="empty"><?= $this->getHtml('Empty', '0', '0'); ?>
+                                <?php endif; ?>
+                        </table>
                         </div>
                     </section>
                 </div>
             </div>
         </div>
+
         <input type="radio" id="c-tab-7" name="tabular-2"<?= $this->request->uri->fragment === 'c-tab-7' ? ' checked' : ''; ?>>
         <div class="tab">
             <div class="row">
-                <div class="col-xs-12 col-md-6 col-lg-4">
-                    <section class="box wf-100">
-                        <header><h1><?= $this->getHtml('AreaManager'); ?></h1></header>
-                        <div class="inner">
-                            <form action="<?= UriFactory::build('{/api}...'); ?>" method="post">
-                                <table class="layout wf-100">
-                                    <tbody>
-                                    <tr><td><label for="iManager"><?= $this->getHtml('AreaManager'); ?></label>
-                                    <tr><td><span class="input"><button type="button" formaction=""><i class="g-icon">book</i></button><input id="iManager" name="source" type="text" placeholder=""></span>
-                                    <tr><td><label for="iSource"><?= $this->getHtml('ID'); ?></label>
-                                    <tr><td><span class="input"><button type="button" formaction=""><i class="g-icon">book</i></button><input id="iSource" name="source" type="text" placeholder=""></span>
-                                    <tr><td><label for="iSegment"><?= $this->getHtml('Segment'); ?></label>
-                                    <tr><td><input id="iSegment" name="segment" type="text" placeholder="">
-                                    <tr><td><label for="iProductgroup"><?= $this->getHtml('Productgroup'); ?></label>
-                                    <tr><td><input id="iProductgroup" name="productgroup" type="text" placeholder="">
-                                    <tr><td><label for="iGroup"><?= $this->getHtml('Group'); ?></label>
-                                    <tr><td><input id="iGroup" name="group" type="text" placeholder="">
-                                    <tr><td><label for="iArticlegroup"><?= $this->getHtml('Articlegroup'); ?></label>
-                                    <tr><td><input id="iArticlegroup" name="articlegroup" type="text" placeholder="">
-                                    <tr><td><input type="submit" value="<?= $this->getHtml('Add', '0', '0'); ?>">
-                                </table>
-                            </form>
-                        </div>
+                <?= $attributeView->render(
+                    $client->attributes,
+                    $this->data['attributeTypes'] ?? [],
+                    $this->data['units'] ?? [],
+                    '{/api}client/attribute',
+                    $client->id
+                );
+                ?>
+            </div>
+        </div>
+
+        <input type="radio" id="c-tab-8" name="tabular-2"<?= $this->request->uri->fragment === 'c-tab-8' ? ' checked' : ''; ?>>
+        <div class="tab col-simple">
+            <?= $this->data['media-upload']->render('client-file', 'files', '', $client->files); ?>
+        </div>
+
+        <input type="radio" id="c-tab-9" name="tabular-2"<?= $this->request->uri->fragment === 'c-tab-9' ? ' checked' : ''; ?>>
+        <div class="tab">
+            <div class="row">
+                <div class="col-xs-12">
+                    <section class="portlet">
+                        <div class="portlet-head"><?= $this->getHtml('RecentInvoices'); ?></div>
+                        <table id="iSalesItemList" class="default sticky">
+                            <thead>
+                            <tr>
+                                <td><?= $this->getHtml('Number'); ?>
+                                <td><?= $this->getHtml('Type'); ?>
+                                <td class="wf-100"><?= $this->getHtml('Name'); ?>
+                                <td><?= $this->getHtml('Net'); ?>
+                                <td><?= $this->getHtml('Date'); ?>
+                            <tbody>
+                            <?php
+                            $allInvoices = SalesBillMapper::getClientBills($client->id, SmartDateTime::startOfYear($this->data['business_start']), new SmartDateTime('now'));
+
+                            /** @var \Modules\Billing\Models\Bill $invoice */
+                            foreach ($allInvoices as $invoice) :
+                                $url = UriFactory::build('{/base}/sales/bill?{?}&id=' . $invoice->id);
+                                ?>
+                            <tr data-href="<?= $url; ?>">
+                                <td><a href="<?= $url; ?>"><?= $invoice->getNumber(); ?></a>
+                                <td><a href="<?= $url; ?>"><?= $invoice->type->getL11n(); ?></a>
+                                <td><a href="<?= $url; ?>"><?= $invoice->billTo; ?></a>
+                                <td><a href="<?= $url; ?>"><?= $this->getCurrency($invoice->netSales); ?></a>
+                                <td><a href="<?= $url; ?>"><?= $invoice->createdAt->format('Y-m-d'); ?></a>
+                            <?php endforeach; ?>
+                        </table>
                     </section>
                 </div>
             </div>
         </div>
-        <input type="radio" id="c-tab-8" name="tabular-2"<?= $this->request->uri->fragment === 'c-tab-8' ? ' checked' : ''; ?>>
-        <div class="tab">
-        </div>
-        <input type="radio" id="c-tab-9" name="tabular-2"<?= $this->request->uri->fragment === 'c-tab-9' ? ' checked' : ''; ?>>
-        <div class="tab">
-            <?php include __DIR__ . '/client-profile-bills.tpl.php'; ?>
-        </div>
+
         <input type="radio" id="c-tab-10" name="tabular-2"<?= $this->request->uri->fragment === 'c-tab-9' ? ' checked' : ''; ?>>
         <div class="tab">
             <?php include __DIR__ . '/client-profile-items.tpl.php'; ?>
         </div>
-        <input type="radio" id="c-tab-11" name="tabular-2"<?= $this->request->uri->fragment === 'c-tab-10' ? ' checked' : ''; ?>>
+
+        <input type="radio" id="c-tab-13" name="tabular-2" checked>
+        <div class="tab col-simple">
+            <?= $this->data['note']->render('client-note', 'notes', $client->notes); ?>
+        </div>
+
+        <input type="radio" id="c-tab-17" name="tabular-2" checked>
         <div class="tab">
             <div class="row">
                 <div class="col-xs-12">
-            <?php
-            $footerView = new \phpOMS\Views\PaginationView($this->l11nManager, $this->request, $this->response);
-            $footerView->setTemplate('/Web/Templates/Lists/Footer/PaginationBig');
-            $footerView->setPages(20);
-            $footerView->setPage(1);
-            ?>
-                    <div class="box wf-100">
-                        <table class="default">
-                            <caption><?= $this->getHtml('Logs'); ?><i class="g-icon end-xs download btn">download</i></caption>
+                    <div class="portlet">
+                        <div class="portlet-head"><?= $this->getHtml('Audits', 'Auditor'); ?><i class="g-icon download btn end-xs">download</i></div>
+                        <div class="slider">
+                        <table class="default sticky">
+                            <colgroup>
+                                <col style="width: 75px">
+                                <col style="width: 150px">
+                                <col style="width: 100px">
+                                <col>
+                                <col>
+                                <col style="width: 125px">
+                                <col style="width: 75px">
+                                <col style="width: 150px">
+                            </colgroup>
                             <thead>
                             <tr>
-                                <td>IP
                                 <td><?= $this->getHtml('ID', '0', '0'); ?>
-                                <td><?= $this->getHtml('Name'); ?>
-                                <td class="wf-100"><?= $this->getHtml('Log'); ?>
-                                <td><?= $this->getHtml('Date'); ?>
-                            <tfoot>
-                            <tr>
-                                <td colspan="6">
+                                <td><?= $this->getHtml('Module', 'Auditor'); ?>
+                                <td><?= $this->getHtml('Type', 'Auditor'); ?>
+                                <td><?= $this->getHtml('Trigger', 'Auditor'); ?>
+                                <td><?= $this->getHtml('Content', 'Auditor'); ?>
+                                <td><?= $this->getHtml('By', 'Auditor'); ?>
+                                <td><?= $this->getHtml('Ref', 'Auditor'); ?>
+                                <td><?= $this->getHtml('Date', 'Auditor'); ?>
                             <tbody>
-                            <tr>
-                                <td><?= $this->printHtml($this->request->getOrigin()); ?>
-                                <td><?= $this->printHtml((string) $this->request->header->account); ?>
-                                <td><?= $this->printHtml((string) $this->request->header->account); ?>
-                                <td>Creating customer
-                                <td><?= $this->printHtml((new \DateTime('now'))->format('Y-m-d H:i:s')); ?>
+                            <?php
+                                $count    = 0;
+                                $audits   = $this->data['audits'] ?? [];
+                                $previous = empty($audits) ? HttpHeader::getAllHeaders()['Referer'] ?? 'admin/module/settings?id={?id}#{\#}' : 'admin/module/settings?{?}&audit=' . \reset($audits)->id . '&ptype=p#{\#}';
+                                $next     = empty($audits) ? HttpHeader::getAllHeaders()['Referer'] ?? 'admin/module/settings?id={?id}#{\#}' : 'admin/module/settings?{?}&audit=' . \end($audits)->id . '&ptype=n#{\#}';
+
+                                foreach ($audits as $key => $audit) : ++$count;
+                                    $url = UriFactory::build('{/base}/admin/audit/single?{?}&id=' . $audit->id); ?>
+                                <tr tabindex="0" data-href="<?= $url; ?>">
+                                    <td><?= $audit->id; ?>
+                                    <td><?= $this->printHtml($audit->module); ?>
+                                    <td><?= $audit->type; ?>
+                                    <td><?= $this->printHtml($audit->trigger); ?>
+                                    <td><?= $this->printHtml((string) $audit->content); ?>
+                                    <td><?= $this->printHtml($audit->createdBy->login); ?>
+                                    <td><?= $this->printHtml((string) $audit->ref); ?>
+                                    <td><?= $audit->createdAt->format('Y-m-d H:i'); ?>
+                            <?php endforeach; ?>
+                            <?php if ($count === 0) : ?>
+                                <tr><td colspan="8" class="empty"><?= $this->getHtml('Empty', '0', '0'); ?>
+                            <?php endif; ?>
                         </table>
+                        </div>
+                        <div class="portlet-foot">
+                            <a tabindex="0" class="button" href="<?= UriFactory::build($previous); ?>"><?= $this->getHtml('Previous', '0', '0'); ?></a>
+                            <a tabindex="0" class="button" href="<?= UriFactory::build($next); ?>"><?= $this->getHtml('Next', '0', '0'); ?></a>
+                        </div>
                     </div>
                 </div>
             </div>

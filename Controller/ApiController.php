@@ -25,6 +25,7 @@ use Modules\ClientManagement\Models\ClientL11nMapper;
 use Modules\ClientManagement\Models\ClientL11nTypeMapper;
 use Modules\ClientManagement\Models\ClientMapper;
 use Modules\ClientManagement\Models\PermissionCategory;
+use Modules\ClientManagement\Models\SettingsEnum;
 use Modules\Media\Models\MediaMapper;
 use Modules\Media\Models\PathSettings;
 use Modules\Organization\Models\UnitMapper;
@@ -193,7 +194,38 @@ final class ApiController extends Controller
                 ->apiClientAttributeCreate($internalRequest, $internalResponse);
         }
 
+        $this->createClientSegmentation($request, $response, $client);
+
         $this->createStandardCreateResponse($request, $response, $client);
+    }
+
+    private function createClientSegmentation(RequestAbstract $request, ResponseAbstract $response, Client $client) : void
+    {
+        /** @var \Model\Setting $settings */
+        $settings = $this->app->appSettings->get(null, [
+            SettingsEnum::DEFAULT_SEGMENTATION,
+        ]);
+
+        $segmentation = \json_decode($settings->content, true);
+        if ($segmentation === false) {
+            return;
+        }
+
+        $types = ClientAttributeTypeMapper::get()
+            ->where('name', \array_keys($segmentation), 'IN')
+            ->execute();
+
+        foreach ($types as $type) {
+            $internalResponse = clone $response;
+            $internalRequest  = new HttpRequest(new HttpUri(''));
+
+            $internalRequest->header->account = $request->header->account;
+            $internalRequest->setData('ref', $client->id);
+            $internalRequest->setData('type', $type->id);
+            $internalRequest->setData('value_id', $segmentation[$type->name]);
+
+            $this->app->moduleManager->get('ClientManagement', 'ApiAttribute')->apiItemAttributeCreate($internalRequest, $internalResponse);
+        }
     }
 
     /**
@@ -219,25 +251,25 @@ final class ApiController extends Controller
         $client          = new Client();
         $client->number  = $request->getDataString('number') ?? '';
         $client->account = $account;
+        $client->unit = $request->getDataInt('unit') ?? 1;
 
+        // Handle main address
         $addr          = new Address();
         $addr->address = $request->getDataString('address') ?? '';
         $addr->postal  = $request->getDataString('postal') ?? '';
         $addr->city    = $request->getDataString('city') ?? '';
-        $addr->setCountry($request->getDataString('country') ?? ISO3166TwoEnum::_XXX);
         $addr->state = $request->getDataString('state') ?? '';
+        $addr->setCountry($request->getDataString('country') ?? ISO3166TwoEnum::_XXX);
+        $client->mainAddress = $addr;
 
+        // Try to find lat/lon through external API
         $geocoding = Nominatim::geocoding($addr->country, $addr->city, $addr->address);
         if ($geocoding === ['lat' => 0.0, 'lon' => 0.0]) {
             $geocoding = Nominatim::geocoding($addr->country, $addr->city);
         }
 
-        $addr->lat = $geocoding['lat'];
-        $addr->lon = $geocoding['lon'];
-
-        $client->mainAddress = $addr;
-
-        $client->unit = $request->getDataInt('unit');
+        $client->mainAddress->lat = $geocoding['lat'];
+        $client->mainAddress->lon = $geocoding['lon'];
 
         return $client;
     }
@@ -340,13 +372,13 @@ final class ApiController extends Controller
      */
     private function updateMainAddressFromRequest(RequestAbstract $request, Address $address) : Address
     {
-        $address->name = $request->getDataString('name') ?? $address->name;
-        $address->fao = $request->getDataString('fao') ?? $address->fao;
-        $address->address = $request->getDataString('address') ?? $address->address;
+        $address->name            = $request->getDataString('name') ?? $address->name;
+        $address->fao             = $request->getDataString('fao') ?? $address->fao;
+        $address->address         = $request->getDataString('address') ?? $address->address;
         $address->addressAddition = $request->getDataString('addition') ?? $address->addressAddition;
-        $address->postal  = $request->getDataString('postal') ?? $address->postal;
-        $address->city    = $request->getDataString('city') ?? $address->city;
-        $address->state   = $request->getDataString('state') ?? $address->state;
+        $address->postal          = $request->getDataString('postal') ?? $address->postal;
+        $address->city            = $request->getDataString('city') ?? $address->city;
+        $address->state           = $request->getDataString('state') ?? $address->state;
         $address->setCountry($request->getDataString('country') ?? $address->getCountry());
 
         return $address;

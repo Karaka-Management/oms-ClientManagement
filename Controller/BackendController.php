@@ -14,23 +14,29 @@ declare(strict_types=1);
 
 namespace Modules\ClientManagement\Controller;
 
+use Modules\Admin\Models\LocalizationMapper;
+use Modules\Admin\Models\SettingsEnum;
+use Modules\Auditor\Models\AuditMapper;
+use Modules\Billing\Models\Price\PriceMapper;
+use Modules\Billing\Models\Price\PriceType;
 use Modules\Billing\Models\SalesBillMapper;
+use Modules\ClientManagement\Models\Attribute\ClientAttributeMapper;
 use Modules\ClientManagement\Models\Attribute\ClientAttributeTypeL11nMapper;
 use Modules\ClientManagement\Models\Attribute\ClientAttributeTypeMapper;
 use Modules\ClientManagement\Models\Attribute\ClientAttributeValueMapper;
 use Modules\ClientManagement\Models\ClientMapper;
 use Modules\Media\Models\MediaMapper;
 use Modules\Media\Models\MediaTypeMapper;
+use Modules\Organization\Models\Attribute\UnitAttributeMapper;
 use phpOMS\Asset\AssetType;
 use phpOMS\Contract\RenderableInterface;
 use phpOMS\DataStorage\Database\Query\Builder;
 use phpOMS\DataStorage\Database\Query\OrderType;
-use phpOMS\Localization\ISO3166CharEnum;
-use phpOMS\Localization\ISO3166NameEnum;
 use phpOMS\Localization\Money;
 use phpOMS\Message\RequestAbstract;
 use phpOMS\Message\ResponseAbstract;
 use phpOMS\Stdlib\Base\SmartDateTime;
+use phpOMS\Utils\StringUtils;
 use phpOMS\Views\View;
 
 /**
@@ -45,7 +51,7 @@ use phpOMS\Views\View;
 final class BackendController extends Controller
 {
     /**
-     * Routing end-point for application behaviour.
+     * Routing end-point for application behavior.
      *
      * @param RequestAbstract  $request  Request
      * @param ResponseAbstract $response Response
@@ -74,7 +80,7 @@ final class BackendController extends Controller
     }
 
     /**
-     * Routing end-point for application behaviour.
+     * Routing end-point for application behavior.
      *
      * @param RequestAbstract  $request  Request
      * @param ResponseAbstract $response Response
@@ -103,7 +109,7 @@ final class BackendController extends Controller
     }
 
     /**
-     * Routing end-point for application behaviour.
+     * Routing end-point for application behavior.
      *
      * @param RequestAbstract  $request  Request
      * @param ResponseAbstract $response Response
@@ -138,7 +144,7 @@ final class BackendController extends Controller
     }
 
     /**
-     * Routing end-point for application behaviour.
+     * Routing end-point for application behavior.
      *
      * @param RequestAbstract  $request  Request
      * @param ResponseAbstract $response Response
@@ -168,7 +174,7 @@ final class BackendController extends Controller
     }
 
     /**
-     * Routing end-point for application behaviour.
+     * Routing end-point for application behavior.
      *
      * @param RequestAbstract  $request  Request
      * @param ResponseAbstract $response Response
@@ -189,7 +195,7 @@ final class BackendController extends Controller
     }
 
     /**
-     * Routing end-point for application behaviour.
+     * Routing end-point for application behavior.
      *
      * @param RequestAbstract  $request  Request
      * @param ResponseAbstract $response Response
@@ -221,10 +227,31 @@ final class BackendController extends Controller
             ->with('mainAddress')
             ->with('files')->limit(5, 'files')->sort('files/id', OrderType::DESC)
             ->with('notes')->limit(5, 'notes')->sort('notes/id', OrderType::DESC)
+            ->with('attributes')
+            ->with('attributes/type')
+            ->with('attributes/type/l11n')
+            ->with('attributes/value')
             ->where('id', (int) $request->getData('id'))
             ->execute();
 
         $view->data['client'] = $client;
+
+        /** @var \Model\Setting $settings */
+        $settings = $this->app->appSettings->get(null, [
+            SettingsEnum::DEFAULT_LOCALIZATION,
+        ]);
+
+
+        $view->data['attributeView']                              = new \Modules\Attribute\Theme\Backend\Components\AttributeView($this->app->l11nManager, $request, $response);
+        $view->data['attributeView']->data['defaultlocalization'] = LocalizationMapper::get()->where('id', (int) $settings->id)->execute();
+
+        /** @var \Modules\Attribute\Models\AttributeType[] $attributeTypes */
+        $attributeTypes = ClientAttributeTypeMapper::getAll()
+            ->with('l11n')
+            ->where('l11n/language', $response->header->l11n->language)
+            ->execute();
+
+        $view->data['attributeTypes'] = $attributeTypes;
 
         // Get item profile image
         // It might not be part of the 5 newest item files from above
@@ -253,44 +280,53 @@ final class BackendController extends Controller
 
         $view->data['clientImage'] = $clientImage;
 
-        // stats
-        if ($this->app->moduleManager->isActive('Billing')) {
-            $ytd            = SalesBillMapper::getSalesByClientId($client->id, new SmartDateTime('Y-01-01'), new SmartDateTime('now'));
-            $mtd            = SalesBillMapper::getSalesByClientId($client->id, new SmartDateTime('Y-m-01'), new SmartDateTime('now'));
-            $lastOrder      = SalesBillMapper::getLastOrderDateByClientId($client->id);
-            $newestInvoices = SalesBillMapper::getAll()
-                ->with('type')
-                ->with('type/l11n')
-                ->with('client')
-                ->where('client', $client->id)
-                ->where('type/l11n/language', $response->header->l11n->language)
-                ->sort('id', OrderType::DESC)
-                ->limit(5)
-                ->execute();
+        $businessStart = UnitAttributeMapper::get()
+            ->with('type')
+            ->with('value')
+            ->where('ref', $this->app->unitId)
+            ->where('type/name', 'business_year_start')
+            ->execute();
 
-            $monthlySalesCosts = SalesBillMapper::getClientMonthlySalesCosts($client->id, (new SmartDateTime('now'))->createModify(-1), new SmartDateTime('now'));
-            $items             = SalesBillMapper::getClientItem($client->id, (new SmartDateTime('now'))->createModify(-1), new SmartDateTime('now'));
-        } else {
-            $ytd               = new Money();
-            $mtd               = new Money();
-            $lastOrder         = null;
-            $newestInvoices    = [];
-            $monthlySalesCosts = [];
-            $items             = [];
-        }
+        $view->data['business_start'] = $businessStart->id === 0 ? 1 : $businessStart->value->getValue();
 
-        $view->data['ytd']               = $ytd;
-        $view->data['mtd']               = $mtd;
-        $view->data['lastOrder']         = $lastOrder;
-        $view->data['newestInvoices']    = $newestInvoices;
-        $view->data['monthlySalesCosts'] = $monthlySalesCosts;
-        $view->data['items']             = $items;
+        /** @var \Modules\Billing\Models\Price\Price[] $prices */
+        $prices = PriceMapper::getAll()
+            ->where('client', $client->id)
+            ->where('type', PriceType::SALES)
+            ->execute();
+
+        $view->data['prices'] = $prices;
+
+        /** @var \Modules\Auditor\Models\Audit[] $audits */
+        $audits = AuditMapper::getAll()
+            ->where('type', StringUtils::intHash(ClientMapper::class))
+            ->where('module', 'ClientManagement')
+            ->where('ref', (string) $client->id)
+            ->execute();
+
+        // @todo join audit with files, attributes, localization, prices, notes, ...
+
+        $view->data['audits'] = $audits;
+
+        /** @var \Modules\Media\Models\Media[] $files */
+        $files = MediaMapper::getAll()
+            ->with('types')
+            ->join('id', ClientMapper::class, 'files') // id = media id, files = client relations
+                ->on('id', $client->id, relation: 'files') // id = item id
+            ->execute();
+
+        $view->data['files'] = $files;
+
+        $view->data['media-upload'] = new \Modules\Media\Theme\Backend\Components\Upload\BaseView($this->app->l11nManager, $request, $response);
+        $view->data['note'] = new \Modules\Editor\Theme\Backend\Components\Note\BaseView($this->app->l11nManager, $request, $response);
+
+        $view->data['hasBilling'] = $this->app->moduleManager->isActive('Billing');
 
         return $view;
     }
 
     /**
-     * Routing end-point for application behaviour.
+     * Routing end-point for application behavior.
      *
      * @param RequestAbstract  $request  Request
      * @param ResponseAbstract $response Response

@@ -23,7 +23,7 @@ $items = $this->data['items'] ?? [];
     <div class="col-xs-12">
         <section class="portlet">
             <div class="portlet-head"><?= $this->getHtml('Items'); ?><i class="g-icon download btn end-xs">download</i></div>
-            <table id="iSalesItemList" class="default">
+            <table id="iSalesItemList" class="default sticky">
                 <thead>
                 <tr>
                     <td><label class="checkbox" for="iSalesItemSelect-">

@@ -74,7 +74,7 @@ echo $this->data['nav']->render(); ?>
     <div class="col-xs-12 col-md-6">
         <div class="portlet">
             <div class="portlet-head"><?= $this->getHtml('Language', '0', '0'); ?><i class="g-icon download btn end-xs">download</i></div>
-            <table class="default">
+            <table class="default sticky">
                 <thead>
                     <tr>
                         <td>
