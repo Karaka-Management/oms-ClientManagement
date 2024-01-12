@@ -100,8 +100,9 @@ echo $this->data['nav']->render(); ?>
                             <i class="filter g-icon">filter_alt</i>
                         </label>
                 <tbody>
-                <?php $count = 0; foreach ($clients as $key => $value) : ++$count;
-                $url         = UriFactory::build('{/base}/sales/client/profile?{?}&id=' . $value->id);
+                <?php $count = 0;
+                foreach ($clients as $key => $value) : ++$count;
+                    $url = UriFactory::build('{/base}/sales/client/profile?{?}&id=' . $value->id);
                 ?>
                 <tr data-href="<?= $url; ?>">
                     <td data-label="<?= $this->getHtml('ID', '0', '0'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->number); ?></a>

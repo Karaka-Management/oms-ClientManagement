@@ -47,6 +47,8 @@ final class Installer extends InstallerAbstract
     {
         parent::install($app, $info, $cfgHandler);
 
+        \Modules\Admin\Admin\Installer::installExternal($app, ['path' => __DIR__ . '/Install/Admin.install.json']);
+
         /* Attributes */
         $fileContent = \file_get_contents(__DIR__ . '/Install/attributes.json');
         if ($fileContent === false) {

@@ -59,6 +59,7 @@ final class ClientAttributeValueMapper extends DataMapperFactory
             'mapper'   => ClientAttributeValueL11nMapper::class,
             'table'    => 'clientmgmt_attr_value_l11n',
             'self'     => 'clientmgmt_attr_value_l11n_value',
+            'column'   => 'content',
             'external' => null,
         ],
     ];

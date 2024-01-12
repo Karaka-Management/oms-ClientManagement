@@ -23,8 +23,11 @@ use Modules\Billing\Models\SalesBillMapper;
 use Modules\ClientManagement\Models\Attribute\ClientAttributeMapper;
 use Modules\ClientManagement\Models\Attribute\ClientAttributeTypeL11nMapper;
 use Modules\ClientManagement\Models\Attribute\ClientAttributeTypeMapper;
+use Modules\ClientManagement\Models\Attribute\ClientAttributeValueL11nMapper;
 use Modules\ClientManagement\Models\Attribute\ClientAttributeValueMapper;
 use Modules\ClientManagement\Models\ClientMapper;
+use Modules\ItemManagement\Models\Attribute\ItemAttributeTypeMapper;
+use Modules\ItemManagement\Models\Attribute\ItemAttributeValueL11nMapper;
 use Modules\Media\Models\MediaMapper;
 use Modules\Media\Models\MediaTypeMapper;
 use Modules\Organization\Models\Attribute\UnitAttributeMapper;
@@ -32,6 +35,7 @@ use phpOMS\Asset\AssetType;
 use phpOMS\Contract\RenderableInterface;
 use phpOMS\DataStorage\Database\Query\Builder;
 use phpOMS\DataStorage\Database\Query\OrderType;
+use phpOMS\DataStorage\Database\Query\Where;
 use phpOMS\Localization\Money;
 use phpOMS\Message\RequestAbstract;
 use phpOMS\Message\ResponseAbstract;
@@ -231,19 +235,23 @@ final class BackendController extends Controller
             ->with('attributes/type')
             ->with('attributes/type/l11n')
             ->with('attributes/value')
+            //->with('attributes/value/l11n')
             ->where('id', (int) $request->getData('id'))
+            ->where('attributes/type/l11n/language', $response->header->l11n->language)
+            /*
+            ->where('attributes/value/l11n', (new Where($this->app->dbPool->get()))
+                ->where(ClientAttributeValueL11nMapper::getColumnByMember('ref'), '=', null)
+                ->orWhere(ClientAttributeValueL11nMapper::getColumnByMember('language'), '=', $response->header->l11n->language))
+            */
             ->execute();
 
         $view->data['client'] = $client;
 
         /** @var \Model\Setting $settings */
-        $settings = $this->app->appSettings->get(null, [
-            SettingsEnum::DEFAULT_LOCALIZATION,
-        ]);
-
+        $settings = $this->app->appSettings->get(null, SettingsEnum::DEFAULT_LOCALIZATION);
 
         $view->data['attributeView']                              = new \Modules\Attribute\Theme\Backend\Components\AttributeView($this->app->l11nManager, $request, $response);
-        $view->data['attributeView']->data['defaultlocalization'] = LocalizationMapper::get()->where('id', (int) $settings->id)->execute();
+        $view->data['attributeView']->data['default_localization'] = LocalizationMapper::get()->where('id', (int) $settings->id)->execute();
 
         /** @var \Modules\Attribute\Models\AttributeType[] $attributeTypes */
         $attributeTypes = ClientAttributeTypeMapper::getAll()
@@ -296,6 +304,44 @@ final class BackendController extends Controller
             ->execute();
 
         $view->data['prices'] = $prices;
+
+        $tmp = ItemAttributeTypeMapper::getAll()
+            ->with('defaults')
+            ->with('defaults/l11n')
+            ->where('name', [
+                'segment', 'section', 'sales_group', 'product_group', 'product_type',
+                'sales_tax_code', 'purchase_tax_code',
+            ], 'IN')
+            ->where('defaults/l11n', (new Where($this->app->dbPool->get()))
+                ->where(ItemAttributeValueL11nMapper::getColumnByMember('ref'), '=', null)
+                ->orWhere(ItemAttributeValueL11nMapper::getColumnByMember('language'), '=', $response->header->l11n->language))
+            ->execute();
+
+        $defaultAttributeTypes = [];
+        foreach ($tmp as $t) {
+            $defaultAttributeTypes[$t->name] = $t;
+        }
+
+        $view->data['defaultAttributeTypes'] = $defaultAttributeTypes;
+
+        $tmp = ClientAttributeTypeMapper::getAll()
+            ->with('defaults')
+            ->with('defaults/l11n')
+            ->where('name', [
+                'segment', 'section', 'client_group', 'client_type',
+                'sales_tax_code',
+            ], 'IN')
+            ->where('defaults/l11n', (new Where($this->app->dbPool->get()))
+                ->where(ClientAttributeValueL11nMapper::getColumnByMember('ref'), '=', null)
+                ->orWhere(ClientAttributeValueL11nMapper::getColumnByMember('language'), '=', $response->header->l11n->language))
+            ->execute();
+
+        $clientSegmentationTypes = [];
+        foreach ($tmp as $t) {
+            $clientSegmentationTypes[$t->name] = $t;
+        }
+
+        $view->data['clientSegmentationTypes'] = $clientSegmentationTypes;
 
         /** @var \Modules\Auditor\Models\Audit[] $audits */
         $audits = AuditMapper::getAll()
