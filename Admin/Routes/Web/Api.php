@@ -18,7 +18,7 @@ use phpOMS\Account\PermissionType;
 use phpOMS\Router\RouteVerb;
 
 return [
-    '^.*/client/find.*$' => [
+    '^.*/client/find(\?.*$|$)' => [
         [
             'dest'       => '\Modules\ClientManagement\Controller\ApiController:apiClientFind',
             'verb'       => RouteVerb::GET,

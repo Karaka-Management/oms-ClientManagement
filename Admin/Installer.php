@@ -20,7 +20,6 @@ use phpOMS\Message\Http\HttpRequest;
 use phpOMS\Message\Http\HttpResponse;
 use phpOMS\Module\InstallerAbstract;
 use phpOMS\Module\ModuleInfo;
-use phpOMS\Uri\HttpUri;
 
 /**
  * Installer class.
@@ -47,8 +46,6 @@ final class Installer extends InstallerAbstract
     {
         parent::install($app, $info, $cfgHandler);
 
-        \Modules\Admin\Admin\Installer::installExternal($app, ['path' => __DIR__ . '/Install/Admin.install.json']);
-
         /* Attributes */
         $fileContent = \file_get_contents(__DIR__ . '/Install/attributes.json');
         if ($fileContent === false) {
@@ -63,6 +60,16 @@ final class Installer extends InstallerAbstract
 
         $attrTypes  = self::createClientAttributeTypes($app, $attributes);
         $attrValues = self::createClientAttributeValues($app, $attrTypes, $attributes);
+
+        $data    = \json_decode(\file_get_contents(__DIR__ . '/Install/Admin.install.json'), true);
+        $content = \json_decode($data[0]['content'], true);
+
+        foreach ($content as $type => $_) {
+            $content[$type] = \reset($attrValues[$type])['id'];
+        }
+
+        $data[0]['content'] = \json_encode($content);
+        \Modules\Admin\Admin\Installer::createSettings($app, $data[0]);
 
         /* Localizations */
         $fileContent = \file_get_contents(__DIR__ . '/Install/localizations.json');
@@ -99,7 +106,7 @@ final class Installer extends InstallerAbstract
 
         foreach ($l11ns as $l11n) {
             $response = new HttpResponse();
-            $request  = new HttpRequest(new HttpUri(''));
+            $request  = new HttpRequest();
 
             $request->header->account = 1;
             $request->setData('title', $l11n['name']);
@@ -141,13 +148,15 @@ final class Installer extends InstallerAbstract
         /** @var array $attribute */
         foreach ($attributes as $attribute) {
             $response = new HttpResponse();
-            $request  = new HttpRequest(new HttpUri(''));
+            $request  = new HttpRequest();
 
             $request->header->account = 1;
             $request->setData('name', $attribute['name'] ?? '');
             $request->setData('title', \reset($attribute['l11n']));
             $request->setData('language', \array_keys($attribute['l11n'])[0] ?? 'en');
             $request->setData('is_required', $attribute['is_required'] ?? false);
+            $request->setData('repeatable', $attribute['repeatable'] ?? false);
+            $request->setData('internal', $attribute['internal'] ?? false);
             $request->setData('custom', $attribute['is_custom_allowed'] ?? false);
             $request->setData('validation_pattern', $attribute['validation_pattern'] ?? '');
             $request->setData('datatype', (int) $attribute['value_type']);
@@ -171,7 +180,7 @@ final class Installer extends InstallerAbstract
                 }
 
                 $response = new HttpResponse();
-                $request  = new HttpRequest(new HttpUri(''));
+                $request  = new HttpRequest();
 
                 $request->header->account = 1;
                 $request->setData('title', $l11n);
@@ -210,7 +219,7 @@ final class Installer extends InstallerAbstract
             /** @var array $value */
             foreach ($attribute['values'] as $value) {
                 $response = new HttpResponse();
-                $request  = new HttpRequest(new HttpUri(''));
+                $request  = new HttpRequest();
 
                 $request->header->account = 1;
                 $request->setData('value', $value['value'] ?? '');
@@ -244,7 +253,7 @@ final class Installer extends InstallerAbstract
                     }
 
                     $response = new HttpResponse();
-                    $request  = new HttpRequest(new HttpUri(''));
+                    $request  = new HttpRequest();
 
                     $request->header->account = 1;
                     $request->setData('title', $l11n);

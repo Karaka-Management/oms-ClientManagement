@@ -18,7 +18,7 @@ use phpOMS\Account\PermissionType;
 use phpOMS\Router\RouteVerb;
 
 return [
-    '^.*/sales/client/attribute/type/list.*$' => [
+    '^.*/sales/client/attribute/type/list(\?.*$|$)' => [
         [
             'dest'       => '\Modules\ClientManagement\Controller\BackendController:viewClientManagementAttributeTypeList',
             'verb'       => RouteVerb::GET,
@@ -29,7 +29,7 @@ return [
             ],
         ],
     ],
-    '^.*/sales/client/attribute/type\?.*$' => [
+    '^.*/sales/client/attribute/type(\?.*$|$)' => [
         [
             'dest'       => '\Modules\ClientManagement\Controller\BackendController:viewClientManagementAttributeType',
             'verb'       => RouteVerb::GET,
@@ -40,7 +40,7 @@ return [
             ],
         ],
     ],
-    '^.*/sales/client/list.*$' => [
+    '^.*/sales/client/list(\?.*$|$)' => [
         [
             'dest'       => '\Modules\ClientManagement\Controller\BackendController:viewClientManagementClientList',
             'verb'       => RouteVerb::GET,
@@ -51,7 +51,7 @@ return [
             ],
         ],
     ],
-    '^.*/sales/client/create.*$' => [
+    '^.*/sales/client/create(\?.*$|$)' => [
         [
             'dest'       => '\Modules\ClientManagement\Controller\BackendController:viewClientManagementClientCreate',
             'verb'       => RouteVerb::GET,
@@ -62,9 +62,9 @@ return [
             ],
         ],
     ],
-    '^.*/sales/client/profile.*$' => [
+    '^.*/sales/client/view(\?.*$|$)' => [
         [
-            'dest'       => '\Modules\ClientManagement\Controller\BackendController:viewClientManagementClientProfile',
+            'dest'       => '\Modules\ClientManagement\Controller\BackendController:viewClientManagementClientView',
             'verb'       => RouteVerb::GET,
             'permission' => [
                 'module' => BackendController::NAME,
@@ -73,7 +73,7 @@ return [
             ],
         ],
     ],
-    '^.*/sales/client/analysis.*$' => [
+    '^.*/sales/client/analysis(\?.*$|$)' => [
         [
             'dest'       => '\Modules\ClientManagement\Controller\BackendController:viewClientManagementClientAnalysis',
             'verb'       => RouteVerb::GET,

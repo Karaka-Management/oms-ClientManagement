@@ -17,8 +17,6 @@ namespace Modules\ClientManagement\Models;
 use Modules\Admin\Models\Account;
 use Modules\Editor\Models\EditorDoc;
 use Modules\Payment\Models\Payment;
-use Modules\Profile\Models\ContactElement;
-use Modules\Profile\Models\NullContactElement;
 use Modules\Profile\Models\Profile;
 use phpOMS\Stdlib\Base\Address;
 use phpOMS\Stdlib\Base\NullAddress;
@@ -190,70 +188,6 @@ class Client
     }
 
     /**
-     * Get id.
-     *
-     * @return int Model id
-     *
-     * @since 1.0.0
-     */
-    public function getId() : int
-    {
-        return $this->id;
-    }
-
-    /**
-     * Get status.
-     *
-     * @return int
-     *
-     * @since 1.0.0
-     */
-    public function getStatus() : int
-    {
-        return $this->status;
-    }
-
-    /**
-     * Set status.
-     *
-     * @param int $status Status
-     *
-     * @return void
-     *
-     * @since 1.0.0
-     */
-    public function setStatus(int $status) : void
-    {
-        $this->status = $status;
-    }
-
-    /**
-     * Get type.
-     *
-     * @return int
-     *
-     * @since 1.0.0
-     */
-    public function getType() : int
-    {
-        return $this->type;
-    }
-
-    /**
-     * Set type.
-     *
-     * @param int $type Type
-     *
-     * @return void
-     *
-     * @since 1.0.0
-     */
-    public function setType(int $type) : void
-    {
-        $this->type = $type;
-    }
-
-    /**
      * Add doc to item
      *
      * @param EditorDoc $note Note
@@ -343,75 +277,12 @@ class Client
         $payments = [];
 
         foreach ($this->payments as $payment) {
-            if ($payment->getType() === $type) {
+            if ($payment->type === $type) {
                 $payments[] = $payment;
             }
         }
 
         return $payments;
-    }
-
-    /**
-     * Get contacts.
-     *
-     * @return array
-     *
-     * @since 1.0.0
-     */
-    public function getContactElements() : array
-    {
-        return $this->contactElements;
-    }
-
-    /**
-     * Order contact elements
-     *
-     * @param ContactElement $a Element
-     * @param ContactElement $b Element
-     *
-     * @return int
-     *
-     * @since 1.0.0
-     */
-    private function orderContactElements(ContactElement $a, ContactElement $b) : int
-    {
-        return $a->order <=> $b->order;
-    }
-
-    /**
-     * Get the main contact element by type
-     *
-     * @param int $type Contact element type
-     *
-     * @return ContactElement
-     *
-     * @since 1.0.0
-     */
-    public function getMainContactElement(int $type) : ContactElement
-    {
-        \uasort($this->contactElements, [$this, 'orderContactElements']);
-
-        foreach ($this->contactElements as $element) {
-            if ($element->getType() === $type) {
-                return $element;
-            }
-        }
-
-        return new NullContactElement();
-    }
-
-    /**
-     * Add contact element
-     *
-     * @param int|ContactElement $element Contact element
-     *
-     * @return void
-     *
-     * @since 1.0.0
-     */
-    public function addContactElement($element) : void
-    {
-        $this->contactElements[] = $element;
     }
 
     /**

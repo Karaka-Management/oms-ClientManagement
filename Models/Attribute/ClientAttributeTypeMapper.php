@@ -37,13 +37,13 @@ final class ClientAttributeTypeMapper extends DataMapperFactory
      * @since 1.0.0
      */
     public const COLUMNS = [
-        'clientmgmt_attr_type_id'         => ['name' => 'clientmgmt_attr_type_id',     'type' => 'int',    'internal' => 'id'],
-        'clientmgmt_attr_type_name'       => ['name' => 'clientmgmt_attr_type_name',   'type' => 'string', 'internal' => 'name', 'autocomplete' => true],
-        'clientmgmt_attr_type_datatype'   => ['name' => 'clientmgmt_attr_type_datatype',   'type' => 'int',    'internal' => 'datatype'],
-        'clientmgmt_attr_type_fields'     => ['name' => 'clientmgmt_attr_type_fields', 'type' => 'int',    'internal' => 'fields'],
-        'clientmgmt_attr_type_custom'     => ['name' => 'clientmgmt_attr_type_custom', 'type' => 'bool', 'internal' => 'custom'],
-        'clientmgmt_attr_type_pattern'    => ['name' => 'clientmgmt_attr_type_pattern', 'type' => 'string', 'internal' => 'validationPattern'],
-        'clientmgmt_attr_type_required'   => ['name' => 'clientmgmt_attr_type_required', 'type' => 'bool', 'internal' => 'isRequired'],
+        'clientmgmt_attr_type_id'       => ['name' => 'clientmgmt_attr_type_id',     'type' => 'int',    'internal' => 'id'],
+        'clientmgmt_attr_type_name'     => ['name' => 'clientmgmt_attr_type_name',   'type' => 'string', 'internal' => 'name', 'autocomplete' => true],
+        'clientmgmt_attr_type_datatype' => ['name' => 'clientmgmt_attr_type_datatype',   'type' => 'int',    'internal' => 'datatype'],
+        'clientmgmt_attr_type_fields'   => ['name' => 'clientmgmt_attr_type_fields', 'type' => 'int',    'internal' => 'fields'],
+        'clientmgmt_attr_type_custom'   => ['name' => 'clientmgmt_attr_type_custom', 'type' => 'bool', 'internal' => 'custom'],
+        'clientmgmt_attr_type_pattern'  => ['name' => 'clientmgmt_attr_type_pattern', 'type' => 'string', 'internal' => 'validationPattern'],
+        'clientmgmt_attr_type_required' => ['name' => 'clientmgmt_attr_type_required', 'type' => 'bool', 'internal' => 'isRequired'],
     ];
 
     /**
@@ -54,17 +54,17 @@ final class ClientAttributeTypeMapper extends DataMapperFactory
      */
     public const HAS_MANY = [
         'l11n' => [
-            'mapper'            => ClientAttributeTypeL11nMapper::class,
-            'table'             => 'clientmgmt_attr_type_l11n',
-            'self'              => 'clientmgmt_attr_type_l11n_type',
-            'column'            => 'content',
-            'external'          => null,
+            'mapper'   => ClientAttributeTypeL11nMapper::class,
+            'table'    => 'clientmgmt_attr_type_l11n',
+            'self'     => 'clientmgmt_attr_type_l11n_type',
+            'column'   => 'content',
+            'external' => null,
         ],
         'defaults' => [
-            'mapper'            => ClientAttributeValueMapper::class,
-            'table'             => 'clientmgmt_client_attr_default',
-            'self'              => 'clientmgmt_client_attr_default_type',
-            'external'          => 'clientmgmt_client_attr_default_value',
+            'mapper'   => ClientAttributeValueMapper::class,
+            'table'    => 'clientmgmt_client_attr_default',
+            'self'     => 'clientmgmt_client_attr_default_type',
+            'external' => 'clientmgmt_client_attr_default_value',
         ],
     ];
 

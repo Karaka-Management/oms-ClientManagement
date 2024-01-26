@@ -37,10 +37,10 @@ final class ClientAttributeTypeL11nMapper extends DataMapperFactory
      * @since 1.0.0
      */
     public const COLUMNS = [
-        'clientmgmt_attr_type_l11n_id'        => ['name' => 'clientmgmt_attr_type_l11n_id',       'type' => 'int',    'internal' => 'id'],
-        'clientmgmt_attr_type_l11n_title'     => ['name' => 'clientmgmt_attr_type_l11n_title',    'type' => 'string', 'internal' => 'content', 'autocomplete' => true],
-        'clientmgmt_attr_type_l11n_type'      => ['name' => 'clientmgmt_attr_type_l11n_type',      'type' => 'int',    'internal' => 'ref'],
-        'clientmgmt_attr_type_l11n_lang'      => ['name' => 'clientmgmt_attr_type_l11n_lang', 'type' => 'string', 'internal' => 'language'],
+        'clientmgmt_attr_type_l11n_id'    => ['name' => 'clientmgmt_attr_type_l11n_id',       'type' => 'int',    'internal' => 'id'],
+        'clientmgmt_attr_type_l11n_title' => ['name' => 'clientmgmt_attr_type_l11n_title',    'type' => 'string', 'internal' => 'content', 'autocomplete' => true],
+        'clientmgmt_attr_type_l11n_type'  => ['name' => 'clientmgmt_attr_type_l11n_type',      'type' => 'int',    'internal' => 'ref'],
+        'clientmgmt_attr_type_l11n_lang'  => ['name' => 'clientmgmt_attr_type_l11n_lang', 'type' => 'string', 'internal' => 'language'],
     ];
 
     /**

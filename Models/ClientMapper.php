@@ -20,10 +20,7 @@ use Modules\ClientManagement\Models\Attribute\ClientAttributeMapper;
 use Modules\Editor\Models\EditorDocMapper;
 use Modules\Media\Models\MediaMapper;
 use Modules\Payment\Models\PaymentMapper;
-use Modules\Profile\Models\ContactElementMapper;
 use phpOMS\DataStorage\Database\Mapper\DataMapperFactory;
-use phpOMS\DataStorage\Database\Query\Builder;
-use phpOMS\Stdlib\Base\FloatInt;
 
 /**
  * Client mapper class.
@@ -105,23 +102,17 @@ final class ClientMapper extends DataMapperFactory
      * @since 1.0.0
      */
     public const HAS_MANY = [
-        'files'           => [
+        'files' => [
             'mapper'   => MediaMapper::class,              /* mapper of the related object */
             'table'    => 'clientmgmt_client_media',       /* table of the related object, null if no relation table is used (many->1) */
             'external' => 'clientmgmt_client_media_dst',
             'self'     => 'clientmgmt_client_media_src',
         ],
-        'notes'           => [
+        'notes' => [
             'mapper'   => EditorDocMapper::class,              /* mapper of the related object */
             'table'    => 'clientmgmt_client_note',       /* table of the related object, null if no relation table is used (many->1) */
             'external' => 'clientmgmt_client_note_dst',
             'self'     => 'clientmgmt_client_note_src',
-        ],
-        'contactElements' => [
-            'mapper'   => ContactElementMapper::class,
-            'table'    => 'clientmgmt_client_contactelement',
-            'external' => 'clientmgmt_client_contactelement_dst',
-            'self'     => 'clientmgmt_client_contactelement_src',
         ],
         'payments' => [
             'mapper'   => PaymentMapper::class,
@@ -130,10 +121,10 @@ final class ClientMapper extends DataMapperFactory
             'self'     => 'clientmgmt_client_payment_src',
         ],
         'attributes' => [
-            'mapper'      => ClientAttributeMapper::class,
-            'table'       => 'clientmgmt_client_attr',
-            'self'        => 'clientmgmt_client_attr_client',
-            'external'    => null,
+            'mapper'   => ClientAttributeMapper::class,
+            'table'    => 'clientmgmt_client_attr',
+            'self'     => 'clientmgmt_client_attr_client',
+            'external' => null,
         ],
     ];
 }

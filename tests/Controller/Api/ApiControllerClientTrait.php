@@ -19,7 +19,6 @@ use phpOMS\Message\Http\HttpRequest;
 use phpOMS\Message\Http\HttpResponse;
 use phpOMS\Message\Http\RequestStatusCode;
 use phpOMS\System\MimeType;
-use phpOMS\Uri\HttpUri;
 use phpOMS\Utils\TestUtils;
 
 trait ApiControllerClientTrait
@@ -42,7 +41,7 @@ trait ApiControllerClientTrait
     public function testApiClientCreate() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('number', '123456');
@@ -65,7 +64,7 @@ trait ApiControllerClientTrait
     public function testApiClientCreateInvalidData() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('invalid', '1');
@@ -81,7 +80,7 @@ trait ApiControllerClientTrait
     public function testApiClientProfileImageCreate() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         \copy(__DIR__ . '/m_icon.png', __DIR__ . '/m_icon_tmp.png');
 
@@ -112,7 +111,7 @@ trait ApiControllerClientTrait
     public function testApiClientFileCreate() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         \copy(__DIR__ . '/Test file.txt', __DIR__ . '/Test file_tmp.txt');
 
@@ -142,7 +141,7 @@ trait ApiControllerClientTrait
     public function testApiClientNoteCreate() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
 
@@ -163,7 +162,7 @@ trait ApiControllerClientTrait
     public function testApiFileCreateInvalidData() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('invalid', '1');

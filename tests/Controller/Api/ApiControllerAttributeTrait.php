@@ -19,7 +19,6 @@ use phpOMS\Localization\ISO639x1Enum;
 use phpOMS\Message\Http\HttpRequest;
 use phpOMS\Message\Http\HttpResponse;
 use phpOMS\Message\Http\RequestStatusCode;
-use phpOMS\Uri\HttpUri;
 
 trait ApiControllerAttributeTrait
 {
@@ -30,7 +29,7 @@ trait ApiControllerAttributeTrait
     public function testApiClientAttributeTypeCreate() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('title', 'EN:1');
@@ -48,7 +47,7 @@ trait ApiControllerAttributeTrait
     public function testApiClientAttributeTypeL11nCreate() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('title', 'DE:2');
@@ -66,7 +65,7 @@ trait ApiControllerAttributeTrait
     public function testApiClientAttributeValueIntCreate() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('default', '1');
@@ -86,7 +85,7 @@ trait ApiControllerAttributeTrait
     public function testApiClientAttributeValueStrCreate() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('value', '1');
@@ -105,7 +104,7 @@ trait ApiControllerAttributeTrait
     public function testApiClientAttributeValueFloatCreate() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('value', '1.1');
@@ -124,7 +123,7 @@ trait ApiControllerAttributeTrait
     public function testApiClientAttributeValueDatCreate() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('value', '2020-08-02');
@@ -143,7 +142,7 @@ trait ApiControllerAttributeTrait
     public function testApiClientAttributeCreate() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('ref', '1');
@@ -161,7 +160,7 @@ trait ApiControllerAttributeTrait
     public function testApiClientAttributeValueCreateInvalidData() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('invalid', '1');
@@ -177,7 +176,7 @@ trait ApiControllerAttributeTrait
     public function testApiClientAttributeTypeCreateInvalidData() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('invalid', '1');
@@ -193,7 +192,7 @@ trait ApiControllerAttributeTrait
     public function testApiClientAttributeTypeL11nCreateInvalidData() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('invalid', '1');
@@ -209,7 +208,7 @@ trait ApiControllerAttributeTrait
     public function testApiClientAttributeCreateInvalidData() : void
     {
         $response = new HttpResponse();
-        $request  = new HttpRequest(new HttpUri(''));
+        $request  = new HttpRequest();
 
         $request->header->account = 1;
         $request->setData('invalid', '1');

@@ -17,7 +17,6 @@ namespace Modules\ClientManagement\tests\Models;
 use Modules\ClientManagement\Models\Client;
 use Modules\ClientManagement\Models\ClientStatus;
 use Modules\Editor\Models\EditorDoc;
-use Modules\Profile\Models\ContactElement;
 
 /**
  * @internal
@@ -44,47 +43,13 @@ final class ClientTest extends \PHPUnit\Framework\TestCase
         self::assertEquals('', $this->client->number);
         self::assertEquals('', $this->client->numberReverse);
         self::assertEquals('', $this->client->info);
-        self::assertEquals(ClientStatus::ACTIVE, $this->client->getStatus());
-        self::assertEquals(0, $this->client->getType());
+        self::assertEquals(ClientStatus::ACTIVE, $this->client->status);
+        self::assertEquals(0, $this->client->type);
         self::assertEquals([], $this->client->getNotes());
         self::assertEquals([], $this->client->files);
-        self::assertEquals([], $this->client->getAddresses());
-        self::assertEquals([], $this->client->getContactElements());
         self::assertEquals((new \DateTime('now'))->format('Y-m-d'), $this->client->createdAt->format('Y-m-d'));
         self::assertInstanceOf('\Modules\Admin\Models\Account', $this->client->account);
-        self::assertInstanceOf('\Modules\Admin\Models\Address', $this->client->mainAddress);
-        self::assertInstanceOf('\Modules\Profile\Models\NullContactElement', $this->client->getMainContactElement(0));
-    }
-
-    /**
-     * @covers Modules\ClientManagement\Models\Client
-     * @group module
-     */
-    public function testStatusInputOutput() : void
-    {
-        $this->client->setStatus(ClientStatus::INACTIVE);
-        self::assertEquals(ClientStatus::INACTIVE, $this->client->getStatus());
-    }
-
-    /**
-     * @covers Modules\ClientManagement\Models\Client
-     * @group module
-     */
-    public function testTypeInputOutput() : void
-    {
-        $this->client->setType(2);
-        self::assertEquals(2, $this->client->getType());
-    }
-
-    /**
-     * @covers Modules\ClientManagement\Models\Client
-     * @group module
-     */
-    public function testContactElementInputOutput() : void
-    {
-        $this->client->addContactElement($temp = new ContactElement());
-        self::assertCount(1, $this->client->getContactElements());
-        self::assertEquals($temp, $this->client->getMainContactElement(0));
+        self::assertInstanceOf('\phpOMS\Stdlib\Base\Address', $this->client->mainAddress);
     }
 
     /**
@@ -105,9 +70,9 @@ final class ClientTest extends \PHPUnit\Framework\TestCase
     {
         $this->client->number        = '123456';
         $this->client->numberReverse = '654321';
-        $this->client->setStatus(ClientStatus::INACTIVE);
-        $this->client->setType(2);
-        $this->client->info = 'Test info';
+        $this->client->status        = ClientStatus::INACTIVE;
+        $this->client->type          = 2;
+        $this->client->info          = 'Test info';
 
         self::assertEquals(
             [

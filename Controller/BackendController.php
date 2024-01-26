@@ -14,13 +14,7 @@ declare(strict_types=1);
 
 namespace Modules\ClientManagement\Controller;
 
-use Modules\Admin\Models\LocalizationMapper;
-use Modules\Admin\Models\SettingsEnum;
 use Modules\Auditor\Models\AuditMapper;
-use Modules\Billing\Models\Price\PriceMapper;
-use Modules\Billing\Models\Price\PriceType;
-use Modules\Billing\Models\SalesBillMapper;
-use Modules\ClientManagement\Models\Attribute\ClientAttributeMapper;
 use Modules\ClientManagement\Models\Attribute\ClientAttributeTypeL11nMapper;
 use Modules\ClientManagement\Models\Attribute\ClientAttributeTypeMapper;
 use Modules\ClientManagement\Models\Attribute\ClientAttributeValueL11nMapper;
@@ -36,10 +30,8 @@ use phpOMS\Contract\RenderableInterface;
 use phpOMS\DataStorage\Database\Query\Builder;
 use phpOMS\DataStorage\Database\Query\OrderType;
 use phpOMS\DataStorage\Database\Query\Where;
-use phpOMS\Localization\Money;
 use phpOMS\Message\RequestAbstract;
 use phpOMS\Message\ResponseAbstract;
-use phpOMS\Stdlib\Base\SmartDateTime;
 use phpOMS\Utils\StringUtils;
 use phpOMS\Views\View;
 
@@ -210,7 +202,7 @@ final class BackendController extends Controller
      * @since 1.0.0
      * @codeCoverageIgnore
      */
-    public function viewClientManagementClientProfile(RequestAbstract $request, ResponseAbstract $response, array $data = []) : RenderableInterface
+    public function viewClientManagementClientView(RequestAbstract $request, ResponseAbstract $response, array $data = []) : RenderableInterface
     {
         $head  = $response->data['Content']->head;
         $nonce = $this->app->appSettings->getOption('script-nonce');
@@ -221,13 +213,21 @@ final class BackendController extends Controller
         $head->addAsset(AssetType::JSLATE, 'Modules/ClientManagement/Controller.js', ['nonce' => $nonce, 'type' => 'module']);
 
         $view = new View($this->app->l11nManager, $request, $response);
-        $view->setTemplate('/Modules/ClientManagement/Theme/Backend/client-profile');
+        $view->setTemplate('/Modules/ClientManagement/Theme/Backend/client-view');
         $view->data['nav'] = $this->app->moduleManager->get('Navigation')->createNavigationMid(1003102001, $request, $response);
 
-        /** @var \Modules\ClientManagement\Models\Client $client */
-        $client = ClientMapper::get()
+        $pkType  = 'id';
+        $pkValue = $request->getDataInt('id');
+        if ($pkValue === null) {
+            $pkType  = 'number';
+            $pkValue = $request->getDataString('number');
+        }
+
+        /** @var \Modules\ClientManagement\Models\Client */
+        $view->data['client'] = ClientMapper::get()
             ->with('account')
-            ->with('contactElements')
+            ->with('account/addresses')
+            ->with('account/contacts')
             ->with('mainAddress')
             ->with('files')->limit(5, 'files')->sort('files/id', OrderType::DESC)
             ->with('notes')->limit(5, 'notes')->sort('notes/id', OrderType::DESC)
@@ -236,8 +236,10 @@ final class BackendController extends Controller
             ->with('attributes/type/l11n')
             ->with('attributes/value')
             //->with('attributes/value/l11n')
-            ->where('id', (int) $request->getData('id'))
+            //->with('attributes/value/l11n')
+            ->where($pkType, $pkValue)
             ->where('attributes/type/l11n/language', $response->header->l11n->language)
+            //->where('attributes/value/l11n/language', $response->header->l11n->language)
             /*
             ->where('attributes/value/l11n', (new Where($this->app->dbPool->get()))
                 ->where(ClientAttributeValueL11nMapper::getColumnByMember('ref'), '=', null)
@@ -245,21 +247,14 @@ final class BackendController extends Controller
             */
             ->execute();
 
-        $view->data['client'] = $client;
+        $view->data['attributeView']                               = new \Modules\Attribute\Theme\Backend\Components\AttributeView($this->app->l11nManager, $request, $response);
+        $view->data['attributeView']->data['default_localization'] = $this->app->l11nServer;
 
-        /** @var \Model\Setting $settings */
-        $settings = $this->app->appSettings->get(null, SettingsEnum::DEFAULT_LOCALIZATION);
-
-        $view->data['attributeView']                              = new \Modules\Attribute\Theme\Backend\Components\AttributeView($this->app->l11nManager, $request, $response);
-        $view->data['attributeView']->data['default_localization'] = LocalizationMapper::get()->where('id', (int) $settings->id)->execute();
-
-        /** @var \Modules\Attribute\Models\AttributeType[] $attributeTypes */
-        $attributeTypes = ClientAttributeTypeMapper::getAll()
+        /** @var \Modules\Attribute\Models\AttributeType[] */
+        $view->data['attributeTypes'] = ClientAttributeTypeMapper::getAll()
             ->with('l11n')
             ->where('l11n/language', $response->header->l11n->language)
             ->execute();
-
-        $view->data['attributeTypes'] = $attributeTypes;
 
         // Get item profile image
         // It might not be part of the 5 newest item files from above
@@ -277,16 +272,14 @@ final class BackendController extends Controller
                 ->on(MediaMapper::TABLE . '.' . MediaMapper::PRIMARYFIELD, '=', MediaMapper::HAS_MANY['types']['table'] . '.' . MediaMapper::HAS_MANY['types']['self'])
             ->leftJoin(MediaTypeMapper::TABLE)
                 ->on(MediaMapper::HAS_MANY['types']['table'] . '.' . MediaMapper::HAS_MANY['types']['external'], '=', MediaTypeMapper::TABLE . '.' . MediaTypeMapper::PRIMARYFIELD)
-            ->where(ClientMapper::HAS_MANY['files']['self'], '=', $client->id)
+            ->where(ClientMapper::HAS_MANY['files']['self'], '=', $view->data['client']->id)
             ->where(MediaTypeMapper::TABLE . '.' . MediaTypeMapper::getColumnByMember('name'), '=', 'client_profile_image');
 
-        $clientImage = MediaMapper::get()
+        $view->data['clientImage'] = MediaMapper::get()
             ->with('types')
             ->where('id', $results)
             ->limit(1)
             ->execute();
-
-        $view->data['clientImage'] = $clientImage;
 
         $businessStart = UnitAttributeMapper::get()
             ->with('type')
@@ -297,13 +290,15 @@ final class BackendController extends Controller
 
         $view->data['business_start'] = $businessStart->id === 0 ? 1 : $businessStart->value->getValue();
 
-        /** @var \Modules\Billing\Models\Price\Price[] $prices */
-        $prices = PriceMapper::getAll()
-            ->where('client', $client->id)
-            ->where('type', PriceType::SALES)
-            ->execute();
+        $view->data['hasBilling'] = $this->app->moduleManager->isActive('Billing');
 
-        $view->data['prices'] = $prices;
+        /** @var \Modules\Billing\Models\Price\Price[] */
+        $view->data['prices'] = $view->data['hasBilling']
+            ? \Modules\Billing\Models\Price\PriceMapper::getAll()
+                ->where('client', $view->data['client']->id)
+                ->where('type', \Modules\Billing\Models\Price\PriceType::SALES)
+                ->execute()
+            : [];
 
         $tmp = ItemAttributeTypeMapper::getAll()
             ->with('defaults')
@@ -343,30 +338,27 @@ final class BackendController extends Controller
 
         $view->data['clientSegmentationTypes'] = $clientSegmentationTypes;
 
-        /** @var \Modules\Auditor\Models\Audit[] $audits */
-        $audits = AuditMapper::getAll()
+        /** @var \Modules\Auditor\Models\Audit[] */
+        $view->data['audits'] = AuditMapper::getAll()
             ->where('type', StringUtils::intHash(ClientMapper::class))
             ->where('module', 'ClientManagement')
-            ->where('ref', (string) $client->id)
+            ->where('ref', (string) $view->data['client']->id)
             ->execute();
 
         // @todo join audit with files, attributes, localization, prices, notes, ...
 
-        $view->data['audits'] = $audits;
-
-        /** @var \Modules\Media\Models\Media[] $files */
-        $files = MediaMapper::getAll()
+        /** @var \Modules\Media\Models\Media[] */
+        $view->data['files'] = MediaMapper::getAll()
             ->with('types')
             ->join('id', ClientMapper::class, 'files') // id = media id, files = client relations
-                ->on('id', $client->id, relation: 'files') // id = item id
+                ->on('id', $view->data['client']->id, relation: 'files') // id = item id
             ->execute();
 
-        $view->data['files'] = $files;
-
         $view->data['media-upload'] = new \Modules\Media\Theme\Backend\Components\Upload\BaseView($this->app->l11nManager, $request, $response);
-        $view->data['note'] = new \Modules\Editor\Theme\Backend\Components\Note\BaseView($this->app->l11nManager, $request, $response);
+        $view->data['note']         = new \Modules\Editor\Theme\Backend\Components\Note\BaseView($this->app->l11nManager, $request, $response);
 
-        $view->data['hasBilling'] = $this->app->moduleManager->isActive('Billing');
+        $view->data['address-component'] = new \Modules\Admin\Theme\Backend\Components\AddressEditor\AddressView($this->app->l11nManager, $request, $response);
+        $view->data['contact-component'] = new \Modules\Admin\Theme\Backend\Components\ContactEditor\ContactView($this->app->l11nManager, $request, $response);
 
         return $view;
     }

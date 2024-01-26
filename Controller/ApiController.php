@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace Modules\ClientManagement\Controller;
 
 use Modules\Admin\Models\Account;
+use Modules\Admin\Models\AccountMapper;
 use Modules\Admin\Models\AddressMapper;
 use Modules\Admin\Models\NullAccount;
 use Modules\Auditor\Models\Audit;
@@ -31,11 +32,10 @@ use Modules\Media\Models\PathSettings;
 use Modules\Organization\Models\UnitMapper;
 use phpOMS\Account\PermissionType;
 use phpOMS\Api\EUVAT\EUVATVies;
-use phpOMS\Api\Geocoding\Nominatim;
 use phpOMS\Localization\BaseStringL11n;
 use phpOMS\Localization\BaseStringL11nType;
 use phpOMS\Localization\ISO3166CharEnum;
-use phpOMS\Localization\ISO3166TwoEnum;
+use phpOMS\Localization\ISO639x1Enum;
 use phpOMS\Localization\NullBaseStringL11nType;
 use phpOMS\Message\Http\HttpRequest;
 use phpOMS\Message\Http\HttpResponse;
@@ -44,8 +44,6 @@ use phpOMS\Message\NotificationLevel;
 use phpOMS\Message\RequestAbstract;
 use phpOMS\Message\ResponseAbstract;
 use phpOMS\Model\Message\FormValidation;
-use phpOMS\Stdlib\Base\Address;
-use phpOMS\Uri\HttpUri;
 use phpOMS\Utils\StringUtils;
 
 /**
@@ -68,7 +66,7 @@ final class ApiController extends Controller
      *
      * @since 1.0.0
      */
-    public function findClientForAccount(int $account, int $unit = null) : ?Client
+    public function findClientForAccount(int $account, ?int $unit = null) : ?Client
     {
         $clientMapper = ClientMapper::get()
             ->where('account', $account);
@@ -81,6 +79,90 @@ final class ApiController extends Controller
         $client = $clientMapper->execute();
 
         return $client->id === 0 ? null : $client;
+    }
+
+    public function setVAT(RequestAbstract $request, Client $client) : void
+    {
+        /** @var \Modules\Attribute\Models\AttributeType $type */
+        $type = ClientAttributeTypeMapper::get()->with('defaults')->where('name', 'vat_id')->execute();
+
+        $internalRequest  = new HttpRequest();
+        $internalResponse = new HttpResponse();
+
+        $internalRequest->header->account = $request->header->account;
+        $internalRequest->setData('ref', $client->id);
+        $internalRequest->setData('type', $type->id);
+        $internalRequest->setData('value', $request->getDataString('vat_id'));
+
+        $this->app->moduleManager->get('ClientManagement', 'ApiAttribute')
+            ->apiClientAttributeCreate($internalRequest, $internalResponse);
+    }
+
+    public function validateVAT(RequestAbstract $request, Client $client) : array
+    {
+        /** @var \Modules\Organization\Models\Unit $unit */
+        $unit = UnitMapper::get()
+            ->with('attributes')
+            ->where('id', $this->app->unitId)
+            ->execute();
+
+        $validate = ['status' => -1];
+
+        if (\in_array($client->mainAddress->country, ISO3166CharEnum::getRegion('eu'))) {
+            $validate = EUVATVies::validateQualified(
+                $request->getDataString('vat_id') ?? '',
+                $unit->getAttribute('vat_id')->value->valueStr ?? '',
+                $client->account->name1,
+                $client->mainAddress->city,
+                $client->mainAddress->postal,
+                $client->mainAddress->address
+            );
+        }
+
+        $audit = new Audit(
+            new NullAccount($request->header->account),
+            null,
+            (string) ($validate['status'] ?? ''),
+            StringUtils::intHash(EUVATVies::class),
+            'vat_validation',
+            self::NAME,
+            (string) $client->id,
+            (string) \json_encode($validate),
+            (int) \ip2long($request->getOrigin())
+        );
+
+        AuditMapper::create()->execute($audit);
+
+        return $validate;
+    }
+
+    public function defineTaxCode(RequestAbstract $request, Client $client) : void
+    {
+        /** @var \Modules\Organization\Models\Unit $unit */
+        $unit = UnitMapper::get()
+            ->with('mainAddress')
+            ->where('id', $this->app->unitId)
+            ->execute();
+
+        /** @var \Modules\Attribute\Models\AttributeType $type */
+        $type = ClientAttributeTypeMapper::get()
+            ->with('defaults')
+            ->where('name', 'sales_tax_code')
+            ->execute();
+
+        $value = $this->app->moduleManager->get('Billing', 'ApiTax')
+            ->getClientTaxCode($client, $unit->mainAddress);
+
+        $internalRequest  = new HttpRequest();
+        $internalResponse = new HttpResponse();
+
+        $internalRequest->header->account = $request->header->account;
+        $internalRequest->setData('ref', $client->id);
+        $internalRequest->setData('type',  $type->id);
+        $internalRequest->setData('value_id', $value->id);
+
+        $this->app->moduleManager->get('ClientManagement', 'ApiAttribute')
+            ->apiClientAttributeCreate($internalRequest, $internalResponse, ['type' => $type]);
     }
 
     /**
@@ -107,42 +189,32 @@ final class ApiController extends Controller
 
         $client = $this->createClientFromRequest($request);
         $this->createModel($request->header->account, $client, ClientMapper::class, 'client', $request->getOrigin());
+        $this->createModelRelation(
+            $client->account->id,
+            $client->account->id,
+            [$client->mainAddress->id],
+            AccountMapper::class,
+            'addresses',
+            'account',
+            $request->getOrigin()
+        );
+
+        // Create stock
+        if ($this->app->moduleManager->isActive('WarehouseManagement')) {
+            $internalResponse = new HttpResponse();
+            $internalRequest  = new HttpRequest($request->uri);
+
+            $internalRequest->header->account = $request->header->account;
+            $internalRequest->setData('name', $client->number);
+            $internalRequest->setData('client', $client->id);
+
+            $this->app->moduleManager->get('WarehouseManagement', 'Api')
+                ->apiStockCreate($internalRequest, $internalResponse);
+        }
 
         // Set VAT Id
-        // @todo move to separate function
         if ($request->hasData('vat_id')) {
-            /** @var \Modules\Organization\Models\Unit $unit */
-            $unit = UnitMapper::get()
-                ->with('attributes')
-                ->where('id', $this->app->unitId)
-                ->execute();
-
-            $validate = ['status' => -1];
-
-            if (\in_array($client->mainAddress->getCountry(), ISO3166CharEnum::getRegion('eu'))) {
-                $validate = EUVATVies::validateQualified(
-                    $request->getDataString('vat_id') ?? '',
-                    $unit->getAttribute('vat_id')->value->valueStr ?? '',
-                    $client->account->name1,
-                    $client->mainAddress->city,
-                    $client->mainAddress->postal,
-                    $client->mainAddress->address
-                );
-            }
-
-            $audit = new Audit(
-                new NullAccount($request->header->account),
-                null,
-                (string) ($validate['status'] ?? ''),
-                StringUtils::intHash(EUVATVies::class),
-                'vat_validation',
-                self::NAME,
-                (string) $client->id,
-                (string) \json_encode($validate),
-                (int) \ip2long($request->getOrigin())
-            );
-
-            AuditMapper::create()->execute($audit);
+            $validate = $this->validateVAT($request, $client);
 
             if (($validate['status'] === 0
                     && $validate['vat'] === 'A'
@@ -150,48 +222,13 @@ final class ApiController extends Controller
                     && $validate['city'] === 'A')
                 || $validate['status'] !== 0 // Api out of order -> accept it -> test it during invoice creation
             ) {
-                /** @var \Modules\Attribute\Models\AttributeType $type */
-                $type = ClientAttributeTypeMapper::get()->with('defaults')->where('name', 'vat_id')->execute();
-
-                $internalRequest  = new HttpRequest(new HttpUri(''));
-                $internalResponse = new HttpResponse();
-
-                $internalRequest->header->account = $request->header->account;
-                $internalRequest->setData('ref', $client->id);
-                $internalRequest->setData('type', $type->id);
-                $internalRequest->setData('value', $request->getDataString('vat_id'));
-
-                $this->app->moduleManager->get('ClientManagement', 'ApiAttribute')
-                    ->apiClientAttributeCreate($internalRequest, $internalResponse);
+                $this->setVAT($request, $client);
             }
         }
 
-        // Find tax code
+        // Find and set tax code
         if ($this->app->moduleManager->isActive('Billing')) {
-            /** @var \Modules\Organization\Models\Unit $unit */
-            $unit = UnitMapper::get()
-                ->with('mainAddress')
-                ->where('id', $this->app->unitId)
-                ->execute();
-
-            /** @var \Modules\Attribute\Models\AttributeType $type */
-            $type = ClientAttributeTypeMapper::get()
-                ->where('name', 'sales_tax_code')
-                ->execute();
-
-            $value = $this->app->moduleManager->get('Billing', 'ApiTax')
-                ->getClientTaxCode($client, $unit->mainAddress);
-
-            $internalRequest  = new HttpRequest(new HttpUri(''));
-            $internalResponse = new HttpResponse();
-
-            $internalRequest->header->account = $request->header->account;
-            $internalRequest->setData('ref', $client->id);
-            $internalRequest->setData('type',  $type->id);
-            $internalRequest->setData('value', $value->id);
-
-            $this->app->moduleManager->get('ClientManagement', 'ApiAttribute')
-                ->apiClientAttributeCreate($internalRequest, $internalResponse);
+            $this->defineTaxCode($request, $client);
         }
 
         $this->createClientSegmentation($request, $response, $client);
@@ -209,13 +246,13 @@ final class ApiController extends Controller
             return;
         }
 
-        $types = ClientAttributeTypeMapper::get()
+        $types = ClientAttributeTypeMapper::getAll()
             ->where('name', \array_keys($segmentation), 'IN')
             ->execute();
 
         foreach ($types as $type) {
             $internalResponse = clone $response;
-            $internalRequest  = new HttpRequest(new HttpUri(''));
+            $internalRequest  = new HttpRequest();
 
             $internalRequest->header->account = $request->header->account;
             $internalRequest->setData('ref', $client->id);
@@ -249,25 +286,10 @@ final class ApiController extends Controller
         $client          = new Client();
         $client->number  = $request->getDataString('number') ?? '';
         $client->account = $account;
-        $client->unit = $request->getDataInt('unit') ?? 1;
+        $client->unit    = $request->getDataInt('unit') ?? 1;
 
-        // Handle main address
-        $addr          = new Address();
-        $addr->address = $request->getDataString('address') ?? '';
-        $addr->postal  = $request->getDataString('postal') ?? '';
-        $addr->city    = $request->getDataString('city') ?? '';
-        $addr->state = $request->getDataString('state') ?? '';
-        $addr->setCountry($request->getDataString('country') ?? ISO3166TwoEnum::_XXX);
-        $client->mainAddress = $addr;
-
-        // Try to find lat/lon through external API
-        $geocoding = Nominatim::geocoding($addr->country, $addr->city, $addr->address);
-        if ($geocoding === ['lat' => 0.0, 'lon' => 0.0]) {
-            $geocoding = Nominatim::geocoding($addr->country, $addr->city);
-        }
-
-        $client->mainAddress->lat = $geocoding['lat'];
-        $client->mainAddress->lon = $geocoding['lon'];
+        $request->setData('name', null, true);
+        $client->mainAddress = $this->app->moduleManager->get('Admin', 'Api')->createAddressFromRequest($request);
 
         return $client;
     }
@@ -315,7 +337,7 @@ final class ApiController extends Controller
             return;
         }
 
-        $clientMapper = $client = ClientMapper::get()
+        $clientMapper = ClientMapper::get()
             ->with('mainAddress');
 
         if ($request->hasData('account')) {
@@ -332,8 +354,8 @@ final class ApiController extends Controller
         $client = $clientMapper->execute();
 
         $old = $client->mainAddress;
+        $new = $this->app->moduleManager->get('Admin', 'Api')->updateAddressFromRequest($request, clone $old);
 
-        $new = $this->updateMainAddressFromRequest($request, clone $old);
         $this->updateModel($request->header->account, $old, $new, AddressMapper::class, 'address', $request->getOrigin());
         $this->createStandardUpdateResponse($request, $response, $new);
     }
@@ -356,30 +378,6 @@ final class ApiController extends Controller
         }
 
         return [];
-    }
-
-    /**
-     * Method to update an account from a request
-     *
-     * @param RequestAbstract $request Request
-     * @param Address         $address Address
-     *
-     * @return Address
-     *
-     * @since 1.0.0
-     */
-    private function updateMainAddressFromRequest(RequestAbstract $request, Address $address) : Address
-    {
-        $address->name            = $request->getDataString('name') ?? $address->name;
-        $address->fao             = $request->getDataString('fao') ?? $address->fao;
-        $address->address         = $request->getDataString('address') ?? $address->address;
-        $address->addressAddition = $request->getDataString('addition') ?? $address->addressAddition;
-        $address->postal          = $request->getDataString('postal') ?? $address->postal;
-        $address->city            = $request->getDataString('city') ?? $address->city;
-        $address->state           = $request->getDataString('state') ?? $address->state;
-        $address->setCountry($request->getDataString('country') ?? $address->getCountry());
-
-        return $address;
     }
 
     /**
@@ -420,13 +418,11 @@ final class ApiController extends Controller
      */
     private function createClientL11nFromRequest(RequestAbstract $request) : BaseStringL11n
     {
-        $clientL11n       = new BaseStringL11n();
-        $clientL11n->ref  = $request->getDataInt('client') ?? 0;
-        $clientL11n->type = new NullBaseStringL11nType($request->getDataInt('type') ?? 0);
-        $clientL11n->setLanguage(
-            $request->getDataString('language') ?? $request->header->l11n->language
-        );
-        $clientL11n->content = $request->getDataString('description') ?? '';
+        $clientL11n           = new BaseStringL11n();
+        $clientL11n->ref      = $request->getDataInt('client') ?? 0;
+        $clientL11n->type     = new NullBaseStringL11nType($request->getDataInt('type') ?? 0);
+        $clientL11n->language = ISO639x1Enum::tryFromValue($request->getDataString('language')) ?? $request->header->l11n->language;
+        $clientL11n->content  = $request->getDataString('description') ?? '';
 
         return $clientL11n;
     }

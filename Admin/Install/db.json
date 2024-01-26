@@ -213,6 +213,11 @@
                 "type": "TINYINT(1)",
                 "null": false
             },
+            "clientmgmt_attr_type_internal": {
+                "name": "clientmgmt_attr_type_internal",
+                "type": "TINYINT(1)",
+                "null": false
+            },
             "clientmgmt_attr_type_required": {
                 "description": "Every item must have this attribute type if set to true.",
                 "name": "clientmgmt_attr_type_required",
@@ -423,7 +428,7 @@
             },
             "clientmgmt_client_account_account": {
                 "name": "clientmgmt_client_account_account",
-                "type": "VARCHAR(50)",
+                "type": "VARCHAR(10)",
                 "null": false
             },
             "clientmgmt_client_account_client": {
