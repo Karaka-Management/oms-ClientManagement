@@ -13,6 +13,7 @@
 declare(strict_types=1);
 
 use Modules\Admin\Models\ContactType;
+use Modules\Billing\Models\BillMapper;
 use Modules\Billing\Models\Price\PriceType;
 use Modules\Billing\Models\SalesBillMapper;
 use Modules\Media\Models\NullMedia;
@@ -928,7 +929,14 @@ echo $this->data['nav']->render();
                                 <td><?= $this->getHtml('Date'); ?>
                             <tbody>
                             <?php
-                            $allInvoices = SalesBillMapper::getClientBills($client->id, SmartDateTime::startOfYear($this->data['business_start']), new SmartDateTime('now'));
+                            $allInvoices = BillMapper::getAll()
+                                ->with('type')
+                                ->with('type/l11n')
+                                ->where('client', $client->id)
+                                ->where('type/l11n/language', $this->response->header->l11n->language)
+                                ->where('billDate', SmartDateTime::startOfYear($this->data['business_start']), '>=')
+                                ->where('billDate', new \DateTime('now'), '<=')
+                                ->execute();
 
                             $count = 0;
                             /** @var \Modules\Billing\Models\Bill $invoice */

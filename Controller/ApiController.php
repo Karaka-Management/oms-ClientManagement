@@ -283,6 +283,9 @@ final class ApiController extends Controller
             $account = new NullAccount((int) $request->getData('account'));
         }
 
+        // @feature Create a way to let admins create a default account format for clients/suppliers
+        //      https://github.com/Karaka-Management/oms-ClientManagement/issues/19
+
         $client          = new Client();
         $client->number  = $request->getDataString('number') ?? '';
         $client->account = $account;
@@ -537,7 +540,7 @@ final class ApiController extends Controller
             return;
         }
 
-        $uploaded = $this->app->moduleManager->get('Media')->uploadFiles(
+        $uploaded = $this->app->moduleManager->get('Media', 'Api')->uploadFiles(
             names: $request->getDataList('names'),
             fileNames: $request->getDataList('filenames'),
             files: $uploadedFiles,

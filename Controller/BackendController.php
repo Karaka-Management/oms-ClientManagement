@@ -257,10 +257,8 @@ final class BackendController extends Controller
             ->execute();
 
         // Get item profile image
-        // It might not be part of the 5 newest item files from above
-        // @todo It would be nice to have something like this as a default method in the model e.g.
-        // ItemManagement::getRelations()->with('types')->where(...);
-        // This should return the relations and NOT the model itself
+        // @feature Create a new read mapper function that returns relation models instead of its own model
+        //      https://github.com/Karaka-Management/phpOMS/issues/320
         $query   = new Builder($this->app->dbPool->get());
         $results = $query->selectAs(ClientMapper::HAS_MANY['files']['external'], 'file')
             ->from(ClientMapper::TABLE)
@@ -276,7 +274,6 @@ final class BackendController extends Controller
             ->where(MediaTypeMapper::TABLE . '.' . MediaTypeMapper::getColumnByMember('name'), '=', 'client_profile_image');
 
         $view->data['clientImage'] = MediaMapper::get()
-            ->with('types')
             ->where('id', $results)
             ->limit(1)
             ->execute();

@@ -6,7 +6,7 @@
             "de": "Bewertung"
         },
         "value_type": 2,
-        "is_custom_allowed": true,
+        "is_custom_allowed": false,
         "validation_pattern": "",
         "is_required": false,
         "default_value": "",
@@ -56,22 +56,39 @@
         ]
     },
     {
+        "name": "client_area",
+        "l11n": {
+            "en": "Client area",
+            "de": "Kundengebiet"
+        },
+        "value_type": 2,
+        "is_custom_allowed": false,
+        "validation_pattern": "",
+        "is_required": false,
+        "default_value": "01",
+        "values": [
+            {
+                "value": "01"
+            }
+        ]
+    },
+    {
         "name": "bill_emails",
         "l11n": {
             "en": "Send bills as emails",
             "de": "Sende Rechnungen als Email"
         },
-        "value_type": 1,
+        "value_type": 5,
         "is_custom_allowed": false,
         "validation_pattern": "",
         "is_required": false,
         "default_value": 1,
         "values": [
             {
-                "value": 0
+                "value": false
             },
             {
-                "value": 1
+                "value": true
             }
         ]
     },
@@ -80,6 +97,39 @@
         "l11n": {
             "en": "Email address for billing",
             "de": "Emailadresse für Rechnungen"
+        },
+        "value_type": 2,
+        "is_custom_allowed": true,
+        "validation_pattern": "",
+        "is_required": false,
+        "default_value": "",
+        "values": []
+    },
+    {
+        "name": "support_emails",
+        "l11n": {
+            "en": "Send support as emails",
+            "de": "Sende Support als Email"
+        },
+        "value_type": 5,
+        "is_custom_allowed": false,
+        "validation_pattern": "",
+        "is_required": false,
+        "default_value": true,
+        "values": [
+            {
+                "value": false
+            },
+            {
+                "value": true
+            }
+        ]
+    },
+    {
+        "name": "support_email_address",
+        "l11n": {
+            "en": "Email address for support",
+            "de": "Emailadresse für Support"
         },
         "value_type": 2,
         "is_custom_allowed": true,

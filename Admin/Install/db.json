@@ -12,8 +12,7 @@
             "clientmgmt_client_no": {
                 "name": "clientmgmt_client_no",
                 "type": "VARCHAR(255)",
-                "null": false,
-                "unique": true
+                "null": false
             },
             "clientmgmt_client_no_reverse": {
                 "name": "clientmgmt_client_no_reverse",

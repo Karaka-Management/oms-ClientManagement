@@ -25,7 +25,8 @@
         "Navigation": "*",
         "Editor": "*",
         "Media": "*",
-        "Admin": "*"
+        "Admin": "*",
+        "Search": "*"
     },
     "load": [
         {
