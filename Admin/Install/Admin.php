@@ -38,6 +38,10 @@ class Admin
      */
     public static function install(ApplicationAbstract $app, string $path) : void
     {
-        // \Modules\Admin\Admin\Installer::installExternal($app, ['path' => __DIR__ . '/Admin.install.json']);
+        // We are creating default items in the ClientManagement installer.
+        // This requires that these settings are already available
+        // However, this install script runs AFTER the primary installer runs.
+        // This causes problems for the item installation and is therefore moved to the "Installer".
+        // \Modules\Admin\Admin\Installer::installExternal($app, ['path' => __DIR__ . '/Admin.install.php']);
     }
 }

@@ -125,6 +125,6 @@ return ['ClientManagement' => [
     'ClientType'           => 'Kundenart',
     'ItemType'             => 'Artikeltyp',
     'Item'                 => 'Item',
-    'EarningIndicator'     => 'Erlöskennzeichen',
-    'CostIndicator'        => 'Kostenkennzeichen',
+    'EarningIndicator'     => 'Verkaufssteuerkennzeichen',
+    'CostIndicator'        => 'Einkaufssteuerkennzeichen',
 ]];

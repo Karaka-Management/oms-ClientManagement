@@ -127,6 +127,6 @@ return ['ClientManagement' => [
     'ClientType'           => 'Client Type',
     'ItemType'             => 'Item Type',
     'Item'                 => 'Item',
-    'EarningIndicator'     => 'Earning Indicator',
-    'CostIndicator'        => 'Cost Indicator',
+    'EarningIndicator'     => 'Sales tax code',
+    'CostIndicator'        => 'Purchase tax code',
 ]];

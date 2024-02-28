@@ -20,11 +20,13 @@ use Modules\ClientManagement\Models\Attribute\ClientAttributeTypeMapper;
 use Modules\ClientManagement\Models\Attribute\ClientAttributeValueL11nMapper;
 use Modules\ClientManagement\Models\Attribute\ClientAttributeValueMapper;
 use Modules\ClientManagement\Models\ClientMapper;
+use Modules\ClientManagement\Models\PermissionCategory;
 use Modules\ItemManagement\Models\Attribute\ItemAttributeTypeMapper;
 use Modules\ItemManagement\Models\Attribute\ItemAttributeValueL11nMapper;
 use Modules\Media\Models\MediaMapper;
 use Modules\Media\Models\MediaTypeMapper;
 use Modules\Organization\Models\Attribute\UnitAttributeMapper;
+use phpOMS\Account\PermissionType;
 use phpOMS\Asset\AssetType;
 use phpOMS\Contract\RenderableInterface;
 use phpOMS\DataStorage\Database\Query\Builder;
@@ -161,6 +163,7 @@ final class BackendController extends Controller
         $client = ClientMapper::getAll()
             ->with('account')
             ->with('mainAddress')
+            ->where('unit', $this->app->unitId)
             ->limit(25)
             ->execute();
 
@@ -207,10 +210,10 @@ final class BackendController extends Controller
         $head  = $response->data['Content']->head;
         $nonce = $this->app->appSettings->getOption('script-nonce');
 
-        $head->addAsset(AssetType::CSS, 'Resources/chartjs/chart.css');
-        $head->addAsset(AssetType::JSLATE, 'Resources/chartjs/chart.js', ['nonce' => $nonce]);
-        $head->addAsset(AssetType::JSLATE, 'Resources/OpenLayers/OpenLayers.js', ['nonce' => $nonce]);
-        $head->addAsset(AssetType::JSLATE, 'Modules/ClientManagement/Controller.js', ['nonce' => $nonce, 'type' => 'module']);
+        $head->addAsset(AssetType::CSS, 'Resources/chartjs/chart.css?v=' . $this->app->version);
+        $head->addAsset(AssetType::JSLATE, 'Resources/chartjs/chart.js?v=' . $this->app->version, ['nonce' => $nonce]);
+        $head->addAsset(AssetType::JSLATE, 'Resources/OpenLayers/OpenLayers.js?v=' . $this->app->version, ['nonce' => $nonce]);
+        $head->addAsset(AssetType::JSLATE, 'Modules/ClientManagement/Controller.js?v=' . self::VERSION, ['nonce' => $nonce, 'type' => 'module']);
 
         $view = new View($this->app->l11nManager, $request, $response);
         $view->setTemplate('/Modules/ClientManagement/Theme/Backend/client-view');
@@ -335,12 +338,24 @@ final class BackendController extends Controller
 
         $view->data['clientSegmentationTypes'] = $clientSegmentationTypes;
 
-        /** @var \Modules\Auditor\Models\Audit[] */
-        $view->data['audits'] = AuditMapper::getAll()
-            ->where('type', StringUtils::intHash(ClientMapper::class))
-            ->where('module', 'ClientManagement')
-            ->where('ref', (string) $view->data['client']->id)
-            ->execute();
+        $logs = [];
+        if ($this->app->accountManager->get($request->header->account)->hasPermission(
+                PermissionType::READ,
+                $this->app->unitId,
+                null,
+                self::NAME,
+                PermissionCategory::CLIENT_LOG,
+            )
+        ) {
+            /** @var \Modules\Auditor\Models\Audit[] */
+            $logs = AuditMapper::getAll()
+                ->where('type', StringUtils::intHash(ClientMapper::class))
+                ->where('module', 'ClientManagement')
+                ->where('ref', (string) $view->data['client']->id)
+                ->execute();
+        }
+
+        $view->data['logs'] = $logs;
 
         // @todo join audit with files, attributes, localization, prices, notes, ...
 

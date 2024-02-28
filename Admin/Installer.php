@@ -61,7 +61,7 @@ final class Installer extends InstallerAbstract
         $attrTypes  = self::createClientAttributeTypes($app, $attributes);
         $attrValues = self::createClientAttributeValues($app, $attrTypes, $attributes);
 
-        $data    = \json_decode(\file_get_contents(__DIR__ . '/Install/Admin.install.json'), true);
+        $data = include __DIR__ . '/Install/Admin.install.php';
         $content = \json_decode($data[0]['content'], true);
 
         foreach ($content as $type => $_) {
@@ -102,7 +102,7 @@ final class Installer extends InstallerAbstract
         $l11nTypes = [];
 
         /** @var \Modules\ClientManagement\Controller\ApiController $module */
-        $module = $app->moduleManager->getModuleInstance('ClientManagement');
+        $module = $app->moduleManager->get('ClientManagement');
 
         foreach ($l11ns as $l11n) {
             $response = new HttpResponse();
@@ -143,7 +143,7 @@ final class Installer extends InstallerAbstract
         $clientAttrType = [];
 
         /** @var \Modules\ClientManagement\Controller\ApiAttributeController $module */
-        $module = $app->moduleManager->getModuleInstance('ClientManagement', 'ApiAttribute');
+        $module = $app->moduleManager->get('ClientManagement', 'ApiAttribute');
 
         /** @var array $attribute */
         foreach ($attributes as $attribute) {
@@ -211,7 +211,7 @@ final class Installer extends InstallerAbstract
         $clientAttrValue = [];
 
         /** @var \Modules\ClientManagement\Controller\ApiAttributeController $module */
-        $module = $app->moduleManager->getModuleInstance('ClientManagement', 'ApiAttribute');
+        $module = $app->moduleManager->get('ClientManagement', 'ApiAttribute');
 
         foreach ($attributes as $attribute) {
             $clientAttrValue[$attribute['name']] = [];

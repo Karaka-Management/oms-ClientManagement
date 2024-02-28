@@ -31,4 +31,6 @@ abstract class PermissionCategory extends Enum
     public const ANALYSIS = 2;
 
     public const CLIENT_NOTE = 3;
+
+    public const CLIENT_LOG = 101;
 }

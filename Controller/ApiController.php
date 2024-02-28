@@ -45,6 +45,7 @@ use phpOMS\Message\RequestAbstract;
 use phpOMS\Message\ResponseAbstract;
 use phpOMS\Model\Message\FormValidation;
 use phpOMS\Utils\StringUtils;
+use phpOMS\Validation\Finance\EUVat;
 
 /**
  * ClientManagement class.
@@ -53,6 +54,12 @@ use phpOMS\Utils\StringUtils;
  * @license OMS License 2.0
  * @link    https://jingga.app
  * @since   1.0.0
+ *
+ * @todo Import client prices from csv/excel sheet
+ *      https://github.com/Karaka-Management/oms-ClientManagement/issues/17
+ *
+ * @todo Perform inflation increase on all client prices
+ *      https://github.com/Karaka-Management/oms-ClientManagement/issues/18
  */
 final class ApiController extends Controller
 {
@@ -108,7 +115,10 @@ final class ApiController extends Controller
 
         $validate = ['status' => -1];
 
-        if (\in_array($client->mainAddress->country, ISO3166CharEnum::getRegion('eu'))) {
+        // Has to be in EU and match VAT pattern before we perform external API request
+        if (\in_array($client->mainAddress->country, ISO3166CharEnum::getRegion('eu'))
+            && EUVat::isValid($request->getDataString('vat_id') ?? '')
+        ) {
             $validate = EUVATVies::validateQualified(
                 $request->getDataString('vat_id') ?? '',
                 $unit->getAttribute('vat_id')->value->valueStr ?? '',
@@ -289,7 +299,7 @@ final class ApiController extends Controller
         $client          = new Client();
         $client->number  = $request->getDataString('number') ?? '';
         $client->account = $account;
-        $client->unit    = $request->getDataInt('unit') ?? 1;
+        $client->unit    = $request->getDataInt('unit') ?? $this->app->unitId;
 
         $request->setData('name', null, true);
         $client->mainAddress = $this->app->moduleManager->get('Admin', 'Api')->createAddressFromRequest($request);

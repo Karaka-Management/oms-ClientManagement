@@ -40,6 +40,8 @@ $languages    = ISO639Enum::getConstants();
 $client      = $this->data['client'];
 $clientImage = $this->data['clientImage'] ?? new NullMedia();
 
+$logs = $this->data['logs'] ?? [];
+
 /**
  * @var \phpOMS\Views\View $this
  */
@@ -58,7 +60,7 @@ echo $this->data['nav']->render();
             <li><label for="c-tab-8"><?= $this->getHtml('Files'); ?></label>
             <li><label for="c-tab-9"><?= $this->getHtml('Bills'); ?></label>
             <li><label for="c-tab-10"><?= $this->getHtml('Items'); ?></label>
-            <li><label for="c-tab-17"><?= $this->getHtml('Logs'); ?></label>
+            <?php if (!empty($logs)) : ?><li><label for="c-tab-17"><?= $this->getHtml('Logs'); ?></label><?php endif; ?>
         </ul>
     </div>
     <div class="tab-content">
@@ -206,7 +208,7 @@ echo $this->data['nav']->render();
                         </div>
                     </section>
 
-                    <section class="portlet highlight-4">
+                    <section class="portlet hl-4">
                         <div class="portlet-body">
                             <textarea class="undecorated"><?= $this->printHtml($client->info); ?></textarea>
                         </div>
@@ -217,7 +219,7 @@ echo $this->data['nav']->render();
                     <!-- If note warning exists -->
                     <div class="row">
                         <div class="col-xs-12">
-                            <section class="portlet highlight-1">
+                            <section class="portlet hl-1">
                                 <div class="portlet-body"><?= $this->printHtml($warning->plain); ?></div>
                             </section>
                         </div>
@@ -227,22 +229,22 @@ echo $this->data['nav']->render();
                     <?php if ($this->data['hasBilling']) : ?>
                     <div class="row">
                         <div class="col-xs-12 col-lg-4">
-                            <section class="portlet highlight-7">
+                            <section class="portlet hl-7">
                                 <div class="portlet-body">
                                     <table class="wf-100">
                                         <tr><td><?= $this->getHtml('YTDSales'); ?>:
-                                            <td><?= $this->getCurrency(SalesBillMapper::getClientNetSales($client->id, SmartDateTime::startOfYear($this->data['business_start']), new \DateTime('now')), format: 'medium'); ?>
+                                            <td><?= SalesBillMapper::getClientNetSales($client->id, SmartDateTime::startOfYear($this->data['business_start']), new \DateTime('now'))->getAmount(); ?>
                                         <tr><td><?= $this->getHtml('MTDSales'); ?>:
-                                            <td><?= $this->getCurrency(SalesBillMapper::getClientNetSales($client->id, SmartDateTime::startOfMonth(), new \DateTime('now')), format: 'medium'); ?>
+                                            <td><?= SalesBillMapper::getClientNetSales($client->id, SmartDateTime::startOfMonth(), new \DateTime('now'))->getAmount(); ?>
                                         <tr><td><?= $this->getHtml('CLV'); ?>:
-                                            <td><?= $this->getCurrency(SalesBillMapper::getCLVHistoric($client->id), format: 'medium'); ?>
+                                            <td><?= SalesBillMapper::getCLVHistoric($client->id)->getAmount(); ?>
                                     </table>
                                 </div>
                             </section>
                         </div>
 
                         <div class="col-xs-12 col-lg-4">
-                            <section class="portlet highlight-2">
+                            <section class="portlet hl-2">
                                 <div class="portlet-body">
                                     <table class="wf-100">
                                         <tr><td><?= $this->getHtml('LastContact'); ?>:
@@ -257,7 +259,7 @@ echo $this->data['nav']->render();
                         </div>
 
                         <div class="col-xs-12 col-lg-4">
-                            <section class="portlet highlight-3">
+                            <section class="portlet hl-3">
                                 <div class="portlet-body">
                                     <table class="wf-100">
                                         <tr><td><?= $this->getHtml('DSO'); ?>:
@@ -553,9 +555,9 @@ echo $this->data['nav']->render();
                             data-add-tpl="#clientSalesPriceTable tbody .oms-add-tpl-clientSalesPrice">
                             <div class="portlet-head"><?= $this->getHtml('Pricing'); ?></div>
                             <div class="portlet-body">
-                                <input id="iPriceId" class="hidden" name="id" type="number" data-tpl-text="/id" data-tpl-value="/id">
-                                <input id="iPriceClientId" class="hidden" name="client" type="text" value="<?= $client->id; ?>">
-                                <input id="iPriceItemType" class="hidden" name="type" type="text" value="<?= PriceType::SALES; ?>">
+                                <input id="iPriceId" class="vh" name="id" type="number" data-tpl-text="/id" data-tpl-value="/id">
+                                <input id="iPriceClientId" class="vh" name="client" type="text" value="<?= $client->id; ?>">
+                                <input id="iPriceItemType" class="vh" name="type" type="text" value="<?= PriceType::SALES; ?>">
 
                                 <div class="form-group">
                                     <label for="iPriceName"><?= $this->getHtml('Name'); ?></label>
@@ -600,8 +602,8 @@ echo $this->data['nav']->render();
 
                                     <div>
                                         <div class="form-group">
-                                            <label for="iPriceDiscountP"><?= $this->getHtml('DiscountP'); ?></label>
-                                            <input id="iPriceDiscountP" name="discountPercentage" type="number" data-tpl-text="/discountp" data-tpl-value="/discountp">
+                                            <label for="iPriceDiscountR"><?= $this->getHtml('DiscountP'); ?></label>
+                                            <input id="iPriceDiscountR" name="discountPercentage" type="number" data-tpl-text="/discountr" data-tpl-value="/discountr">
                                         </div>
                                     </div>
                                 </div>
@@ -767,8 +769,8 @@ echo $this->data['nav']->render();
                             </div>
                             <div class="portlet-foot">
                                 <input id="bPriceItemAdd" formmethod="put" type="submit" class="add-form" value="<?= $this->getHtml('Add', '0', '0'); ?>">
-                                <input id="bPriceItemSave" formmethod="post" type="submit" class="save-form hidden button save" value="<?= $this->getHtml('Update', '0', '0'); ?>">
-                                <input id="bPriceItemCancel" type="submit" class="cancel-form hidden button close" value="<?= $this->getHtml('Cancel', '0', '0'); ?>">
+                                <input id="bPriceItemSave" formmethod="post" type="submit" class="save-form vh button save" value="<?= $this->getHtml('Update', '0', '0'); ?>">
+                                <input id="bPriceItemCancel" type="submit" class="cancel-form vh button close" value="<?= $this->getHtml('Cancel', '0', '0'); ?>">
                             </div>
                         </form>
                     </section>
@@ -813,7 +815,7 @@ echo $this->data['nav']->render();
                                     <tr class="animated medium-duration greenCircleFade" data-id="" draggable="false">
                                         <td>
                                             <i class="g-icon btn update-form">settings</i>
-                                            <input id="clientSalesPriceTable-remove-0" type="checkbox" class="hidden">
+                                            <input id="clientSalesPriceTable-remove-0" type="checkbox" class="vh">
                                             <label for="clientSalesPriceTable-remove-0" class="checked-visibility-alt"><i class="g-icon btn form-action">close</i></label>
                                             <span class="checked-visibility">
                                                 <label for="clientSalesPriceTable-remove-0" class="link default"><?= $this->getHtml('Cancel', '0', '0'); ?></label>
@@ -826,7 +828,7 @@ echo $this->data['nav']->render();
                                         <td data-tpl-text="/currency" data-tpl-value="/currency"></td>
                                         <td data-tpl-text="/quantity" data-tpl-value="/quantity"></td>
                                         <td data-tpl-text="/discount" data-tpl-value="/discount"></td>
-                                        <td data-tpl-text="/discountp" data-tpl-value="/discountp"></td>
+                                        <td data-tpl-text="/discountr" data-tpl-value="/discountr"></td>
                                         <td data-tpl-text="/bonus" data-tpl-value="/bonus"></td>
                                         <td data-tpl-text="/item_item" data-tpl-value="/item_item"></td>
                                         <td data-tpl-text="/item_segment" data-tpl-value="/item_segment"></td>
@@ -852,7 +854,7 @@ echo $this->data['nav']->render();
                                         <td>
                                             <i class="g-icon btn update-form">settings</i>
                                             <?php if ($value->name !== 'default') : ?>
-                                            <input id="clientSalesPriceTable-remove-<?= $value->id; ?>" type="checkbox" class="hidden">
+                                            <input id="clientSalesPriceTable-remove-<?= $value->id; ?>" type="checkbox" class="vh">
                                             <label for="clientSalesPriceTable-remove-<?= $value->id; ?>" class="checked-visibility-alt"><i class="g-icon btn form-action">close</i></label>
                                             <span class="checked-visibility">
                                                 <label for="clientSalesPriceTable-remove-<?= $value->id; ?>" class="link default"><?= $this->getHtml('Cancel', '0', '0'); ?></label>
@@ -866,7 +868,7 @@ echo $this->data['nav']->render();
                                         <td data-tpl-text="/currency" data-tpl-value="/currency"><?= $this->printHtml($value->currency); ?>
                                         <td data-tpl-text="/quantity" data-tpl-value="/quantity"><?= $value->quantity->getAmount(); ?>
                                         <td data-tpl-text="/discount" data-tpl-value="/discount"><?= $value->discount->getAmount(); ?>
-                                        <td data-tpl-text="/discountp" data-tpl-value="/discountp"><?= $this->getPercentage($value->discountPercentage->value / 10000 / 100); ?>
+                                        <td data-tpl-text="/discountr" data-tpl-value="/discountr"><?= $this->getPercentage($value->discountPercentage); ?>
                                         <td data-tpl-text="/bonus" data-tpl-value="/bonus"><?= $value->bonus->getAmount(); ?>
                                         <td data-tpl-text="/item_item" data-tpl-value="/item_item"><?= $this->printHtml((string) $value->item); ?>
                                         <td data-tpl-text="/item_segment" data-tpl-value="/item_segment"><?= $this->printHtml((string) $value->itemsegment->getL11n()); ?>
@@ -1153,8 +1155,8 @@ echo $this->data['nav']->render();
                                 <td><a href="<?= $url; ?>"><?= $this->printHtml((string) $value->quantity->getAmount()); ?></a>
                                 <td><a href="<?= $url; ?>"><?= $this->getCurrency($value->singleSalesPriceNet, symbol: ''); ?></a>
                                 <td><a href="<?= $url; ?>"><?= $this->getCurrency($value->singleDiscountP, symbol: ''); ?></a>
-                                <td><a href="<?= $url; ?>"><?= $this->getPercentage($value->singleDiscountR?->value ?? 0); ?></a>
-                                <td><a href="<?= $url; ?>"><?= $this->getNumeric($value->discountQ?->value ?? 0); ?></a>
+                                <td><a href="<?= $url; ?>"><?= $this->getPercentage($value->singleDiscountR); ?></a>
+                                <td><a href="<?= $url; ?>"><?= $this->getNumeric($value->discountQ?->value); ?></a>
                                 <td><a href="<?= $url; ?>"><?= $this->getCurrency($value->totalSalesPriceNet, symbol: ''); ?></a>
                             <?php endforeach; ?>
                             <?php if ($count === 0) : ?>
@@ -1172,6 +1174,7 @@ echo $this->data['nav']->render();
             <?= $this->data['note']->render('client-note', 'notes', $client->notes); ?>
         </div>
 
+        <?php if (!empty($logs)) : ?>
         <input type="radio" id="c-tab-17" name="tabular-2" checked>
         <div class="tab">
             <div class="row">
@@ -1203,11 +1206,10 @@ echo $this->data['nav']->render();
                             <tbody>
                             <?php
                                 $count    = 0;
-                                $audits   = $this->data['audits'] ?? [];
-                                $previous = empty($audits) ? HttpHeader::getAllHeaders()['Referer'] ?? 'admin/module/settings?id={?id}#{\#}' : 'admin/module/settings?{?}&audit=' . \reset($audits)->id . '&ptype=p#{\#}';
-                                $next     = empty($audits) ? HttpHeader::getAllHeaders()['Referer'] ?? 'admin/module/settings?id={?id}#{\#}' : 'admin/module/settings?{?}&audit=' . \end($audits)->id . '&ptype=n#{\#}';
+                                $previous = empty($logs) ? HttpHeader::getAllHeaders()['Referer'] ?? 'admin/module/settings?id={?id}#{\#}' : 'admin/module/settings?{?}&audit=' . \reset($logs)->id . '&ptype=p#{\#}';
+                                $next     = empty($logs) ? HttpHeader::getAllHeaders()['Referer'] ?? 'admin/module/settings?id={?id}#{\#}' : 'admin/module/settings?{?}&audit=' . \end($logs)->id . '&ptype=n#{\#}';
 
-                                foreach ($audits as $key => $audit) : ++$count;
+                                foreach ($logs as $key => $audit) : ++$count;
                                     $url = UriFactory::build('{/base}/admin/audit/view?{?}&id=' . $audit->id); ?>
                                 <tr tabindex="0" data-href="<?= $url; ?>">
                                     <td><?= $audit->id; ?>
@@ -1232,5 +1234,6 @@ echo $this->data['nav']->render();
                 </div>
             </div>
         </div>
+        <?php endif; ?>
     </div>
 </div>

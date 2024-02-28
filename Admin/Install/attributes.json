@@ -332,19 +332,6 @@
         "values": []
     },
     {
-        "name": "order_limit",
-        "l11n": {
-            "en": "Order limit",
-            "de": "Bestelllimit"
-        },
-        "value_type": 1,
-        "is_custom_allowed": true,
-        "validation_pattern": "",
-        "is_required": false,
-        "default_value": "",
-        "values": []
-    },
-    {
         "name": "minimum_order",
         "l11n": {
             "en": "MOQ",
