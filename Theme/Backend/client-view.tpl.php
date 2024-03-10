@@ -516,29 +516,48 @@ echo $this->data['nav']->render();
             <div class="row">
                 <div class="col-xs-12 col-md-6 col-lg-4">
                     <section class="portlet">
-                        <div class="portlet-head"><?= $this->getHtml('PaymentTerm'); ?></div>
-                        <div class="portlet-body">
-                            <form>
-                                <table class="layout wf-100">
-                                    <tr><td><label for="iSource"><?= $this->getHtml('ID', '0', '0'); ?></label>
-                                    <tr><td><span class="input"><button type="button" formaction=""><i class="g-icon">book</i></button><input id="iSource" name="source" type="text" placeholder=""></span>
-                                    <tr><td><label for="iSegment"><?= $this->getHtml('Segment'); ?></label>
-                                    <tr><td><input id="iSegment" name="segment" type="text" placeholder="">
-                                    <tr><td><label for="iProductgroup"><?= $this->getHtml('Productgroup'); ?></label>
-                                    <tr><td><input id="iProductgroup" name="productgroup" type="text" placeholder="">
-                                    <tr><td><label for="iGroup"><?= $this->getHtml('Group'); ?></label>
-                                    <tr><td><input id="iGroup" name="group" type="text" placeholder="">
-                                    <tr><td><label for="iArticlegroup"><?= $this->getHtml('Articlegroup'); ?></label>
-                                    <tr><td><input id="iArticlegroup" name="articlegroup" type="text" placeholder="">
-                                    <tr><td><label for="iTerm"><?= $this->getHtml('Type'); ?></label>
-                                    <tr><td><select id="iTerm" name="term" required>
+                        <form>
+                            <div class="portlet-head"><?= $this->getHtml('PaymentTerm'); ?></div>
+                            <div class="portlet-body">
+                                <div class="form-group">
+                                    <label for="iSource"><?= $this->getHtml('ID', '0', '0'); ?></label>
+                                    <span class="input"><button type="button" formaction=""><i class="g-icon">book</i></button><input id="iSource" name="source" type="text" placeholder=""></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="iSegment"><?= $this->getHtml('Segment'); ?></label>
+                                    <input id="iSegment" name="segment" type="text" placeholder="">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="iProductgroup"><?= $this->getHtml('Productgroup'); ?></label>
+                                    <input id="iProductgroup" name="productgroup" type="text" placeholder="">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="iGroup"><?= $this->getHtml('Group'); ?></label>
+                                    <input id="iGroup" name="group" type="text" placeholder="">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="iArticlegroup"><?= $this->getHtml('Articlegroup'); ?></label>
+                                    <input id="iArticlegroup" name="articlegroup" type="text" placeholder="">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="iTerm"><?= $this->getHtml('Type'); ?></label>
+                                    <select id="iTerm" name="term" required>
                                                 <option>
                                             </select>
-                                    <tr><td><span class="check"><input type="checkbox" id="iFreightage" name="freightage"><label for="iFreightage"><?= $this->getHtml('Freightage'); ?></label></span>
-                                    <tr><td colspan="2"><input type="submit" value="<?= $this->getHtml('Add', '0', '0'); ?>">
-                                </table>
-                            </form>
-                        </div>
+                                </div>
+                                <div class="form-group">
+                                    <span class="check"><input type="checkbox" id="iFreightage" name="freightage"><label for="iFreightage"><?= $this->getHtml('Freightage'); ?></label></span>
+                                </div>
+                            </div>
+                            <div class="portlet-foot">
+                                <input type="submit" value="<?= $this->getHtml('Add', '0', '0'); ?>">
+                            </div>
+                        </form>
                     </section>
                 </div>
             </div>
@@ -579,7 +598,7 @@ echo $this->data['nav']->render();
                                                     </select>
                                                 </div>
                                                 <div>
-                                                    <input id="iPricePrice" class="wf-100" name="price_new" type="number" data-tpl-text="/price" data-tpl-value="/price">
+                                                    <input id="iPricePrice" class="wf-100" name="price_new" type="number" step="any" data-tpl-text="/price" data-tpl-value="/price">
                                                 </div>
                                             </div>
                                         </div>
@@ -587,7 +606,7 @@ echo $this->data['nav']->render();
                                     <div>
                                         <div class="form-group">
                                             <label for="iPriceQuantity"><?= $this->getHtml('Quantity'); ?></label>
-                                            <input id="iPriceQuantity" name="quantity" type="number" data-tpl-text="/quantity" data-tpl-value="/quantity">
+                                            <input id="iPriceQuantity" name="quantity" type="number" step="any" data-tpl-text="/quantity" data-tpl-value="/quantity">
                                         </div>
                                     </div>
                                 </div>
@@ -596,21 +615,21 @@ echo $this->data['nav']->render();
                                     <div>
                                         <div class="form-group">
                                             <label for="iPriceDiscount"><?= $this->getHtml('Discount'); ?></label>
-                                            <input id="iPriceDiscount" name="discount" type="number" data-tpl-text="/discount" data-tpl-value="/discount">
+                                            <input id="iPriceDiscount" name="discount" type="number" step="any" data-tpl-text="/discount" data-tpl-value="/discount">
                                         </div>
                                     </div>
 
                                     <div>
                                         <div class="form-group">
                                             <label for="iPriceDiscountR"><?= $this->getHtml('DiscountP'); ?></label>
-                                            <input id="iPriceDiscountR" name="discountPercentage" type="number" data-tpl-text="/discountr" data-tpl-value="/discountr">
+                                            <input id="iPriceDiscountR" name="discountPercentage" type="number" step="any" data-tpl-text="/discountr" data-tpl-value="/discountr">
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="iPriceBonus"><?= $this->getHtml('Bonus'); ?></label>
-                                    <input id="iPriceBonus" name="bonus" type="number" data-tpl-text="/bonus" data-tpl-value="/bonus">
+                                    <input id="iPriceBonus" name="bonus" type="number" step="any" data-tpl-text="/bonus" data-tpl-value="/bonus">
                                 </div>
                             </div>
                             <div class="portlet-separator"></div>
