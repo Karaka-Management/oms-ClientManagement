@@ -88,6 +88,16 @@ final class ApiController extends Controller
         return $client->id === 0 ? null : $client;
     }
 
+    /**
+     * Set VAT for client
+     *
+     * @param RequestAbstract $request Request
+     * @param Client          $client  Client
+     *
+     * @return void
+     *
+     * @since 1.0.0
+     */
     public function setVAT(RequestAbstract $request, Client $client) : void
     {
         /** @var \Modules\Attribute\Models\AttributeType $type */
@@ -105,6 +115,16 @@ final class ApiController extends Controller
             ->apiClientAttributeCreate($internalRequest, $internalResponse);
     }
 
+    /**
+     * Validate VAT of client
+     *
+     * @param RequestAbstract $request Request
+     * @param Client          $client  Client
+     *
+     * @return array
+     *
+     * @since 1.0.0
+     */
     public function validateVAT(RequestAbstract $request, Client $client) : array
     {
         /** @var \Modules\Organization\Models\Unit $unit */
@@ -146,6 +166,16 @@ final class ApiController extends Controller
         return $validate;
     }
 
+    /**
+     * Set tax code for client
+     *
+     * @param RequestAbstract $request Request
+     * @param Client          $client  Client
+     *
+     * @return void
+     *
+     * @since 1.0.0
+     */
     public function defineTaxCode(RequestAbstract $request, Client $client) : void
     {
         /** @var \Modules\Organization\Models\Unit $unit */
@@ -246,16 +276,31 @@ final class ApiController extends Controller
         $this->createStandardCreateResponse($request, $response, $client);
     }
 
+    /**
+     * Create client segmentation.
+     *
+     * Default: segment->section->sales_group and to the side client_type
+     *
+     * @param RequestAbstract  $request  Request
+     * @param ResponseAbstract $response Response
+     * @param Client           $client   Client
+     *
+     * @return void
+     *
+     * @since 1.0.0
+     */
     private function createClientSegmentation(RequestAbstract $request, ResponseAbstract $response, Client $client) : void
     {
         /** @var \Model\Setting $settings */
         $settings = $this->app->appSettings->get(null, SettingsEnum::DEFAULT_SEGMENTATION);
 
+        /** @var array $segmentation */
         $segmentation = \json_decode($settings->content, true);
         if ($segmentation === false || $segmentation === null) {
             return;
         }
 
+        /** @var \Modules\Attribute\Models\AttributeType[] $types */
         $types = ClientAttributeTypeMapper::getAll()
             ->where('name', \array_keys($segmentation), 'IN')
             ->execute();

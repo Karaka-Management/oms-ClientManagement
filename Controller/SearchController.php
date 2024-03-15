@@ -48,7 +48,7 @@ final class SearchController extends Controller
      */
     public function searchGeneral(RequestAbstract $request, ResponseAbstract $response, array $data = []) : void
     {
-        $names = \explode(' ', ($request->getDataString('search') ?? ''));
+        $names   = \explode(' ', ($request->getDataString('search') ?? ''));
         $names[] = ($request->getDataString('search') ?? '');
 
         $mapper = ClientMapper::getAll()
@@ -72,7 +72,7 @@ final class SearchController extends Controller
             // Get item profile image
             // @feature Create a new read mapper function that returns relation models instead of its own model
             //      https://github.com/Karaka-Management/phpOMS/issues/320
-            $query   = new Builder($this->app->dbPool->get());
+            $query    = new Builder($this->app->dbPool->get());
             $iResults = $query->selectAs(ClientMapper::HAS_MANY['files']['external'], 'file')
                 ->from(ClientMapper::TABLE)
                 ->leftJoin(ClientMapper::HAS_MANY['files']['table'])
@@ -92,16 +92,16 @@ final class SearchController extends Controller
                 ->execute();
 
             $results[] = [
-                'title'     => $account->account->name1 . ' ' . $account->account->name2,
-                'link'      => '{/base}/sales/client/view?id=' . $account->id,
+                'title' => $account->account->name1 . ' ' . $account->account->name2,
+                'link'  => '{/base}/sales/client/view?id=' . $account->id,
                 'email' => $account->account->getContactByType(ContactType::EMAIL)->content,
                 'phone' => $account->account->getContactByType(ContactType::PHONE)->content,
-                'city' => $account->mainAddress?->city,
+                'city'  => $account->mainAddress->city,
                 'image' => $image->id === 0
                     ? 'Web/Backend/img/logo_grey.png'
                     : $image->getPath(),
-                'type'  => 'list_accounts',
-                'module'  => 'Client Management',
+                'type'   => 'list_accounts',
+                'module' => 'Client Management',
             ];
         }
 

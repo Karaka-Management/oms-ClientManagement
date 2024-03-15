@@ -226,7 +226,6 @@ final class BackendController extends Controller
             $pkValue = $request->getDataString('number');
         }
 
-        /** @var \Modules\ClientManagement\Models\Client */
         $view->data['client'] = ClientMapper::get()
             ->with('account')
             ->with('account/addresses')
@@ -253,7 +252,6 @@ final class BackendController extends Controller
         $view->data['attributeView']                               = new \Modules\Attribute\Theme\Backend\Components\AttributeView($this->app->l11nManager, $request, $response);
         $view->data['attributeView']->data['default_localization'] = $this->app->l11nServer;
 
-        /** @var \Modules\Attribute\Models\AttributeType[] */
         $view->data['attributeTypes'] = ClientAttributeTypeMapper::getAll()
             ->with('l11n')
             ->where('l11n/language', $response->header->l11n->language)
@@ -292,7 +290,6 @@ final class BackendController extends Controller
 
         $view->data['hasBilling'] = $this->app->moduleManager->isActive('Billing');
 
-        /** @var \Modules\Billing\Models\Price\Price[] */
         $view->data['prices'] = $view->data['hasBilling']
             ? \Modules\Billing\Models\Price\PriceMapper::getAll()
                 ->where('client', $view->data['client']->id)
@@ -300,6 +297,7 @@ final class BackendController extends Controller
                 ->execute()
             : [];
 
+        /** @var \Modules\Attribute\Models\AttributeType[] $tmp */
         $tmp = ItemAttributeTypeMapper::getAll()
             ->with('defaults')
             ->with('defaults/l11n')
@@ -308,8 +306,8 @@ final class BackendController extends Controller
                 'sales_tax_code', 'purchase_tax_code',
             ], 'IN')
             ->where('defaults/l11n', (new Where($this->app->dbPool->get()))
-                ->where(ItemAttributeValueL11nMapper::getColumnByMember('ref'), '=', null)
-                ->orWhere(ItemAttributeValueL11nMapper::getColumnByMember('language'), '=', $response->header->l11n->language))
+                ->where(ItemAttributeValueL11nMapper::getColumnByMember('ref') ?? '', '=', null)
+                ->orWhere(ItemAttributeValueL11nMapper::getColumnByMember('language') ?? '', '=', $response->header->l11n->language))
             ->execute();
 
         $defaultAttributeTypes = [];
@@ -319,6 +317,7 @@ final class BackendController extends Controller
 
         $view->data['defaultAttributeTypes'] = $defaultAttributeTypes;
 
+        /** @var \Modules\Attribute\Models\AttributeType[] $tmp */
         $tmp = ClientAttributeTypeMapper::getAll()
             ->with('defaults')
             ->with('defaults/l11n')
@@ -327,8 +326,8 @@ final class BackendController extends Controller
                 'sales_tax_code',
             ], 'IN')
             ->where('defaults/l11n', (new Where($this->app->dbPool->get()))
-                ->where(ClientAttributeValueL11nMapper::getColumnByMember('ref'), '=', null)
-                ->orWhere(ClientAttributeValueL11nMapper::getColumnByMember('language'), '=', $response->header->l11n->language))
+                ->where(ClientAttributeValueL11nMapper::getColumnByMember('ref') ?? '', '=', null)
+                ->orWhere(ClientAttributeValueL11nMapper::getColumnByMember('language') ?? '', '=', $response->header->l11n->language))
             ->execute();
 
         $clientSegmentationTypes = [];
@@ -359,7 +358,6 @@ final class BackendController extends Controller
 
         // @todo join audit with files, attributes, localization, prices, notes, ...
 
-        /** @var \Modules\Media\Models\Media[] */
         $view->data['files'] = MediaMapper::getAll()
             ->with('types')
             ->join('id', ClientMapper::class, 'files') // id = media id, files = client relations

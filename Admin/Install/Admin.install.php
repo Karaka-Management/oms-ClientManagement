@@ -18,10 +18,10 @@ use Modules\ClientManagement\Models\SettingsEnum;
 return [
     [
         "description" => "Default item segmentation (segment, section, sales group, product group)",
-        'type'    => 'setting',
-        'name'    => SettingsEnum::DEFAULT_SEGMENTATION,
-        'content' => '{"segment":1, "section":1, "client_group":1}',
-        'pattern' => '',
-        'module'  => ApiController::NAME,
+        'type'        => 'setting',
+        'name'        => SettingsEnum::DEFAULT_SEGMENTATION,
+        'content'     => '{"segment":1, "section":1, "client_group":1}',
+        'pattern'     => '',
+        'module'      => ApiController::NAME,
     ],
 ];
