@@ -13,6 +13,7 @@
 declare(strict_types=1);
 
 return ['ClientManagement' => [
+    'Account'              => 'Konto',
     'Accounting'           => 'Buchhaltung',
     'Addition'             => 'Zusatz',
     'Address'              => 'Adresse',
