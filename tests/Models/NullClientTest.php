@@ -22,7 +22,7 @@ use Modules\ClientManagement\Models\NullClient;
 final class NullClientTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @covers Modules\ClientManagement\Models\NullClient
+     * @covers \Modules\ClientManagement\Models\NullClient
      * @group module
      */
     public function testNull() : void
@@ -31,7 +31,7 @@ final class NullClientTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\ClientManagement\Models\NullClient
+     * @covers \Modules\ClientManagement\Models\NullClient
      * @group module
      */
     public function testId() : void
@@ -41,7 +41,7 @@ final class NullClientTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\ClientManagement\Models\NullClient
+     * @covers \Modules\ClientManagement\Models\NullClient
      * @group module
      */
     public function testJsonSerialize() : void

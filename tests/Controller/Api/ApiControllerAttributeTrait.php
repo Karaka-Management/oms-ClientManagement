@@ -23,7 +23,7 @@ use phpOMS\Message\Http\RequestStatusCode;
 trait ApiControllerAttributeTrait
 {
     /**
-     * @covers Modules\ClientManagement\Controller\ApiController
+     * @covers \Modules\ClientManagement\Controller\ApiController
      * @group module
      */
     public function testApiClientAttributeTypeCreate() : void
@@ -41,7 +41,7 @@ trait ApiControllerAttributeTrait
     }
 
     /**
-     * @covers Modules\ClientManagement\Controller\ApiController
+     * @covers \Modules\ClientManagement\Controller\ApiController
      * @group module
      */
     public function testApiClientAttributeTypeL11nCreate() : void
@@ -59,7 +59,7 @@ trait ApiControllerAttributeTrait
     }
 
     /**
-     * @covers Modules\ClientManagement\Controller\ApiController
+     * @covers \Modules\ClientManagement\Controller\ApiController
      * @group module
      */
     public function testApiClientAttributeValueIntCreate() : void
@@ -79,7 +79,7 @@ trait ApiControllerAttributeTrait
     }
 
     /**
-     * @covers Modules\ClientManagement\Controller\ApiController
+     * @covers \Modules\ClientManagement\Controller\ApiController
      * @group module
      */
     public function testApiClientAttributeValueStrCreate() : void
@@ -98,7 +98,7 @@ trait ApiControllerAttributeTrait
     }
 
     /**
-     * @covers Modules\ClientManagement\Controller\ApiController
+     * @covers \Modules\ClientManagement\Controller\ApiController
      * @group module
      */
     public function testApiClientAttributeValueFloatCreate() : void
@@ -117,7 +117,7 @@ trait ApiControllerAttributeTrait
     }
 
     /**
-     * @covers Modules\ClientManagement\Controller\ApiController
+     * @covers \Modules\ClientManagement\Controller\ApiController
      * @group module
      */
     public function testApiClientAttributeValueDatCreate() : void
@@ -136,7 +136,7 @@ trait ApiControllerAttributeTrait
     }
 
     /**
-     * @covers Modules\ClientManagement\Controller\ApiController
+     * @covers \Modules\ClientManagement\Controller\ApiController
      * @group module
      */
     public function testApiClientAttributeCreate() : void
@@ -154,7 +154,7 @@ trait ApiControllerAttributeTrait
     }
 
     /**
-     * @covers Modules\ClientManagement\Controller\ApiController
+     * @covers \Modules\ClientManagement\Controller\ApiController
      * @group module
      */
     public function testApiClientAttributeValueCreateInvalidData() : void
@@ -170,7 +170,7 @@ trait ApiControllerAttributeTrait
     }
 
     /**
-     * @covers Modules\ClientManagement\Controller\ApiController
+     * @covers \Modules\ClientManagement\Controller\ApiController
      * @group module
      */
     public function testApiClientAttributeTypeCreateInvalidData() : void
@@ -186,7 +186,7 @@ trait ApiControllerAttributeTrait
     }
 
     /**
-     * @covers Modules\ClientManagement\Controller\ApiController
+     * @covers \Modules\ClientManagement\Controller\ApiController
      * @group module
      */
     public function testApiClientAttributeTypeL11nCreateInvalidData() : void
@@ -202,7 +202,7 @@ trait ApiControllerAttributeTrait
     }
 
     /**
-     * @covers Modules\ClientManagement\Controller\ApiController
+     * @covers \Modules\ClientManagement\Controller\ApiController
      * @group module
      */
     public function testApiClientAttributeCreateInvalidData() : void

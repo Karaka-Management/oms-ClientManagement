@@ -35,7 +35,7 @@ trait ApiControllerClientTrait
     }
 
     /**
-     * @covers Modules\ClientManagement\Controller\ApiController
+     * @covers \Modules\ClientManagement\Controller\ApiController
      * @group module
      */
     public function testApiClientCreate() : void
@@ -58,7 +58,7 @@ trait ApiControllerClientTrait
     }
 
     /**
-     * @covers Modules\ClientManagement\Controller\ApiController
+     * @covers \Modules\ClientManagement\Controller\ApiController
      * @group module
      */
     public function testApiClientCreateInvalidData() : void
@@ -74,7 +74,7 @@ trait ApiControllerClientTrait
     }
 
     /**
-     * @covers Modules\ClientManagement\Controller\ApiController
+     * @covers \Modules\ClientManagement\Controller\ApiController
      * @group module
      */
     public function testApiClientProfileImageCreate() : void
@@ -105,7 +105,7 @@ trait ApiControllerClientTrait
     }
 
     /**
-     * @covers Modules\ClientManagement\Controller\ApiController
+     * @covers \Modules\ClientManagement\Controller\ApiController
      * @group module
      */
     public function testApiClientFileCreate() : void
@@ -135,7 +135,7 @@ trait ApiControllerClientTrait
     }
 
     /**
-     * @covers Modules\ClientManagement\Controller\ApiController
+     * @covers \Modules\ClientManagement\Controller\ApiController
      * @group module
      */
     public function testApiClientNoteCreate() : void
@@ -156,7 +156,7 @@ trait ApiControllerClientTrait
     }
 
     /**
-     * @covers Modules\ClientManagement\Controller\ApiController
+     * @covers \Modules\ClientManagement\Controller\ApiController
      * @group module
      */
     public function testApiFileCreateInvalidData() : void

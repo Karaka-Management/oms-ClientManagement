@@ -34,7 +34,7 @@ final class ClientTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\ClientManagement\Models\Client
+     * @covers \Modules\ClientManagement\Models\Client
      * @group module
      */
     public function testDefault() : void
@@ -53,7 +53,7 @@ final class ClientTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\ClientManagement\Models\Client
+     * @covers \Modules\ClientManagement\Models\Client
      * @group module
      */
     public function testNoteInputOutput() : void
@@ -63,7 +63,7 @@ final class ClientTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @covers Modules\ClientManagement\Models\Client
+     * @covers \Modules\ClientManagement\Models\Client
      * @group module
      */
     public function testSerialize() : void
