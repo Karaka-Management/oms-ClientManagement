@@ -36,8 +36,8 @@ trait ApiControllerClientTrait
 
     /**
      * @covers \Modules\ClientManagement\Controller\ApiController
-     * @group module
      */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testApiClientCreate() : void
     {
         $response = new HttpResponse();
@@ -59,8 +59,8 @@ trait ApiControllerClientTrait
 
     /**
      * @covers \Modules\ClientManagement\Controller\ApiController
-     * @group module
      */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testApiClientCreateInvalidData() : void
     {
         $response = new HttpResponse();
@@ -75,8 +75,8 @@ trait ApiControllerClientTrait
 
     /**
      * @covers \Modules\ClientManagement\Controller\ApiController
-     * @group module
      */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testApiClientProfileImageCreate() : void
     {
         $response = new HttpResponse();
@@ -106,8 +106,8 @@ trait ApiControllerClientTrait
 
     /**
      * @covers \Modules\ClientManagement\Controller\ApiController
-     * @group module
      */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testApiClientFileCreate() : void
     {
         $response = new HttpResponse();
@@ -136,8 +136,8 @@ trait ApiControllerClientTrait
 
     /**
      * @covers \Modules\ClientManagement\Controller\ApiController
-     * @group module
      */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testApiClientNoteCreate() : void
     {
         $response = new HttpResponse();
@@ -157,8 +157,8 @@ trait ApiControllerClientTrait
 
     /**
      * @covers \Modules\ClientManagement\Controller\ApiController
-     * @group module
      */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testApiFileCreateInvalidData() : void
     {
         $response = new HttpResponse();

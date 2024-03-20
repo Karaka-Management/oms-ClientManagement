@@ -23,12 +23,10 @@ use Modules\Profile\Models\ProfileMapper;
 /**
  * @internal
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\Modules\ClientManagement\Models\ClientMapper::class)]
 final class ClientMapperTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @covers \Modules\ClientManagement\Models\ClientMapper
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testCR() : void
     {
         $client         = new Client();

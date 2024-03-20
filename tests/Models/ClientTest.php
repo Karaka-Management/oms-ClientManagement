@@ -21,6 +21,7 @@ use Modules\Editor\Models\EditorDoc;
 /**
  * @internal
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\Modules\ClientManagement\Models\Client::class)]
 final class ClientTest extends \PHPUnit\Framework\TestCase
 {
     private Client $client;
@@ -33,10 +34,7 @@ final class ClientTest extends \PHPUnit\Framework\TestCase
         $this->client = new Client();
     }
 
-    /**
-     * @covers \Modules\ClientManagement\Models\Client
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testDefault() : void
     {
         self::assertEquals(0, $this->client->id);
@@ -52,20 +50,14 @@ final class ClientTest extends \PHPUnit\Framework\TestCase
         self::assertInstanceOf('\phpOMS\Stdlib\Base\Address', $this->client->mainAddress);
     }
 
-    /**
-     * @covers \Modules\ClientManagement\Models\Client
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testNoteInputOutput() : void
     {
         $this->client->addNote(new EditorDoc());
         self::assertCount(1, $this->client->getNotes());
     }
 
-    /**
-     * @covers \Modules\ClientManagement\Models\Client
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testSerialize() : void
     {
         $this->client->number        = '123456';

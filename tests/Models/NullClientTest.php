@@ -19,31 +19,23 @@ use Modules\ClientManagement\Models\NullClient;
 /**
  * @internal
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\Modules\ClientManagement\Models\NullClient::class)]
 final class NullClientTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @covers \Modules\ClientManagement\Models\NullClient
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testNull() : void
     {
         self::assertInstanceOf('\Modules\ClientManagement\Models\Client', new NullClient());
     }
 
-    /**
-     * @covers \Modules\ClientManagement\Models\NullClient
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testId() : void
     {
         $null = new NullClient(2);
         self::assertEquals(2, $null->id);
     }
 
-    /**
-     * @covers \Modules\ClientManagement\Models\NullClient
-     * @group module
-     */
+    #[\PHPUnit\Framework\Attributes\Group('module')]
     public function testJsonSerialize() : void
     {
         $null = new NullClient(2);
