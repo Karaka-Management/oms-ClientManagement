@@ -25,6 +25,7 @@ use phpOMS\Localization\ISO4217CharEnum;
 use phpOMS\Localization\ISO639Enum;
 use phpOMS\Localization\RegionEnum;
 use phpOMS\Message\Http\HttpHeader;
+use phpOMS\Stdlib\Base\FloatInt;
 use phpOMS\Stdlib\Base\SmartDateTime;
 use phpOMS\Uri\UriFactory;
 
@@ -373,7 +374,7 @@ echo $this->data['nav']->render();
                                         <td><a href="<?= $url; ?>"><?= $invoice->type->getL11n(); ?></a>
                                         <td><a href="<?= $url; ?>"><?= $invoice->billTo; ?></a>
                                         <td><a href="<?= $url; ?>"><?= $this->getCurrency($invoice->netSales, symbol: ''); ?></a>
-                                        <td><a href="<?= $url; ?>"><?= $invoice->createdAt->format('Y-m-d'); ?></a>
+                                        <td><a href="<?= $url; ?>"><?= $invoice->performanceDate->format('Y-m-d'); ?></a>
                                     <?php endforeach; ?>
                                     <?php if ($count === 0) : ?>
                                     <tr><td colspan="5" class="empty"><?= $this->getHtml('Empty', '0', '0'); ?>
@@ -388,11 +389,65 @@ echo $this->data['nav']->render();
                     <?php if ($this->data['hasBilling']) :
                         $monthlySalesCosts = SalesBillMapper::getClientMonthlySalesCosts($client->id, (new SmartDateTime('now'))->createModify(-1), new SmartDateTime('now'));
                     ?>
+                    <?php if (!empty($monthlySalesCosts)) : ?>
                     <div class="row">
+                        <?php $segmentSales = SalesBillMapper::getClientAttributeNetSales($client->id, 'segment', 'en', (new SmartDateTime('now'))->createModify(-1), new SmartDateTime('now')); ?>
                         <div class="col-xs-12 col-md-6">
                             <section class="portlet">
                                 <div class="portlet-head"><?= $this->getHtml('Segments'); ?></div>
-                                <div class="portlet-body"></div>
+                                <div class="portlet-body">
+                                <div style="position: relative; width: 100%; height: 100%; aspect-ratio: 2;">
+                                    <canvas id="sales-region" data-chart='{
+                                            "type": "bar",
+                                            "data": {
+                                                "labels": [
+                                                    <?php
+                                                        $temp = [];
+                                                        foreach ($segmentSales as $segment) {
+                                                            $temp[] = $segment['title'];
+                                                        }
+                                                    ?>
+                                                    <?= '"' . \implode('", "', $temp) . '"'; ?>
+                                                ],
+                                                "datasets": [
+                                                    {
+                                                        "label": "<?= $this->getHtml('Sales'); ?>",
+                                                        "type": "bar",
+                                                        "data": [
+                                                            <?php
+                                                                $temp = [];
+                                                                foreach ($segmentSales as $segment) {
+                                                                    $temp[] = (float) (((int) $segment['net_sales']) / FloatInt::DIVISOR);
+                                                                }
+                                                            ?>
+                                                            <?= \implode(',', $temp); ?>
+                                                        ],
+                                                        "yAxisID": "axis1",
+                                                        "backgroundColor": "rgb(54, 162, 235)"
+                                                    }
+                                                ]
+                                            },
+                                            "options": {
+                                                "responsive": true,
+                                                "scales": {
+                                                    "axis1": {
+                                                        "id": "axis1",
+                                                        "display": true,
+                                                        "position": "left",
+                                                        "ticks": {
+                                                            "precision": 0
+                                                        }
+                                                    }
+                                                },
+                                                "plugins": {
+                                                    "legend": {
+                                                        "display": false
+                                                    }
+                                                }
+                                            }
+                                    }'></canvas>
+                                    </div>
+                                </div>
                             </section>
                         </div>
 
@@ -400,6 +455,7 @@ echo $this->data['nav']->render();
                             <section class="portlet">
                                 <div class="portlet-head"><?= $this->getHtml('Sales'); ?></div>
                                 <div class="portlet-body">
+                                    <div style="position: relative; width: 100%; height: 100%; aspect-ratio: 2;">
                                     <canvas id="sales-region" data-chart='{
                                             "type": "bar",
                                             "data": {
@@ -437,7 +493,7 @@ echo $this->data['nav']->render();
                                                             <?php
                                                                 $temp = [];
                                                                 foreach ($monthlySalesCosts as $monthly) {
-                                                                    $temp[] = (float) (((int) $monthly['net_sales']) / 1000);
+                                                                    $temp[] = (float) (((int) $monthly['net_sales']) / FloatInt::DIVISOR);
                                                                 }
                                                             ?>
                                                             <?= \implode(',', $temp); ?>
@@ -453,7 +509,10 @@ echo $this->data['nav']->render();
                                                     "axis1": {
                                                         "id": "axis1",
                                                         "display": true,
-                                                        "position": "left"
+                                                        "position": "left",
+                                                        "ticks": {
+                                                            "precision": 0
+                                                        }
                                                     },
                                                     "axis2": {
                                                         "id": "axis2",
@@ -476,10 +535,12 @@ echo $this->data['nav']->render();
                                                 }
                                             }
                                     }'></canvas>
+                                    </div>
                                 </div>
                             </section>
                         </div>
                     </div>
+                    <?php endif; ?>
                     <?php endif; ?>
                 </div>
             </div>
@@ -521,27 +582,27 @@ echo $this->data['nav']->render();
                             <div class="portlet-body">
                                 <div class="form-group">
                                     <label for="iSource"><?= $this->getHtml('ID', '0', '0'); ?></label>
-                                    <span class="input"><button type="button" formaction=""><i class="g-icon">book</i></button><input id="iSource" name="source" type="text" placeholder=""></span>
+                                    <span class="input"><button type="button" formaction=""><i class="g-icon">book</i></button><input id="iSource" name="source" type="text"></span>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="iSegment"><?= $this->getHtml('Segment'); ?></label>
-                                    <input id="iSegment" name="segment" type="text" placeholder="">
+                                    <input id="iSegment" name="segment" type="text">
                                 </div>
 
                                 <div class="form-group">
                                     <label for="iProductgroup"><?= $this->getHtml('Productgroup'); ?></label>
-                                    <input id="iProductgroup" name="productgroup" type="text" placeholder="">
+                                    <input id="iProductgroup" name="productgroup" type="text">
                                 </div>
 
                                 <div class="form-group">
                                     <label for="iGroup"><?= $this->getHtml('Group'); ?></label>
-                                    <input id="iGroup" name="group" type="text" placeholder="">
+                                    <input id="iGroup" name="group" type="text">
                                 </div>
 
                                 <div class="form-group">
                                     <label for="iArticlegroup"><?= $this->getHtml('Articlegroup'); ?></label>
-                                    <input id="iArticlegroup" name="articlegroup" type="text" placeholder="">
+                                    <input id="iArticlegroup" name="articlegroup" type="text">
                                 </div>
 
                                 <div class="form-group">
@@ -568,7 +629,7 @@ echo $this->data['nav']->render();
             <div class="row">
                 <div class="col-xs-12 col-md-6">
                     <section class="portlet">
-                        <form id="clientSalesPriceForm" action="<?= UriFactory::build('{/api}bill/price'); ?>" method="post"
+                        <form id="clientSalesPriceForm" action="<?= UriFactory::build('{/api}bill/price?csrf={$CSRF}'); ?>" method="post"
                             data-ui-container="#clientSalesPriceTable tbody"
                             data-add-form="clientSalesPriceForm"
                             data-add-tpl="#clientSalesPriceTable tbody .oms-add-tpl-clientSalesPrice">
@@ -921,7 +982,7 @@ echo $this->data['nav']->render();
                     $client->attributes,
                     $this->data['attributeTypes'] ?? [],
                     $this->data['units'] ?? [],
-                    '{/api}client/attribute',
+                    '{/api}client/attribute?csrf={$CSRF}',
                     $client->id
                 );
                 ?>
@@ -948,6 +1009,7 @@ echo $this->data['nav']->render();
                                 <td class="wf-100"><?= $this->getHtml('Name'); ?>
                                 <td><?= $this->getHtml('Net'); ?>
                                 <td><?= $this->getHtml('Date'); ?>
+                                <td><?= $this->getHtml('Created'); ?>
                             <tbody>
                             <?php
                             $allInvoices = BillMapper::getAll()
@@ -956,7 +1018,6 @@ echo $this->data['nav']->render();
                                 ->where('client', $client->id)
                                 ->where('type/l11n/language', $this->response->header->l11n->language)
                                 ->where('billDate', SmartDateTime::startOfYear($this->data['business_start']), '>=')
-                                ->where('billDate', new \DateTime('now'), '<=')
                                 ->execute();
 
                             $count = 0;
@@ -970,6 +1031,7 @@ echo $this->data['nav']->render();
                                 <td><a href="<?= $url; ?>"><?= $invoice->type->getL11n(); ?></a>
                                 <td><a href="<?= $url; ?>"><?= $invoice->billTo; ?></a>
                                 <td><a href="<?= $url; ?>"><?= $this->getCurrency($invoice->netSales, symbol: ''); ?></a>
+                                <td><a href="<?= $url; ?>"><?= $invoice->performanceDate->format('Y-m-d'); ?></a>
                                 <td><a href="<?= $url; ?>"><?= $invoice->createdAt->format('Y-m-d'); ?></a>
                             <?php endforeach; ?>
                             <?php if ($count === 0) : ?>
@@ -987,7 +1049,7 @@ echo $this->data['nav']->render();
             <div class="row">
                 <div class="col-xs-12 col-md-6">
                     <section class="portlet">
-                        <form id="itemAccounting" action="<?= UriFactory::build('{/api}item/accounting'); ?>" method="post">
+                        <form id="itemAccounting" action="<?= UriFactory::build('{/api}item/accounting?csrf={$CSRF}'); ?>" method="post">
                             <div class="portlet-head"><?= $this->getHtml('Accounting'); ?></div>
                             <div class="portlet-body">
                                 <div class="form-group">
@@ -1245,10 +1307,12 @@ echo $this->data['nav']->render();
                             <?php endif; ?>
                         </table>
                         </div>
+                        <!--
                         <div class="portlet-foot">
                             <a tabindex="0" class="button" href="<?= UriFactory::build($previous); ?>"><?= $this->getHtml('Previous', '0', '0'); ?></a>
                             <a tabindex="0" class="button" href="<?= UriFactory::build($next); ?>"><?= $this->getHtml('Next', '0', '0'); ?></a>
                         </div>
+                        -->
                     </div>
                 </div>
             </div>

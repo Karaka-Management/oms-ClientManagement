@@ -62,17 +62,15 @@ final class BackendController extends Controller
      */
     public function viewClientManagementAttributeTypeList(RequestAbstract $request, ResponseAbstract $response, array $data = []) : RenderableInterface
     {
-        $view = new View($this->app->l11nManager, $request, $response);
-        $view->setTemplate('/Modules/ClientManagement/Theme/Backend/attribute-type-list');
-        $view->data['nav'] = $this->app->moduleManager->get('Navigation')->createNavigationMid(1004801001, $request, $response);
+        $view = new \Modules\Attribute\Theme\Backend\Components\AttributeTypeListView($this->app->l11nManager, $request, $response);
+        $view->data['nav'] = $this->app->moduleManager->get('Navigation')->createNavigationMid(1003101001, $request, $response);
 
-        /** @var \Modules\Attribute\Models\AttributeType[] $attributes */
-        $attributes = ClientAttributeTypeMapper::getAll()
+        $view->attributes = ClientAttributeTypeMapper::getAll()
             ->with('l11n')
             ->where('l11n/language', $response->header->l11n->language)
             ->execute();
 
-        $view->data['attributes'] = $attributes;
+        $view->path = 'sales/client';
 
         return $view;
     }
@@ -93,7 +91,7 @@ final class BackendController extends Controller
     {
         $view = new View($this->app->l11nManager, $request, $response);
         $view->setTemplate('/Modules/ClientManagement/Theme/Backend/attribute-value-list');
-        $view->data['nav'] = $this->app->moduleManager->get('Navigation')->createNavigationMid(1004801001, $request, $response);
+        $view->data['nav'] = $this->app->moduleManager->get('Navigation')->createNavigationMid(1003101001, $request, $response);
 
         /** @var \Modules\Attribute\Models\AttributeValue[] $attributes */
         $attributes = ClientAttributeValueMapper::getAll()
@@ -120,23 +118,55 @@ final class BackendController extends Controller
      */
     public function viewClientManagementAttributeType(RequestAbstract $request, ResponseAbstract $response, array $data = []) : RenderableInterface
     {
-        $view = new View($this->app->l11nManager, $request, $response);
-        $view->setTemplate('/Modules/ClientManagement/Theme/Backend/attribute-type');
-        $view->data['nav'] = $this->app->moduleManager->get('Navigation')->createNavigationMid(1004801001, $request, $response);
+        $view = new \Modules\Attribute\Theme\Backend\Components\AttributeTypeView($this->app->l11nManager, $request, $response);
+        $view->data['nav'] = $this->app->moduleManager->get('Navigation')->createNavigationMid(1003101001, $request, $response);
 
-        /** @var \Modules\Attribute\Models\AttributeType $attribute */
-        $attribute = ClientAttributeTypeMapper::get()
+        $view->attribute = ClientAttributeTypeMapper::get()
             ->with('l11n')
+            ->with('defaults')
+            ->with('defaults/l11n')
             ->where('id', (int) $request->getData('id'))
             ->where('l11n/language', $response->header->l11n->language)
+            ->where('defaults/l11n/language', [$response->header->l11n->language, null])
             ->execute();
 
-        $l11ns = ClientAttributeTypeL11nMapper::getAll()
-            ->where('ref', $attribute->id)
+        $view->l11ns = ClientAttributeTypeL11nMapper::getAll()
+            ->where('ref', $view->attribute->id)
             ->execute();
 
-        $view->data['attribute'] = $attribute;
-        $view->data['l11ns']     = $l11ns;
+        $view->path = 'sales/client';
+
+        return $view;
+    }
+
+    /**
+     * Routing end-point for application behavior.
+     *
+     * @param RequestAbstract  $request  Request
+     * @param ResponseAbstract $response Response
+     * @param array            $data     Generic data
+     *
+     * @return RenderableInterface
+     *
+     * @since 1.0.0
+     * @codeCoverageIgnore
+     */
+    public function viewClientManagementAttributeValue(RequestAbstract $request, ResponseAbstract $response, array $data = []) : RenderableInterface
+    {
+        $view = new \Modules\Attribute\Theme\Backend\Components\AttributeValueView($this->app->l11nManager, $request, $response);
+        $view->data['nav'] = $this->app->moduleManager->get('Navigation')->createNavigationMid(1003101001, $request, $response);
+
+        $view->attribute = ClientAttributeValueMapper::get()
+            ->with('l11n')
+            ->where('id', (int) $request->getData('id'))
+            ->where('l11n/language', [$response->header->l11n->language, null])
+            ->execute();
+
+        $view->l11ns = ClientAttributeValueL11nMapper::getAll()
+            ->where('ref', $view->attribute->id)
+            ->execute();
+
+        // @todo Also find the ItemAttributeType
 
         return $view;
     }

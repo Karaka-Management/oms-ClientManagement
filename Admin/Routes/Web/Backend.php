@@ -25,18 +25,51 @@ return [
             'permission' => [
                 'module' => BackendController::NAME,
                 'type'   => PermissionType::READ,
-                'state'  => PermissionCategory::CLIENT,
+                'state'  => PermissionCategory::ATTRIBUTE,
             ],
         ],
     ],
-    '^.*/sales/client/attribute/type(\?.*$|$)' => [
+    '^.*/sales/client/attribute/type/view(\?.*$|$)' => [
         [
             'dest'       => '\Modules\ClientManagement\Controller\BackendController:viewClientManagementAttributeType',
             'verb'       => RouteVerb::GET,
             'permission' => [
                 'module' => BackendController::NAME,
                 'type'   => PermissionType::READ,
-                'state'  => PermissionCategory::CLIENT,
+                'state'  => PermissionCategory::ATTRIBUTE,
+            ],
+        ],
+    ],
+    '^.*/sales/client/attribute/type/create(\?.*$|$)' => [
+        [
+            'dest'       => '\Modules\ClientManagement\Controller\BackendController:viewClientManagementAttributeType',
+            'verb'       => RouteVerb::GET,
+            'permission' => [
+                'module' => BackendController::NAME,
+                'type'   => PermissionType::CREATE,
+                'state'  => PermissionCategory::ATTRIBUTE,
+            ],
+        ],
+    ],
+    '^.*/sales/client/attribute/value/view(\?.*$|$)' => [
+        [
+            'dest'       => '\Modules\ClientManagement\Controller\BackendController:viewClientManagementAttributeValue',
+            'verb'       => RouteVerb::GET,
+            'permission' => [
+                'module' => BackendController::NAME,
+                'type'   => PermissionType::READ,
+                'state'  => PermissionCategory::ATTRIBUTE,
+            ],
+        ],
+    ],
+    '^.*/sales/client/attribute/value/create(\?.*$|$)' => [
+        [
+            'dest'       => '\Modules\ClientManagement\Controller\BackendController:viewClientManagementAttributeValueCreate',
+            'verb'       => RouteVerb::GET,
+            'permission' => [
+                'module' => BackendController::NAME,
+                'type'   => PermissionType::CREATE,
+                'state'  => PermissionCategory::ATTRIBUTE,
             ],
         ],
     ],

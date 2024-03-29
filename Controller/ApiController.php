@@ -27,6 +27,8 @@ use Modules\ClientManagement\Models\ClientL11nTypeMapper;
 use Modules\ClientManagement\Models\ClientMapper;
 use Modules\ClientManagement\Models\PermissionCategory;
 use Modules\ClientManagement\Models\SettingsEnum;
+use Modules\Media\Models\Collection;
+use Modules\Media\Models\CollectionMapper;
 use Modules\Media\Models\MediaMapper;
 use Modules\Media\Models\PathSettings;
 use Modules\Organization\Models\UnitMapper;
@@ -239,6 +241,10 @@ final class ApiController extends Controller
             $request->getOrigin()
         );
 
+        // Create media dir
+        // @todo should this collection get added to the parent collection?
+        $this->createMediaDirForClient($client->id, $request->header->account);
+
         // Create stock
         if ($this->app->moduleManager->isActive('WarehouseManagement')) {
             $internalResponse = new HttpResponse();
@@ -274,6 +280,29 @@ final class ApiController extends Controller
         $this->createClientSegmentation($request, $response, $client);
 
         $this->createStandardCreateResponse($request, $response, $client);
+    }
+
+    /**
+     * Create directory for an account
+     *
+     * @param int $id    Item number
+     * @param int $createdBy Creator of the directory
+     *
+     * @return Collection
+     *
+     * @since 1.0.0
+     */
+    private function createMediaDirForClient(int $id, int $createdBy) : Collection
+    {
+        $collection       = new Collection();
+        $collection->name = $id;
+        $collection->setVirtualPath('/Modules/ClientManagement/Clients');
+        $collection->setPath('/Modules/Media/Files/Modules/ClientManagement/Clients/' . $id);
+        $collection->createdBy = new NullAccount($createdBy);
+
+        CollectionMapper::create()->execute($collection);
+
+        return $collection;
     }
 
     /**
@@ -600,8 +629,8 @@ final class ApiController extends Controller
             fileNames: $request->getDataList('filenames'),
             files: $uploadedFiles,
             account: $request->header->account,
-            basePath: __DIR__ . '/../../../Modules/Media/Files/Modules/ClientManagement/' . ($request->getData('client') ?? '0'),
-            virtualPath: '/Modules/ClientManagement/' . ($request->getData('client') ?? '0'),
+            basePath: __DIR__ . '/../../../Modules/Media/Files/Modules/ClientManagement/Clients/' . ($request->getData('client') ?? '0'),
+            virtualPath: '/Modules/ClientManagement/Clients/' . ($request->getData('client') ?? '0'),
             pathSettings: PathSettings::FILE_PATH
         );
 
@@ -650,7 +679,7 @@ final class ApiController extends Controller
      */
     public function apiNoteCreate(RequestAbstract $request, ResponseAbstract $response, array $data = []) : void
     {
-        $request->setData('virtualpath', '/Modules/ClientManagement/' . ((int) $request->getData('id')), true);
+        $request->setData('virtualpath', '/Modules/ClientManagement/Clients/' . ((int) $request->getData('id')), true);
         $this->app->moduleManager->get('Editor')->apiEditorCreate($request, $response, $data);
 
         $responseData = $response->getDataArray($request->uri->__toString());

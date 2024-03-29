@@ -7,6 +7,13 @@
         "user": 1
     },
     {
+        "type": "collection",
+        "create_directory": true,
+        "name": "Clients",
+        "virtualPath": "/Modules/ClientManagement",
+        "user": 1
+    },
+    {
         "type": "type",
         "name": "client_profile_image",
         "l11n": [

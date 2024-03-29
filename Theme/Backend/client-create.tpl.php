@@ -44,11 +44,11 @@ echo $this->data['nav']->render(); ?>
                                     <tr><td><label for="iId"><?= $this->getHtml('ID', '0', '0'); ?></label>
                                     <tr><td><span class="input"><button type="button" formaction=""><i class="g-icon">book</i></button><input type="number" id="iId" min="1" name="id" required></span>
                                     <tr><td><label for="iName1"><?= $this->getHtml('Name1'); ?></label>
-                                    <tr><td><input type="text" id="iName1" name="name1" placeholder="" required>
+                                    <tr><td><input type="text" id="iName1" name="name1" required>
                                     <tr><td><label for="iName2"><?= $this->getHtml('Name2'); ?></label>
-                                    <tr><td><input type="text" id="iName2" name="name2" placeholder="">
+                                    <tr><td><input type="text" id="iName2" name="name2">
                                     <tr><td><label for="iName3"><?= $this->getHtml('Name3'); ?></label>
-                                    <tr><td><input type="text" id="iName3" name="name3" placeholder="">
+                                    <tr><td><input type="text" id="iName3" name="name3">
                                     <tr><td colspan="2"><input type="submit" value="<?= $this->getHtml('Create', '0', '0'); ?>" name="create-client">
                                 </table>
                             </form>
@@ -134,15 +134,15 @@ echo $this->data['nav']->render(); ?>
                             <form>
                                 <table class="layout wf-100">
                                     <tr><td><label for="iSource"><?= $this->getHtml('ID'); ?></label>
-                                    <tr><td><span class="input"><button type="button" formaction=""><i class="g-icon">book</i></button><input id="iSource" name="source" type="text" placeholder=""></span>
+                                    <tr><td><span class="input"><button type="button" formaction=""><i class="g-icon">book</i></button><input id="iSource" name="source" type="text"></span>
                                     <tr><td><label for="iSegment"><?= $this->getHtml('Segment'); ?></label>
-                                    <tr><td><input id="iSegment" name="segment" type="text" placeholder="">
+                                    <tr><td><input id="iSegment" name="segment" type="text">
                                     <tr><td><label for="iProductgroup"><?= $this->getHtml('Productgroup'); ?></label>
-                                    <tr><td><input id="iProductgroup" name="productgroup" type="text" placeholder="">
+                                    <tr><td><input id="iProductgroup" name="productgroup" type="text">
                                     <tr><td><label for="iGroup"><?= $this->getHtml('Group'); ?></label>
-                                    <tr><td><input id="iGroup" name="group" type="text" placeholder="">
+                                    <tr><td><input id="iGroup" name="group" type="text">
                                     <tr><td><label for="iArticlegroup"><?= $this->getHtml('Articlegroup'); ?></label>
-                                    <tr><td><input id="iArticlegroup" name="articlegroup" type="text" placeholder="">
+                                    <tr><td><input id="iArticlegroup" name="articlegroup" type="text">
                                     <tr><td><label for="iTerm"><?= $this->getHtml('Type'); ?></label>
                                     <tr><td><select id="iTerm" name="term" required>
                                                 <option>
@@ -193,25 +193,25 @@ echo $this->data['nav']->render(); ?>
                                                 <option>
                                             </select><td>
                                     <tr><td><label for="iSource"><?= $this->getHtml('ID'); ?></label>
-                                    <tr><td><span class="input"><button type="button" formaction=""><i class="g-icon">book</i></button><input id="iSource" name="source" type="text" placeholder=""></span>
+                                    <tr><td><span class="input"><button type="button" formaction=""><i class="g-icon">book</i></button><input id="iSource" name="source" type="text"></span>
                                     <tr><td><label for="iSegment"><?= $this->getHtml('Segment'); ?></label>
-                                    <tr><td><input id="iSegment" name="segment" type="text" placeholder="">
+                                    <tr><td><input id="iSegment" name="segment" type="text">
                                     <tr><td><label for="iProductgroup"><?= $this->getHtml('Productgroup'); ?></label>
-                                    <tr><td><input id="iProductgroup" name="productgroup" type="text" placeholder="">
+                                    <tr><td><input id="iProductgroup" name="productgroup" type="text">
                                     <tr><td><label for="iGroup"><?= $this->getHtml('Group'); ?></label>
-                                    <tr><td><input id="iGroup" name="group" type="text" placeholder="">
+                                    <tr><td><input id="iGroup" name="group" type="text">
                                     <tr><td><label for="iArticlegroup"><?= $this->getHtml('Articlegroup'); ?></label>
-                                    <tr><td><input id="iArticlegroup" name="articlegroup" type="text" placeholder="">
+                                    <tr><td><input id="iArticlegroup" name="articlegroup" type="text">
                                     <tr><td><label for="iPQuantity"><?= $this->getHtml('Quantity'); ?></label>
-                                    <tr><td><input id="iPQuantity" name="quantity" type="text" placeholder=""><td>
+                                    <tr><td><input id="iPQuantity" name="quantity" type="text"><td>
                                     <tr><td><label for="iPrice"><?= $this->getHtml('Price'); ?></label>
-                                    <tr><td><input id="iPrice" name="price" type="number" step="any" min="0" placeholder=""><td>
+                                    <tr><td><input id="iPrice" name="price" type="number" step="any" min="0"><td>
                                     <tr><td><label for="iDiscount"><?= $this->getHtml('Discount'); ?></label>
-                                    <tr><td><input id="iDiscount" name="discount" type="number" step="any" min="0" placeholder=""><td>
+                                    <tr><td><input id="iDiscount" name="discount" type="number" step="any" min="0"><td>
                                     <tr><td><label for="iDiscount"><?= $this->getHtml('DiscountP'); ?></label>
-                                    <tr><td><input id="iDiscountP" name="discountp" type="number" step="any" min="0" placeholder=""><td>
+                                    <tr><td><input id="iDiscountP" name="discountp" type="number" step="any" min="0"><td>
                                     <tr><td><label for="iBonus"><?= $this->getHtml('Bonus'); ?></label>
-                                    <tr><td><input id="iBonus" name="bonus" type="number" step="any" min="0" placeholder=""><td>
+                                    <tr><td><input id="iBonus" name="bonus" type="number" step="any" min="0"><td>
                                     <tr><td><input type="submit" value="<?= $this->getHtml('Add', '0', '0'); ?>">
                                 </table>
                             </form>
@@ -231,17 +231,17 @@ echo $this->data['nav']->render(); ?>
                                 <table class="layout wf-100">
                                     <tbody>
                                     <tr><td><label for="iManager"><?= $this->getHtml('AreaManager'); ?></label>
-                                    <tr><td><span class="input"><button type="button" formaction=""><i class="g-icon">book</i></button><input id="iManager" name="source" type="text" placeholder=""></span>
+                                    <tr><td><span class="input"><button type="button" formaction=""><i class="g-icon">book</i></button><input id="iManager" name="source" type="text"></span>
                                     <tr><td><label for="iSource"><?= $this->getHtml('ID'); ?></label>
-                                    <tr><td><span class="input"><button type="button" formaction=""><i class="g-icon">book</i></button><input id="iSource" name="source" type="text" placeholder=""></span>
+                                    <tr><td><span class="input"><button type="button" formaction=""><i class="g-icon">book</i></button><input id="iSource" name="source" type="text"></span>
                                     <tr><td><label for="iSegment"><?= $this->getHtml('Segment'); ?></label>
-                                    <tr><td><input id="iSegment" name="segment" type="text" placeholder="">
+                                    <tr><td><input id="iSegment" name="segment" type="text">
                                     <tr><td><label for="iProductgroup"><?= $this->getHtml('Productgroup'); ?></label>
-                                    <tr><td><input id="iProductgroup" name="productgroup" type="text" placeholder="">
+                                    <tr><td><input id="iProductgroup" name="productgroup" type="text">
                                     <tr><td><label for="iGroup"><?= $this->getHtml('Group'); ?></label>
-                                    <tr><td><input id="iGroup" name="group" type="text" placeholder="">
+                                    <tr><td><input id="iGroup" name="group" type="text">
                                     <tr><td><label for="iArticlegroup"><?= $this->getHtml('Articlegroup'); ?></label>
-                                    <tr><td><input id="iArticlegroup" name="articlegroup" type="text" placeholder="">
+                                    <tr><td><input id="iArticlegroup" name="articlegroup" type="text">
                                     <tr><td><input type="submit" value="<?= $this->getHtml('Add', '0', '0'); ?>">
                                 </table>
                             </form>
