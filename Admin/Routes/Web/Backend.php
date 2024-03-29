@@ -18,7 +18,7 @@ use phpOMS\Account\PermissionType;
 use phpOMS\Router\RouteVerb;
 
 return [
-    '^.*/sales/client/attribute/type/list(\?.*$|$)' => [
+    '^/sales/client/attribute/type/list(\?.*$|$)' => [
         [
             'dest'       => '\Modules\ClientManagement\Controller\BackendController:viewClientManagementAttributeTypeList',
             'verb'       => RouteVerb::GET,
@@ -29,7 +29,7 @@ return [
             ],
         ],
     ],
-    '^.*/sales/client/attribute/type/view(\?.*$|$)' => [
+    '^/sales/client/attribute/type/view(\?.*$|$)' => [
         [
             'dest'       => '\Modules\ClientManagement\Controller\BackendController:viewClientManagementAttributeType',
             'verb'       => RouteVerb::GET,
@@ -40,7 +40,7 @@ return [
             ],
         ],
     ],
-    '^.*/sales/client/attribute/type/create(\?.*$|$)' => [
+    '^/sales/client/attribute/type/create(\?.*$|$)' => [
         [
             'dest'       => '\Modules\ClientManagement\Controller\BackendController:viewClientManagementAttributeType',
             'verb'       => RouteVerb::GET,
@@ -51,7 +51,7 @@ return [
             ],
         ],
     ],
-    '^.*/sales/client/attribute/value/view(\?.*$|$)' => [
+    '^/sales/client/attribute/value/view(\?.*$|$)' => [
         [
             'dest'       => '\Modules\ClientManagement\Controller\BackendController:viewClientManagementAttributeValue',
             'verb'       => RouteVerb::GET,
@@ -62,7 +62,7 @@ return [
             ],
         ],
     ],
-    '^.*/sales/client/attribute/value/create(\?.*$|$)' => [
+    '^/sales/client/attribute/value/create(\?.*$|$)' => [
         [
             'dest'       => '\Modules\ClientManagement\Controller\BackendController:viewClientManagementAttributeValueCreate',
             'verb'       => RouteVerb::GET,
@@ -73,7 +73,7 @@ return [
             ],
         ],
     ],
-    '^.*/sales/client/list(\?.*$|$)' => [
+    '^/sales/client/list(\?.*$|$)' => [
         [
             'dest'       => '\Modules\ClientManagement\Controller\BackendController:viewClientManagementClientList',
             'verb'       => RouteVerb::GET,
@@ -84,7 +84,7 @@ return [
             ],
         ],
     ],
-    '^.*/sales/client/create(\?.*$|$)' => [
+    '^/sales/client/create(\?.*$|$)' => [
         [
             'dest'       => '\Modules\ClientManagement\Controller\BackendController:viewClientManagementClientCreate',
             'verb'       => RouteVerb::GET,
@@ -95,7 +95,7 @@ return [
             ],
         ],
     ],
-    '^.*/sales/client/view(\?.*$|$)' => [
+    '^/sales/client/view(\?.*$|$)' => [
         [
             'dest'       => '\Modules\ClientManagement\Controller\BackendController:viewClientManagementClientView',
             'verb'       => RouteVerb::GET,
@@ -106,7 +106,7 @@ return [
             ],
         ],
     ],
-    '^.*/sales/client/analysis(\?.*$|$)' => [
+    '^/sales/client/analysis(\?.*$|$)' => [
         [
             'dest'       => '\Modules\ClientManagement\Controller\BackendController:viewClientManagementClientAnalysis',
             'verb'       => RouteVerb::GET,
