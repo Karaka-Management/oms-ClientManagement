@@ -16,6 +16,8 @@ use Modules\Admin\Models\ContactType;
 use Modules\Billing\Models\BillMapper;
 use Modules\Billing\Models\Price\PriceType;
 use Modules\Billing\Models\SalesBillMapper;
+use Modules\ClientManagement\Models\ClientStatus;
+use Modules\ClientManagement\Models\NullClient;
 use Modules\Media\Models\NullMedia;
 use phpOMS\DataStorage\Database\Query\OrderType;
 use phpOMS\Localization\ISO3166CharEnum;
@@ -38,8 +40,12 @@ $languages    = ISO639Enum::getConstants();
 /**
  * @var \Modules\ClientManagement\Models\Client $client
  */
-$client      = $this->data['client'];
+$client = $this->data['client'] ?? new NullClient();
+$isNew  = $client->id === 0;
+
 $clientImage = $this->data['clientImage'] ?? new NullMedia();
+
+$clientStatus = ClientStatus::getConstants();
 
 $logs = $this->data['logs'] ?? [];
 
@@ -49,41 +55,54 @@ $logs = $this->data['logs'] ?? [];
 echo $this->data['nav']->render();
 ?>
 <div class="tabview tab-2">
+    <?php if (!$isNew) : ?>
     <div class="box">
         <ul class="tab-links">
             <li><label for="c-tab-1"><?= $this->getHtml('Profile'); ?></label>
-            <li><label for="c-tab-3"><?= $this->getHtml('Addresses'); ?></label>
-            <li><label for="c-tab-5"><?= $this->getHtml('Payment'); ?></label>
-            <li><label for="c-tab-6"><?= $this->getHtml('Prices'); ?></label>
-            <li><label for="c-tab-7"><?= $this->getHtml('Attributes', 'Attribute', 'Backend'); ?></label>
-            <li><label for="c-tab-2"><?= $this->getHtml('Accounting'); ?></label>
-            <li><label for="c-tab-13"><?= $this->getHtml('Notes'); ?></label>
+            <li><label for="c-tab-2"><?= $this->getHtml('Addresses'); ?></label>
+            <li><label for="c-tab-3"><?= $this->getHtml('Payment'); ?></label>
+            <li><label for="c-tab-4"><?= $this->getHtml('Prices'); ?></label>
+            <li><label for="c-tab-5"><?= $this->getHtml('Attributes', 'Attribute', 'Backend'); ?></label>
+            <li><label for="c-tab-6"><?= $this->getHtml('Accounting'); ?></label>
+            <li><label for="c-tab-7"><?= $this->getHtml('Notes'); ?></label>
             <li><label for="c-tab-8"><?= $this->getHtml('Files'); ?></label>
             <li><label for="c-tab-9"><?= $this->getHtml('Bills'); ?></label>
             <li><label for="c-tab-10"><?= $this->getHtml('Items'); ?></label>
             <?php if (!empty($logs)) : ?><li><label for="c-tab-17"><?= $this->getHtml('Logs'); ?></label><?php endif; ?>
         </ul>
     </div>
+    <?php endif; ?>
     <div class="tab-content">
-        <input type="radio" id="c-tab-1" name="tabular-2"<?= $this->request->uri->fragment === 'c-tab-1' ? ' checked' : ''; ?>>
+        <input type="radio" id="c-tab-1" name="tabular-2"<?= $isNew || $this->request->uri->fragment === 'c-tab-1' ? ' checked' : ''; ?>>
         <div class="tab">
             <div class="row">
                 <div class="col-xs-12 col-lg-3 last-lg">
+                    <?php if (!$isNew && (($this->data['hasBilling'] ?? false) || ($this->data['hasAccounting'] ?? false))) : ?>
                     <div class="box">
-                        <?php if(true) : ?>
+                        <?php if ($this->data['hasBilling'] ?? false) : ?>
                         <a class="button" href="<?= UriFactory::build('{/base}/sales/bill/create?client=' . $client->id); ?>"><?= $this->getHtml('CreateBill'); ?></a>
                         <?php endif; ?>
-                        <?php if (false) : ?>
-                            <a class="button"><?= $this->getHtml('ViewAccount', 'Accounting'); ?></a>
+                        <?php if ($this->data['hasAccounting'] ?? false) : ?>
+                            <a class="button" href="<?= UriFactory::build('{/base}/accounting/account?number=' . $client->number); ?>"><?= $this->getHtml('ViewAccount'); ?></a>
                         <?php endif; ?>
                     </div>
+                    <?php endif; ?>
 
                     <section class="portlet">
-                        <form>
+                        <form id="clientForm" method="<?= $isNew ? 'PUT' : 'POST'; ?>" action="<?= UriFactory::build('{/api}sales/client?csrf={$CSRF}'); ?>">
                             <div class="portlet-body">
                                 <div class="form-group">
                                     <label for="iId"><?= $this->getHtml('ID', '0', '0'); ?></label>
-                                    <span class="input"><button type="button" formaction=""><i class="g-icon">book</i></button><input type="text" id="iId" min="1" name="id" value="<?= $this->printHtml($client->number); ?>" disabled></span>
+                                    <span class="input"><button type="button" formaction=""><i class="g-icon">book</i></button><input type="text" id="iId" min="1" name="id" value="<?= $this->printHtml($client->number); ?>"<?= $isNew ? ' required' : ' disabled'; ?>></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="iStatus"><?= $this->getHtml('Status'); ?></label>
+                                    <select id="iStatus" name="status">
+                                        <?php foreach ($clientStatus as $status) : ?>
+                                            <option value="<?= $status; ?>"<?= $client->status === $status ? ' selected': ''; ?>><?= $this->getHtml(':status-' . $status); ?>
+                                        <?php endforeach; ?>
+                                    </select>
                                 </div>
 
                                 <div class="form-group">
@@ -102,7 +121,12 @@ echo $this->data['nav']->render();
                                 </div>
                             </div>
                             <div class="portlet-foot">
-                                <input type="submit" value="<?= $this->getHtml('Save', '0', '0'); ?>" name="save-client-profile"> <input type="submit" value="<?= $this->getHtml('Delete', '0', '0'); ?>" name="delete-client-profile">
+                                <?php if ($isNew) : ?>
+                                    <input type="submit" value="<?= $this->getHtml('Create', '0', '0'); ?>" name="create-client">
+                                <?php else : ?>
+                                    <input type="submit" value="<?= $this->getHtml('Save', '0', '0'); ?>" name="save-client-profile">
+                                    <input class="cancel end-xs" type="submit" value="<?= $this->getHtml('Delete', '0', '0'); ?>" name="delete-client-profile">
+                                <?php endif; ?>
                             </div>
                         </form>
                     </section>
@@ -115,17 +139,17 @@ echo $this->data['nav']->render();
                         <div class="portlet-body">
                             <div class="form-group">
                                 <label for="iPhone"><?= $this->getHtml('Phone'); ?></label>
-                                <input type="text" id="iPhone" name="name1" value="<?= $this->printHtml($client->account->getContactByType(ContactType::PHONE)->content); ?>">
+                                <input type="text" id="iPhone" form="clientForm" name="phone" value="<?= $this->printHtml($client->account->getContactByType(ContactType::PHONE)->content); ?>">
                             </div>
 
                             <div class="form-group">
                                 <label for="iEmail"><?= $this->getHtml('Email'); ?></label>
-                                <input type="text" id="iEmail" name="name1" value="<?= $this->printHtml($client->account->getContactByType(ContactType::EMAIL)->content); ?>">
+                                <input type="text" id="iEmail" form="clientForm" name="email" value="<?= $this->printHtml($client->account->getContactByType(ContactType::EMAIL)->content); ?>">
                             </div>
 
                             <div class="form-group">
                                 <label for="iWebsite"><?= $this->getHtml('Website'); ?></label>
-                                <input type="text" id="iWebsite" name="name1" value="<?= $this->printHtml($client->account->getContactByType(ContactType::WEBSITE)->content); ?>">
+                                <input type="text" id="iWebsite" form="clientForm" name="website" value="<?= $this->printHtml($client->account->getContactByType(ContactType::WEBSITE)->content); ?>">
                             </div>
                         </div>
                     </section>
@@ -158,48 +182,51 @@ echo $this->data['nav']->render();
                             <?php if (!empty($client->mainAddress->fao)) : ?>
                             <div class="form-group">
                                 <label for="iFAO"><?= $this->getHtml('FAO'); ?></label>
-                                <input type="text" id="iFAO" name="fao" value="<?= $this->printHtml($client->mainAddress->fao); ?>">
+                                <input type="text" id="iFAO" form="clientForm" name="fao" value="<?= $this->printHtml($client->mainAddress->fao); ?>">
                             </div>
                             <?php endif; ?>
 
                             <div class="form-group">
                                 <label for="iAddress"><?= $this->getHtml('Address'); ?></label>
-                                <input type="text" id="iAddress" name="address" value="<?= $this->printHtml($client->mainAddress->address); ?>" required>
+                                <input type="text" id="iAddress" form="clientForm" name="address" value="<?= $this->printHtml($client->mainAddress->address); ?>" required>
                             </div>
 
                             <?php if (!empty($client->mainAddress->addressAddition)) : ?>
                             <div class="form-group">
                                 <label for="iAddition"><?= $this->getHtml('Addition'); ?></label>
-                                <input type="text" id="iAddition" name="addition" value="<?= $this->printHtml($client->mainAddress->addressAddition); ?>">
+                                <input type="text" id="iAddition" form="clientForm" name="addition" value="<?= $this->printHtml($client->mainAddress->addressAddition); ?>">
                             </div>
                             <?php endif; ?>
 
                             <div class="form-group">
                                 <label for="iPostal"><?= $this->getHtml('Postal'); ?></label>
-                                <input type="text" id="iPostal" name="postal" value="<?= $this->printHtml($client->mainAddress->postal); ?>" required>
+                                <input type="text" id="iPostal" form="clientForm" name="postal" value="<?= $this->printHtml($client->mainAddress->postal); ?>" required>
                             </div>
 
                             <div class="form-group">
                                 <label for="iCity"><?= $this->getHtml('City'); ?></label>
-                                <input type="text" id="iCity" name="city" value="<?= $this->printHtml($client->mainAddress->city); ?>" required>
+                                <input type="text" id="iCity" form="clientForm" name="city" value="<?= $this->printHtml($client->mainAddress->city); ?>" required>
                             </div>
 
                             <div class="form-group">
                                 <label for="iCountry"><?= $this->getHtml('Country'); ?></label>
-                                <select id="iCountry" name="country">
+                                <select id="iCountry" form="clientForm" name="country">
                                     <?php foreach ($countryCodes as $code3 => $code2) : ?>
                                     <option value="<?= $this->printHtml($code2); ?>"<?= $this->printHtml($code2 === $client->mainAddress->country ? ' selected' : ''); ?>><?= $this->printHtml($countries[$code3]); ?>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
 
+                            <?php if (!$isNew) : ?>
                             <div class="form-group">
                                 <label for="iClientMap"><?= $this->getHtml('Map'); ?></label>
                                 <div id="iClientMap" class="map" data-lat="<?= $client->mainAddress->lat; ?>" data-lon="<?= $client->mainAddress->lon; ?>"></div>
                             </div>
+                            <?php endif; ?>
                         </div>
                     </section>
 
+                    <?php if (!$isNew) : ?>
                     <section class="portlet">
                         <div class="portlet-body">
                             <img alt="<?= $this->printHtml($clientImage->name); ?>" width="100%" loading="lazy" class="item-image"
@@ -214,7 +241,10 @@ echo $this->data['nav']->render();
                             <textarea class="undecorated"><?= $this->printHtml($client->info); ?></textarea>
                         </div>
                     </section>
+                    <?php endif; ?>
                 </div>
+
+                <?php if (!$isNew) : ?>
                 <div class="col-xs-12 col-lg-9 plain-grid">
                     <?php if (!empty($client->notes) && ($warning = $client->getEditorDocByTypeName('client_backend_warning'))->id !== 0) : ?>
                     <!-- If note warning exists -->
@@ -227,7 +257,7 @@ echo $this->data['nav']->render();
                     </div>
                     <?php endif; ?>
 
-                    <?php if ($this->data['hasBilling']) : ?>
+                    <?php if ($this->data['hasBilling'] ?? false) : ?>
                     <div class="row">
                         <div class="col-xs-12 col-lg-4">
                             <section class="portlet hl-7">
@@ -321,7 +351,7 @@ echo $this->data['nav']->render();
                                     foreach ($client->files as $file) :
                                         ++$count;
                                         $url = UriFactory::build('{/base}/media/view?{?}&id=' . $file->id);
-                                        ?>
+                                    ?>
                                     <tr data-href="<?= $url; ?>">
                                         <td><a href="<?= $url; ?>"><?= $file->name; ?></a>
                                         <td><a href="<?= $url; ?>"><?= $file->extension; ?></a>
@@ -336,7 +366,7 @@ echo $this->data['nav']->render();
                         </div>
                     </div>
 
-                    <?php if ($this->data['hasBilling']) : ?>
+                    <?php if ($this->data['hasBilling'] ?? false) : ?>
                     <div class="row">
                         <div class="col-xs-12">
                             <section class="portlet">
@@ -360,19 +390,20 @@ echo $this->data['nav']->render();
                                         ->where('type/l11n/language', $this->response->header->l11n->language)
                                         ->sort('id', OrderType::DESC)
                                         ->limit(5)
-                                        ->execute();
+                                        ->executeGetArray();
 
                                     $count = 0;
 
                                     /** @var \Modules\Billing\Models\Bill $invoice */
                                     foreach ($newestInvoices as $invoice) :
                                         ++$count;
-                                        $url = UriFactory::build('{/base}/sales/bill?{?}&id=' . $invoice->id);
+                                        $url       = UriFactory::build('{/base}/sales/bill/view?{?}&id=' . $invoice->id);
+                                        $clientUrl = UriFactory::build('{/base}/sales/client/view?{?}&id=' . $invoice->client->id);
                                         ?>
                                     <tr data-href="<?= $url; ?>">
                                         <td><a href="<?= $url; ?>"><?= $invoice->getNumber(); ?></a>
                                         <td><a href="<?= $url; ?>"><?= $invoice->type->getL11n(); ?></a>
-                                        <td><a href="<?= $url; ?>"><?= $invoice->billTo; ?></a>
+                                        <td><a class="content" href="<?= $clientUrl; ?>"><?= $invoice->billTo; ?></a>
                                         <td><a href="<?= $url; ?>"><?= $this->getCurrency($invoice->netSales, symbol: ''); ?></a>
                                         <td><a href="<?= $url; ?>"><?= $invoice->performanceDate->format('Y-m-d'); ?></a>
                                     <?php endforeach; ?>
@@ -386,10 +417,11 @@ echo $this->data['nav']->render();
                     </div>
                     <?php endif; ?>
 
-                    <?php if ($this->data['hasBilling']) :
+                    <?php if ($this->data['hasBilling'] ?? false) :
                         $monthlySalesCosts = SalesBillMapper::getClientMonthlySalesCosts($client->id, (new SmartDateTime('now'))->createModify(-1), new SmartDateTime('now'));
+
+                        if (!empty($monthlySalesCosts)) :
                     ?>
-                    <?php if (!empty($monthlySalesCosts)) : ?>
                     <div class="row">
                         <?php $segmentSales = SalesBillMapper::getClientAttributeNetSales($client->id, 'segment', 'en', (new SmartDateTime('now'))->createModify(-1), new SmartDateTime('now')); ?>
                         <div class="col-xs-12 col-md-6">
@@ -543,16 +575,18 @@ echo $this->data['nav']->render();
                     <?php endif; ?>
                     <?php endif; ?>
                 </div>
+                <?php endif; ?>
             </div>
         </div>
 
-        <input type="radio" id="c-tab-3" name="tabular-2"<?= $this->request->uri->fragment === 'c-tab-3' ? ' checked' : ''; ?>>
+        <?php if (!$isNew) : ?>
+        <input type="radio" id="c-tab-2" name="tabular-2"<?= $this->request->uri->fragment === 'c-tab-2' ? ' checked' : ''; ?>>
         <div class="tab">
             <?= $this->data['contact-component']->render('client-contact', 'contacts', $client->account->contacts); ?>
             <?= $this->data['address-component']->render('client-address', 'addresses', $client->account->addresses); ?>
         </div>
 
-        <input type="radio" id="c-tab-5" name="tabular-2"<?= $this->request->uri->fragment === 'c-tab-5' ? ' checked' : ''; ?>>
+        <input type="radio" id="c-tab-3" name="tabular-2"<?= $this->request->uri->fragment === 'c-tab-3' ? ' checked' : ''; ?>>
         <div class="tab">
             <div class="row">
                 <div class="col-xs-12 col-md-6 col-lg-4">
@@ -611,9 +645,6 @@ echo $this->data['nav']->render();
                                                 <option>
                                             </select>
                                 </div>
-                                <div class="form-group">
-                                    <span class="check"><input type="checkbox" id="iFreightage" name="freightage"><label for="iFreightage"><?= $this->getHtml('Freightage'); ?></label></span>
-                                </div>
                             </div>
                             <div class="portlet-foot">
                                 <input type="submit" value="<?= $this->getHtml('Add', '0', '0'); ?>">
@@ -624,7 +655,7 @@ echo $this->data['nav']->render();
             </div>
         </div>
 
-        <input type="radio" id="c-tab-6" name="tabular-2"<?= $this->request->uri->fragment === 'c-tab-6' ? ' checked' : ''; ?>>
+        <input type="radio" id="c-tab-4" name="tabular-2"<?= $this->request->uri->fragment === 'c-tab-4' ? ' checked' : ''; ?>>
         <div class="tab">
             <div class="row">
                 <div class="col-xs-12 col-md-6">
@@ -950,7 +981,7 @@ echo $this->data['nav']->render();
                                         <td data-tpl-text="/discount" data-tpl-value="/discount"><?= $value->discount->getAmount(); ?>
                                         <td data-tpl-text="/discountr" data-tpl-value="/discountr"><?= $this->getPercentage($value->discountPercentage); ?>
                                         <td data-tpl-text="/bonus" data-tpl-value="/bonus"><?= $value->bonus->getAmount(); ?>
-                                        <td data-tpl-text="/item_item" data-tpl-value="/item_item"><?= $this->printHtml((string) $value->item); ?>
+                                        <td data-tpl-text="/item_item" data-tpl-value="/item_item"><?= $this->printHtml((string) $value->item->id); ?>
                                         <td data-tpl-text="/item_segment" data-tpl-value="/item_segment"><?= $this->printHtml((string) $value->itemsegment->getL11n()); ?>
                                         <td data-tpl-text="/item_section" data-tpl-value="/item_section"><?= $this->printHtml((string) $value->itemsection->getL11n()); ?>
                                         <td data-tpl-text="/item_salesgroup" data-tpl-value="/item_salesgroup"><?= $this->printHtml((string) $value->itemsalesgroup->getL11n()); ?>
@@ -975,7 +1006,7 @@ echo $this->data['nav']->render();
             </div>
         </div>
 
-        <input type="radio" id="c-tab-7" name="tabular-2"<?= $this->request->uri->fragment === 'c-tab-7' ? ' checked' : ''; ?>>
+        <input type="radio" id="c-tab-5" name="tabular-2"<?= $this->request->uri->fragment === 'c-tab-5' ? ' checked' : ''; ?>>
         <div class="tab">
             <div class="row">
                 <?= $this->data['attributeView']->render(
@@ -1018,13 +1049,13 @@ echo $this->data['nav']->render();
                                 ->where('client', $client->id)
                                 ->where('type/l11n/language', $this->response->header->l11n->language)
                                 ->where('billDate', SmartDateTime::startOfYear($this->data['business_start']), '>=')
-                                ->execute();
+                                ->executeGetArray();
 
                             $count = 0;
                             /** @var \Modules\Billing\Models\Bill $invoice */
                             foreach ($allInvoices as $invoice) :
                                 ++$count;
-                                $url = UriFactory::build('{/base}/sales/bill?{?}&id=' . $invoice->id);
+                                $url = UriFactory::build('{/base}/sales/bill/view?{?}&id=' . $invoice->id);
                                 ?>
                             <tr data-href="<?= $url; ?>">
                                 <td><a href="<?= $url; ?>"><?= $invoice->getNumber(); ?></a>
@@ -1044,7 +1075,7 @@ echo $this->data['nav']->render();
             </div>
         </div>
 
-        <input type="radio" id="c-tab-2" name="tabular-2"<?= $this->request->uri->fragment === 'c-tab-9' ? ' checked' : ''; ?>>
+        <input type="radio" id="c-tab-6" name="tabular-2"<?= $this->request->uri->fragment === 'c-tab-6' ? ' checked' : ''; ?>>
         <div class="tab">
             <div class="row">
                 <div class="col-xs-12 col-md-6">
@@ -1080,7 +1111,7 @@ echo $this->data['nav']->render();
 
         <input type="radio" id="c-tab-10" name="tabular-2" checked>
         <div class="tab col-simple">
-            <?php $items = SalesBillMapper::getClientItem($client->id, SmartDateTime::startOfYear($this->data['business_start']), new SmartDateTime('now')); ?>
+            <?php $billElements = SalesBillMapper::getClientItem($client->id, SmartDateTime::startOfYear($this->data['business_start']), new SmartDateTime('now')); ?>
             <div class="row">
                 <div class="col-xs-12">
                     <section class="portlet">
@@ -1216,13 +1247,10 @@ echo $this->data['nav']->render();
                             <tbody>
                             <?php
                                 $count = 0;
-                                foreach ($items as $key => $value) :
-                                    if ($value->itemNumber === '') {
-                                        continue;
-                                    }
-
+                                foreach ($billElements as $key => $value) :
                                     ++$count;
-                                    $url = UriFactory::build('{/base}/sales/item/view?{?}&id=' . $value->id);
+                                    $url     = UriFactory::build('{/base}/sales/bill/view?{?}&id=' . $value->bill->id);
+                                    $itemUrl = UriFactory::build('{/base}/sales/item/view?{?}&id=' . $value->item->id);
                             ?>
                             <tr data-href="<?= $url; ?>">
                                 <td><label class="checkbox" for="iSalesItemSelect-<?= $key; ?>">
@@ -1231,8 +1259,8 @@ echo $this->data['nav']->render();
                                     </label>
                                 <td><?= $value->bill->performanceDate?->format('Y-m-d'); ?>
                                 <td><?= $this->printHtml($value->bill->getNumber()); ?>
-                                <td><a href="<?= $url; ?>"><?= $this->printHtml($value->itemNumber); ?></a>
-                                <td><a href="<?= $url; ?>"><?= $this->printHtml($value->itemName); ?></a>
+                                <td><a class="content" href="<?= $itemUrl; ?>"><?= $this->printHtml($value->itemNumber); ?></a>
+                                <td><a class="content" href="<?= $itemUrl; ?>"><?= $this->printHtml($value->itemName); ?></a>
                                 <td><a href="<?= $url; ?>"><?= $this->printHtml((string) $value->quantity->getAmount()); ?></a>
                                 <td><a href="<?= $url; ?>"><?= $this->getCurrency($value->singleSalesPriceNet, symbol: ''); ?></a>
                                 <td><a href="<?= $url; ?>"><?= $this->getCurrency($value->singleDiscountP, symbol: ''); ?></a>
@@ -1250,7 +1278,7 @@ echo $this->data['nav']->render();
             </div>
         </div>
 
-        <input type="radio" id="c-tab-13" name="tabular-2" checked>
+        <input type="radio" id="c-tab-7" name="tabular-2" checked>
         <div class="tab col-simple">
             <?= $this->data['note']->render('client-note', 'notes', $client->notes); ?>
         </div>
@@ -1317,6 +1345,7 @@ echo $this->data['nav']->render();
                 </div>
             </div>
         </div>
+        <?php endif; ?>
         <?php endif; ?>
     </div>
 </div>

@@ -285,7 +285,7 @@ final class ApiController extends Controller
     /**
      * Create directory for an account
      *
-     * @param int $id    Item number
+     * @param int $id        Item number
      * @param int $createdBy Creator of the directory
      *
      * @return Collection
@@ -332,7 +332,7 @@ final class ApiController extends Controller
         /** @var \Modules\Attribute\Models\AttributeType[] $types */
         $types = ClientAttributeTypeMapper::getAll()
             ->where('name', \array_keys($segmentation), 'IN')
-            ->execute();
+            ->executeGetArray();
 
         foreach ($types as $type) {
             $internalResponse = clone $response;

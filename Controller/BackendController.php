@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace Modules\ClientManagement\Controller;
 
+use Modules\Attribute\Models\NullAttributeValue;
 use Modules\Auditor\Models\AuditMapper;
 use Modules\ClientManagement\Models\Attribute\ClientAttributeTypeL11nMapper;
 use Modules\ClientManagement\Models\Attribute\ClientAttributeTypeMapper;
@@ -21,8 +22,6 @@ use Modules\ClientManagement\Models\Attribute\ClientAttributeValueL11nMapper;
 use Modules\ClientManagement\Models\Attribute\ClientAttributeValueMapper;
 use Modules\ClientManagement\Models\ClientMapper;
 use Modules\ClientManagement\Models\PermissionCategory;
-use Modules\ItemManagement\Models\Attribute\ItemAttributeTypeMapper;
-use Modules\ItemManagement\Models\Attribute\ItemAttributeValueL11nMapper;
 use Modules\Media\Models\MediaMapper;
 use Modules\Media\Models\MediaTypeMapper;
 use Modules\Organization\Models\Attribute\UnitAttributeMapper;
@@ -62,13 +61,13 @@ final class BackendController extends Controller
      */
     public function viewClientManagementAttributeTypeList(RequestAbstract $request, ResponseAbstract $response, array $data = []) : RenderableInterface
     {
-        $view = new \Modules\Attribute\Theme\Backend\Components\AttributeTypeListView($this->app->l11nManager, $request, $response);
+        $view              = new \Modules\Attribute\Theme\Backend\Components\AttributeTypeListView($this->app->l11nManager, $request, $response);
         $view->data['nav'] = $this->app->moduleManager->get('Navigation')->createNavigationMid(1003101001, $request, $response);
 
         $view->attributes = ClientAttributeTypeMapper::getAll()
             ->with('l11n')
             ->where('l11n/language', $response->header->l11n->language)
-            ->execute();
+            ->executeGetArray();
 
         $view->path = 'sales/client';
 
@@ -97,7 +96,7 @@ final class BackendController extends Controller
         $attributes = ClientAttributeValueMapper::getAll()
             ->with('l11n')
             ->where('l11n/language', $response->header->l11n->language)
-            ->execute();
+            ->executeGetArray();
 
         $view->data['attributes'] = $attributes;
 
@@ -118,7 +117,7 @@ final class BackendController extends Controller
      */
     public function viewClientManagementAttributeType(RequestAbstract $request, ResponseAbstract $response, array $data = []) : RenderableInterface
     {
-        $view = new \Modules\Attribute\Theme\Backend\Components\AttributeTypeView($this->app->l11nManager, $request, $response);
+        $view              = new \Modules\Attribute\Theme\Backend\Components\AttributeTypeView($this->app->l11nManager, $request, $response);
         $view->data['nav'] = $this->app->moduleManager->get('Navigation')->createNavigationMid(1003101001, $request, $response);
 
         $view->attribute = ClientAttributeTypeMapper::get()
@@ -132,7 +131,7 @@ final class BackendController extends Controller
 
         $view->l11ns = ClientAttributeTypeL11nMapper::getAll()
             ->where('ref', $view->attribute->id)
-            ->execute();
+            ->executeGetArray();
 
         $view->path = 'sales/client';
 
@@ -153,7 +152,7 @@ final class BackendController extends Controller
      */
     public function viewClientManagementAttributeValue(RequestAbstract $request, ResponseAbstract $response, array $data = []) : RenderableInterface
     {
-        $view = new \Modules\Attribute\Theme\Backend\Components\AttributeValueView($this->app->l11nManager, $request, $response);
+        $view              = new \Modules\Attribute\Theme\Backend\Components\AttributeValueView($this->app->l11nManager, $request, $response);
         $view->data['nav'] = $this->app->moduleManager->get('Navigation')->createNavigationMid(1003101001, $request, $response);
 
         $view->attribute = ClientAttributeValueMapper::get()
@@ -164,7 +163,7 @@ final class BackendController extends Controller
 
         $view->l11ns = ClientAttributeValueL11nMapper::getAll()
             ->where('ref', $view->attribute->id)
-            ->execute();
+            ->executeGetArray();
 
         // @todo Also find the ItemAttributeType
 
@@ -195,7 +194,7 @@ final class BackendController extends Controller
             ->with('mainAddress')
             ->where('unit', $this->app->unitId)
             ->limit(25)
-            ->execute();
+            ->executeGetArray();
 
         $view->data['client'] = $client;
 
@@ -217,7 +216,7 @@ final class BackendController extends Controller
     public function viewClientManagementClientCreate(RequestAbstract $request, ResponseAbstract $response, array $data = []) : RenderableInterface
     {
         $view = new View($this->app->l11nManager, $request, $response);
-        $view->setTemplate('/Modules/ClientManagement/Theme/Backend/client-create');
+        $view->setTemplate('/Modules/ClientManagement/Theme/Backend/client-view');
         $view->data['nav'] = $this->app->moduleManager->get('Navigation')->createNavigationMid(1003102001, $request, $response);
 
         return $view;
@@ -285,7 +284,7 @@ final class BackendController extends Controller
         $view->data['attributeTypes'] = ClientAttributeTypeMapper::getAll()
             ->with('l11n')
             ->where('l11n/language', $response->header->l11n->language)
-            ->execute();
+            ->executeGetArray();
 
         // Get item profile image
         // @feature Create a new read mapper function that returns relation models instead of its own model
@@ -318,17 +317,18 @@ final class BackendController extends Controller
 
         $view->data['business_start'] = $businessStart->id === 0 ? 1 : $businessStart->value->getValue();
 
-        $view->data['hasBilling'] = $this->app->moduleManager->isActive('Billing');
+        $view->data['hasBilling']    = $this->app->moduleManager->isActive('Billing');
+        $view->data['hasAccounting'] = $this->app->moduleManager->isActive('Accounting');
 
         $view->data['prices'] = $view->data['hasBilling']
             ? \Modules\Billing\Models\Price\PriceMapper::getAll()
                 ->where('client', $view->data['client']->id)
                 ->where('type', \Modules\Billing\Models\Price\PriceType::SALES)
-                ->execute()
+                ->executeGetArray()
             : [];
 
         /** @var \Modules\Attribute\Models\AttributeType[] $tmp */
-        $tmp = ItemAttributeTypeMapper::getAll()
+        $tmp = ClientAttributeTypeMapper::getAll()
             ->with('defaults')
             ->with('defaults/l11n')
             ->where('name', [
@@ -336,9 +336,9 @@ final class BackendController extends Controller
                 'sales_tax_code', 'purchase_tax_code',
             ], 'IN')
             ->where('defaults/l11n', (new Where($this->app->dbPool->get()))
-                ->where(ItemAttributeValueL11nMapper::getColumnByMember('ref') ?? '', '=', null)
-                ->orWhere(ItemAttributeValueL11nMapper::getColumnByMember('language') ?? '', '=', $response->header->l11n->language))
-            ->execute();
+                ->where(ClientAttributeValueL11nMapper::getColumnByMember('ref') ?? '', '=', null)
+                ->orWhere(ClientAttributeValueL11nMapper::getColumnByMember('language') ?? '', '=', $response->header->l11n->language))
+            ->executeGetArray();
 
         $defaultAttributeTypes = [];
         foreach ($tmp as $t) {
@@ -358,7 +358,7 @@ final class BackendController extends Controller
             ->where('defaults/l11n', (new Where($this->app->dbPool->get()))
                 ->where(ClientAttributeValueL11nMapper::getColumnByMember('ref') ?? '', '=', null)
                 ->orWhere(ClientAttributeValueL11nMapper::getColumnByMember('language') ?? '', '=', $response->header->l11n->language))
-            ->execute();
+            ->executeGetArray();
 
         $clientSegmentationTypes = [];
         foreach ($tmp as $t) {
@@ -381,7 +381,7 @@ final class BackendController extends Controller
                 ->where('type', StringUtils::intHash(ClientMapper::class))
                 ->where('module', 'ClientManagement')
                 ->where('ref', (string) $view->data['client']->id)
-                ->execute();
+                ->executeGetArray();
         }
 
         $view->data['logs'] = $logs;
@@ -392,7 +392,7 @@ final class BackendController extends Controller
             ->with('types')
             ->join('id', ClientMapper::class, 'files') // id = media id, files = client relations
                 ->on('id', $view->data['client']->id, relation: 'files') // id = item id
-            ->execute();
+            ->executeGetArray();
 
         $view->data['media-upload'] = new \Modules\Media\Theme\Backend\Components\Upload\BaseView($this->app->l11nManager, $request, $response);
         $view->data['note']         = new \Modules\Editor\Theme\Backend\Components\Note\BaseView($this->app->l11nManager, $request, $response);
@@ -418,5 +418,30 @@ final class BackendController extends Controller
     public function viewClientManagementClientAnalysis(RequestAbstract $request, ResponseAbstract $response, array $data = []) : RenderableInterface
     {
         return new View($this->app->l11nManager, $request, $response);
+    }
+
+    /**
+     * Routing end-point for application behavior.
+     *
+     * @param RequestAbstract  $request  Request
+     * @param ResponseAbstract $response Response
+     * @param array            $data     Generic data
+     *
+     * @return RenderableInterface
+     *
+     * @since 1.0.0
+     * @codeCoverageIgnore
+     */
+    public function viewClientManagementAttributeValueCreate(RequestAbstract $request, ResponseAbstract $response, array $data = []) : RenderableInterface
+    {
+        $view              = new \Modules\Attribute\Theme\Backend\Components\AttributeValueView($this->app->l11nManager, $request, $response);
+        $view->data['nav'] = $this->app->moduleManager->get('Navigation')->createNavigationMid(1003101001, $request, $response);
+
+        $view->type      = ClientAttributeTypeMapper::get()->where('id', (int) $request->getData('type'))->execute();
+        $view->attribute = new NullAttributeValue();
+
+        $view->path = 'sales/client';
+
+        return $view;
     }
 }
