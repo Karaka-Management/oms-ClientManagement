@@ -64,6 +64,9 @@ echo $this->data['nav']->render();
             <li><label for="c-tab-4"><?= $this->getHtml('Prices'); ?></label>
             <li><label for="c-tab-5"><?= $this->getHtml('Attributes', 'Attribute', 'Backend'); ?></label>
             <li><label for="c-tab-6"><?= $this->getHtml('Accounting'); ?></label>
+            <!-- @todo Implement view
+            <li><label for="c-tab-11"><?= $this->getHtml('Tickets'); ?></label>
+            -->
             <li><label for="c-tab-7"><?= $this->getHtml('Notes'); ?></label>
             <li><label for="c-tab-8"><?= $this->getHtml('Files'); ?></label>
             <li><label for="c-tab-9"><?= $this->getHtml('Bills'); ?></label>

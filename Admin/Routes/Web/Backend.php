@@ -22,6 +22,7 @@ return [
         [
             'dest'       => '\Modules\ClientManagement\Controller\BackendController:viewClientManagementAttributeTypeList',
             'verb'       => RouteVerb::GET,
+            'active' => true,
             'permission' => [
                 'module' => BackendController::NAME,
                 'type'   => PermissionType::READ,
@@ -33,6 +34,7 @@ return [
         [
             'dest'       => '\Modules\ClientManagement\Controller\BackendController:viewClientManagementAttributeType',
             'verb'       => RouteVerb::GET,
+            'active' => true,
             'permission' => [
                 'module' => BackendController::NAME,
                 'type'   => PermissionType::READ,
@@ -44,6 +46,7 @@ return [
         [
             'dest'       => '\Modules\ClientManagement\Controller\BackendController:viewClientManagementAttributeType',
             'verb'       => RouteVerb::GET,
+            'active' => true,
             'permission' => [
                 'module' => BackendController::NAME,
                 'type'   => PermissionType::CREATE,
@@ -55,6 +58,7 @@ return [
         [
             'dest'       => '\Modules\ClientManagement\Controller\BackendController:viewClientManagementAttributeValue',
             'verb'       => RouteVerb::GET,
+            'active' => true,
             'permission' => [
                 'module' => BackendController::NAME,
                 'type'   => PermissionType::READ,
@@ -66,6 +70,7 @@ return [
         [
             'dest'       => '\Modules\ClientManagement\Controller\BackendController:viewClientManagementAttributeValueCreate',
             'verb'       => RouteVerb::GET,
+            'active' => true,
             'permission' => [
                 'module' => BackendController::NAME,
                 'type'   => PermissionType::CREATE,
@@ -77,6 +82,7 @@ return [
         [
             'dest'       => '\Modules\ClientManagement\Controller\BackendController:viewClientManagementClientList',
             'verb'       => RouteVerb::GET,
+            'active' => true,
             'permission' => [
                 'module' => BackendController::NAME,
                 'type'   => PermissionType::READ,
@@ -88,6 +94,7 @@ return [
         [
             'dest'       => '\Modules\ClientManagement\Controller\BackendController:viewClientManagementClientCreate',
             'verb'       => RouteVerb::GET,
+            'active' => true,
             'permission' => [
                 'module' => BackendController::NAME,
                 'type'   => PermissionType::CREATE,
@@ -99,6 +106,7 @@ return [
         [
             'dest'       => '\Modules\ClientManagement\Controller\BackendController:viewClientManagementClientView',
             'verb'       => RouteVerb::GET,
+            'active' => true,
             'permission' => [
                 'module' => BackendController::NAME,
                 'type'   => PermissionType::READ,
@@ -110,6 +118,7 @@ return [
         [
             'dest'       => '\Modules\ClientManagement\Controller\BackendController:viewClientManagementClientAnalysis',
             'verb'       => RouteVerb::GET,
+            'active' => true,
             'permission' => [
                 'module' => BackendController::NAME,
                 'type'   => PermissionType::READ,

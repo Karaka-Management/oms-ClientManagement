@@ -208,7 +208,7 @@ final class ApiController extends Controller
     }
 
     /**
-     * Api method to create news article
+     * Api method to create Client
      *
      * @param RequestAbstract  $request  Request
      * @param ResponseAbstract $response Response
@@ -283,7 +283,7 @@ final class ApiController extends Controller
     }
 
     /**
-     * Create directory for an account
+     * Create directory for a client
      *
      * @param int $id        Item number
      * @param int $createdBy Creator of the directory
@@ -348,7 +348,7 @@ final class ApiController extends Controller
     }
 
     /**
-     * Method to create news article from request.
+     * Method to create Client from request.
      *
      * @param RequestAbstract $request Request
      *
@@ -382,7 +382,7 @@ final class ApiController extends Controller
     }
 
     /**
-     * Validate news create request
+     * Validate Client create request
      *
      * @param RequestAbstract $request Request
      *
@@ -403,7 +403,7 @@ final class ApiController extends Controller
     }
 
     /**
-     * Api method to update an account
+     * Api method to update the main Address
      *
      * @param RequestAbstract  $request  Request
      * @param ResponseAbstract $response Response
@@ -448,7 +448,7 @@ final class ApiController extends Controller
     }
 
     /**
-     * Validate news create request
+     * Validate main Address create request
      *
      * @param RequestAbstract $request Request
      *
