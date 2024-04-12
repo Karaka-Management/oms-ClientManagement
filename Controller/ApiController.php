@@ -29,7 +29,6 @@ use Modules\ClientManagement\Models\PermissionCategory;
 use Modules\ClientManagement\Models\SettingsEnum;
 use Modules\Media\Models\Collection;
 use Modules\Media\Models\CollectionMapper;
-use Modules\Media\Models\MediaMapper;
 use Modules\Media\Models\PathSettings;
 use Modules\Organization\Models\UnitMapper;
 use phpOMS\Account\PermissionType;
@@ -295,7 +294,7 @@ final class ApiController extends Controller
     private function createMediaDirForClient(int $id, int $createdBy) : Collection
     {
         $collection       = new Collection();
-        $collection->name = $id;
+        $collection->name = (string) $id;
         $collection->setVirtualPath('/Modules/ClientManagement/Clients');
         $collection->setPath('/Modules/Media/Files/Modules/ClientManagement/Clients/' . $id);
         $collection->createdBy = new NullAccount($createdBy);
@@ -615,10 +614,8 @@ final class ApiController extends Controller
      */
     public function apiFileCreate(RequestAbstract $request, ResponseAbstract $response, array $data = []) : void
     {
-        $uploadedFiles = $request->files;
-
-        if (empty($uploadedFiles)) {
-            $this->fillJsonResponse($request, $response, NotificationLevel::ERROR, 'Client', 'Invalid file', $uploadedFiles);
+        if (empty($request->files)) {
+            $this->fillJsonResponse($request, $response, NotificationLevel::ERROR, 'Client', 'Invalid file', $request->files);
             $response->header->status = RequestStatusCode::R_400;
 
             return;
@@ -627,41 +624,24 @@ final class ApiController extends Controller
         $uploaded = $this->app->moduleManager->get('Media', 'Api')->uploadFiles(
             names: $request->getDataList('names'),
             fileNames: $request->getDataList('filenames'),
-            files: $uploadedFiles,
+            files: $request->files,
             account: $request->header->account,
             basePath: __DIR__ . '/../../../Modules/Media/Files/Modules/ClientManagement/Clients/' . ($request->getData('client') ?? '0'),
             virtualPath: '/Modules/ClientManagement/Clients/' . ($request->getData('client') ?? '0'),
-            pathSettings: PathSettings::FILE_PATH
+            pathSettings: PathSettings::FILE_PATH,
+            type: $request->getDataInt('type'),
+            rel: (int) $request->getData('client'),
+            mapper: ClientMapper::class,
+            field: 'files'
         );
 
-        if ($request->hasData('type')) {
-            foreach ($uploaded as $file) {
-                $this->createModelRelation(
-                    $request->header->account,
-                    $file->id,
-                    $request->getDataInt('type'),
-                    MediaMapper::class,
-                    'types',
-                    '',
-                    $request->getOrigin()
-                );
-            }
-        }
-
-        if (empty($uploaded)) {
+        if (empty($uploaded->sources)) {
             $this->createInvalidAddResponse($request, $response, []);
 
             return;
         }
 
-        $this->createModelRelation(
-            $request->header->account,
-            (int) $request->getData('client'),
-            \reset($uploaded)->id,
-            ClientMapper::class, 'files', '', $request->getOrigin()
-        );
-
-        $this->createStandardCreateResponse($request, $response, $uploaded);
+        $this->createStandardCreateResponse($request, $response, $uploaded->sources);
     }
 
     /**
