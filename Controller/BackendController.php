@@ -30,7 +30,6 @@ use phpOMS\Asset\AssetType;
 use phpOMS\Contract\RenderableInterface;
 use phpOMS\DataStorage\Database\Query\Builder;
 use phpOMS\DataStorage\Database\Query\OrderType;
-use phpOMS\DataStorage\Database\Query\Where;
 use phpOMS\Message\RequestAbstract;
 use phpOMS\Message\ResponseAbstract;
 use phpOMS\Utils\StringUtils;
@@ -334,9 +333,7 @@ final class BackendController extends Controller
                 'segment', 'section', 'sales_group', 'product_group', 'product_type',
                 'sales_tax_code', 'purchase_tax_code',
             ], 'IN')
-            ->where('defaults/l11n', (new Where($this->app->dbPool->get()))
-                ->where(ClientAttributeValueL11nMapper::getColumnByMember('ref') ?? '', '=', null)
-                ->orWhere(ClientAttributeValueL11nMapper::getColumnByMember('language') ?? '', '=', $response->header->l11n->language))
+            ->where('defaults/l11n/language', [$response->header->l11n->language, null])
             ->executeGetArray();
 
         $defaultAttributeTypes = [];
@@ -354,9 +351,7 @@ final class BackendController extends Controller
                 'segment', 'section', 'client_group', 'client_type',
                 'sales_tax_code',
             ], 'IN')
-            ->where('defaults/l11n', (new Where($this->app->dbPool->get()))
-                ->where(ClientAttributeValueL11nMapper::getColumnByMember('ref') ?? '', '=', null)
-                ->orWhere(ClientAttributeValueL11nMapper::getColumnByMember('language') ?? '', '=', $response->header->l11n->language))
+            ->where('defaults/l11n/language', [$response->header->l11n->language, null])
             ->executeGetArray();
 
         $clientSegmentationTypes = [];
@@ -400,23 +395,6 @@ final class BackendController extends Controller
         $view->data['contact-component'] = new \Modules\Admin\Theme\Backend\Components\ContactEditor\ContactView($this->app->l11nManager, $request, $response);
 
         return $view;
-    }
-
-    /**
-     * Routing end-point for application behavior.
-     *
-     * @param RequestAbstract  $request  Request
-     * @param ResponseAbstract $response Response
-     * @param array            $data     Generic data
-     *
-     * @return RenderableInterface
-     *
-     * @since 1.0.0
-     * @codeCoverageIgnore
-     */
-    public function viewClientManagementClientAnalysis(RequestAbstract $request, ResponseAbstract $response, array $data = []) : RenderableInterface
-    {
-        return new View($this->app->l11nManager, $request, $response);
     }
 
     /**
