@@ -421,4 +421,20 @@ final class BackendController extends Controller
 
         return $view;
     }
+
+    /**
+     * Method which generates the module profile view.
+     *
+     * @param RequestAbstract  $request  Request
+     * @param ResponseAbstract $response Response
+     * @param array            $data     Generic data
+     *
+     * @return RenderableInterface Response can be rendered
+     *
+     * @since 1.0.0
+     */
+    public function viewClientManagementClientAnalysis(RequestAbstract $request, ResponseAbstract $response, array $data = []) : RenderableInterface
+    {
+        return new View($this->app->l11nManager, $request, $response);
+    }
 }
