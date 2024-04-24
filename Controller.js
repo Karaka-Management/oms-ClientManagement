@@ -3,6 +3,7 @@ import { Autoloader } from '../../jsOMS/Autoloader.js';
 
 Autoloader.defineNamespace('omsApp.Modules');
 
+/* global omsApp */
 omsApp.Modules.ClientManagement = class {
     /**
      * @constructor
@@ -45,12 +46,11 @@ omsApp.Modules.ClientManagement = class {
             return;
         }
 
-        const self = this;
         const data = JSON.parse(chart.getAttribute('data-chart'));
 
-        /** global: Chart */
+        /* global Chart */
+        // eslint-disable-next-line no-unused-vars
         const myChart = new Chart(chart.getContext('2d'), data);
-
     };
 
     bindMap (map)
@@ -61,7 +61,7 @@ omsApp.Modules.ClientManagement = class {
             return;
         }
 
-        /** global: OpenLayers */
+        /* global OpenLayers */
         const mapObj = new OpenLayers.Map(map.getAttribute('id'), {
             controls: [
                 new OpenLayers.Control.Navigation(
@@ -77,12 +77,12 @@ omsApp.Modules.ClientManagement = class {
 
         mapObj.addLayer(new OpenLayers.Layer.OSM());
 
-        const fromProjection = new OpenLayers.Projection("EPSG:4326");   // Transform from WGS 1984
-        const toProjection   = new OpenLayers.Projection("EPSG:900913"); // to Spherical Mercator Projection
+        const fromProjection = new OpenLayers.Projection('EPSG:4326');   // Transform from WGS 1984
+        const toProjection   = new OpenLayers.Projection('EPSG:900913'); // to Spherical Mercator Projection
         const position       = new OpenLayers.LonLat(map.getAttribute('data-lon'), map.getAttribute('data-lat')).transform(fromProjection, toProjection);
         const zoom           = 12;
 
-        const markers = new OpenLayers.Layer.Markers("Markers");
+        const markers = new OpenLayers.Layer.Markers('Markers');
         mapObj.addLayer(markers);
 
         markers.addMarker(new OpenLayers.Marker(position));
