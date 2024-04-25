@@ -209,7 +209,7 @@ final class ApiController extends Controller
     /**
      * Api method to create Client
      *
-     * @param RequestAbstract  $request  Request
+     * @param HttpRequest      $request  Request
      * @param ResponseAbstract $response Response
      * @param array            $data     Generic data
      *
@@ -219,7 +219,7 @@ final class ApiController extends Controller
      *
      * @since 1.0.0
      */
-    public function apiClientCreate(RequestAbstract $request, ResponseAbstract $response, array $data = []) : void
+    public function apiClientCreate(HttpRequest $request, ResponseAbstract $response, array $data = []) : void
     {
         if (!empty($val = $this->validateClientCreate($request))) {
             $response->header->status = RequestStatusCode::R_400;
