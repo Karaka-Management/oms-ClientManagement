@@ -31,7 +31,31 @@ return [
             ],
         ],
     ],
-    '^.*/client/attribute$' => [
+    '^.*/client(\?.*|$)$' => [
+        [
+            'dest'       => '\Modules\ClientManagement\Controller\ApiController:apiClientCreate',
+            'verb'       => RouteVerb::PUT,
+            'csrf'       => true,
+            'active'     => true,
+            'permission' => [
+                'module' => ApiController::NAME,
+                'type'   => PermissionType::CREATE,
+                'state'  => PermissionCategory::CLIENT,
+            ],
+        ],
+        [
+            'dest'       => '\Modules\ClientManagement\Controller\ApiController:apiClientUpdate',
+            'verb'       => RouteVerb::SET,
+            'csrf'       => true,
+            'active'     => true,
+            'permission' => [
+                'module' => ApiController::NAME,
+                'type'   => PermissionType::MODIFY,
+                'state'  => PermissionCategory::CLIENT,
+            ],
+        ],
+    ],
+    '^.*/client/attribute(\?.*|$)$' => [
         [
             'dest'       => '\Modules\ClientManagement\Controller\ApiAttributeController:apiClientAttributeCreate',
             'verb'       => RouteVerb::PUT,
@@ -39,7 +63,7 @@ return [
             'active'     => true,
             'permission' => [
                 'module' => ApiController::NAME,
-                'type'   => PermissionType::READ,
+                'type'   => PermissionType::CREATE,
                 'state'  => PermissionCategory::CLIENT,
             ],
         ],
@@ -50,12 +74,12 @@ return [
             'active'     => true,
             'permission' => [
                 'module' => ApiController::NAME,
-                'type'   => PermissionType::READ,
+                'type'   => PermissionType::MODIFY,
                 'state'  => PermissionCategory::CLIENT,
             ],
         ],
     ],
-    '^.*/client/attribute/type$' => [
+    '^.*/client/attribute/type(\?.*|$)$' => [
         [
             'dest'       => '\Modules\ClientManagement\Controller\ApiAttributeController:apiClientAttributeTypeCreate',
             'verb'       => RouteVerb::PUT,
@@ -64,7 +88,7 @@ return [
             'permission' => [
                 'module' => ApiController::NAME,
                 'type'   => PermissionType::READ,
-                'state'  => PermissionCategory::CLIENT,
+                'state'  => PermissionCategory::ATTRIBUTE,
             ],
         ],
         [
@@ -75,11 +99,11 @@ return [
             'permission' => [
                 'module' => ApiController::NAME,
                 'type'   => PermissionType::READ,
-                'state'  => PermissionCategory::CLIENT,
+                'state'  => PermissionCategory::ATTRIBUTE,
             ],
         ],
     ],
-    '^.*/client/attribute/type/l11n$' => [
+    '^.*/client/attribute/type/l11n(\?.*|$)$' => [
         [
             'dest'       => '\Modules\ClientManagement\Controller\ApiAttributeController:apiClientAttributeTypeL11nCreate',
             'verb'       => RouteVerb::PUT,
@@ -87,8 +111,8 @@ return [
             'active'     => true,
             'permission' => [
                 'module' => ApiController::NAME,
-                'type'   => PermissionType::READ,
-                'state'  => PermissionCategory::CLIENT,
+                'type'   => PermissionType::CREATE,
+                'state'  => PermissionCategory::ATTRIBUTE,
             ],
         ],
         [
@@ -98,12 +122,12 @@ return [
             'active'     => true,
             'permission' => [
                 'module' => ApiController::NAME,
-                'type'   => PermissionType::READ,
-                'state'  => PermissionCategory::CLIENT,
+                'type'   => PermissionType::MODIFY,
+                'state'  => PermissionCategory::ATTRIBUTE,
             ],
         ],
     ],
-    '^.*/client/attribute/value$' => [
+    '^.*/client/attribute/value(\?.*|$)$' => [
         [
             'dest'       => '\Modules\ClientManagement\Controller\ApiAttributeController:apiClientAttributeValueCreate',
             'verb'       => RouteVerb::PUT,
@@ -111,7 +135,7 @@ return [
             'active'     => true,
             'permission' => [
                 'module' => ApiController::NAME,
-                'type'   => PermissionType::READ,
+                'type'   => PermissionType::CREATE,
                 'state'  => PermissionCategory::CLIENT,
             ],
         ],
@@ -122,12 +146,12 @@ return [
             'active'     => true,
             'permission' => [
                 'module' => ApiController::NAME,
-                'type'   => PermissionType::READ,
+                'type'   => PermissionType::MODIFY,
                 'state'  => PermissionCategory::CLIENT,
             ],
         ],
     ],
-    '^.*/client/attribute/value/l11n$' => [
+    '^.*/client/attribute/value/l11n(\?.*|$)$' => [
         [
             'dest'       => '\Modules\ClientManagement\Controller\ApiAttributeController:apiClientAttributeValueL11nCreate',
             'verb'       => RouteVerb::PUT,
@@ -135,7 +159,7 @@ return [
             'active'     => true,
             'permission' => [
                 'module' => ApiController::NAME,
-                'type'   => PermissionType::READ,
+                'type'   => PermissionType::CREATE,
                 'state'  => PermissionCategory::CLIENT,
             ],
         ],
@@ -146,12 +170,12 @@ return [
             'active'     => true,
             'permission' => [
                 'module' => ApiController::NAME,
-                'type'   => PermissionType::READ,
+                'type'   => PermissionType::MODIFY,
                 'state'  => PermissionCategory::CLIENT,
             ],
         ],
     ],
-    '^.*/client/l11n$' => [
+    '^.*/client/l11n(\?.*|$)$' => [
         [
             'dest'       => '\Modules\ClientManagement\Controller\ApiController:apiClientL11nCreate',
             'verb'       => RouteVerb::PUT,
@@ -159,7 +183,7 @@ return [
             'active'     => true,
             'permission' => [
                 'module' => ApiController::NAME,
-                'type'   => PermissionType::READ,
+                'type'   => PermissionType::CREATE,
                 'state'  => PermissionCategory::CLIENT,
             ],
         ],
@@ -170,12 +194,12 @@ return [
             'active'     => true,
             'permission' => [
                 'module' => ApiController::NAME,
-                'type'   => PermissionType::READ,
+                'type'   => PermissionType::MODIFY,
                 'state'  => PermissionCategory::CLIENT,
             ],
         ],
     ],
-    '^.*/client/l11n/type$' => [
+    '^.*/client/l11n/type(\?.*|$)$' => [
         [
             'dest'       => '\Modules\ClientManagement\Controller\ApiController:apiClientL11nTypeCreate',
             'verb'       => RouteVerb::PUT,
@@ -183,7 +207,7 @@ return [
             'active'     => true,
             'permission' => [
                 'module' => ApiController::NAME,
-                'type'   => PermissionType::READ,
+                'type'   => PermissionType::CREATE,
                 'state'  => PermissionCategory::CLIENT,
             ],
         ],
@@ -194,7 +218,7 @@ return [
             'active'     => true,
             'permission' => [
                 'module' => ApiController::NAME,
-                'type'   => PermissionType::READ,
+                'type'   => PermissionType::MODIFY,
                 'state'  => PermissionCategory::CLIENT,
             ],
         ],

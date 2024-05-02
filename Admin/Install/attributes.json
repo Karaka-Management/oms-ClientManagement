@@ -56,23 +56,6 @@
         ]
     },
     {
-        "name": "client_area",
-        "l11n": {
-            "en": "Client area",
-            "de": "Kundengebiet"
-        },
-        "value_type": 2,
-        "is_custom_allowed": false,
-        "validation_pattern": "",
-        "is_required": false,
-        "default_value": "01",
-        "values": [
-            {
-                "value": "01"
-            }
-        ]
-    },
-    {
         "name": "bill_emails",
         "l11n": {
             "en": "Send bills as emails",

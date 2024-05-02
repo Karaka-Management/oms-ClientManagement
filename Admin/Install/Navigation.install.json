@@ -37,7 +37,7 @@
                 "uri": "{/base}/sales/client/create",
                 "target": "self",
                 "icon": null,
-                "order": 1,
+                "order": 5,
                 "from": "ClientManagement",
                 "permission": { "permission": 4, "category": null, "element": null },
                 "parent": 1003102001,

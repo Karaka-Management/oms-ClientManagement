@@ -30,6 +30,7 @@ use phpOMS\Asset\AssetType;
 use phpOMS\Contract\RenderableInterface;
 use phpOMS\DataStorage\Database\Query\Builder;
 use phpOMS\DataStorage\Database\Query\OrderType;
+use phpOMS\Math\Geometry\Shape\D3\Sphere;
 use phpOMS\Message\RequestAbstract;
 use phpOMS\Message\ResponseAbstract;
 use phpOMS\Utils\StringUtils;
@@ -187,15 +188,27 @@ final class BackendController extends Controller
         $view->setTemplate('/Modules/ClientManagement/Theme/Backend/client-list');
         $view->data['nav'] = $this->app->moduleManager->get('Navigation')->createNavigationMid(1003102001, $request, $response);
 
-        /** @var \Modules\ClientManagement\Models\Client $client */
-        $client = ClientMapper::getAll()
+        $mapper = ClientMapper::getAll()
             ->with('account')
             ->with('mainAddress')
             ->where('unit', $this->app->unitId)
-            ->limit(25)
-            ->executeGetArray();
+            ->limit(25);
 
-        $view->data['client'] = $client;
+        if ($request->hasData('geo')) {
+            $geo = $request->getDataList('geo');
+
+            $locationBox = Sphere::boundingBox(
+                (float) $geo[0], (float) $geo[1],
+                $request->getDataFloat('radius') ?? 3000.0
+            );
+
+            $mapper->where('lat', $locationBox['a']['lat'], '<')->where('lon', $locationBox['a']['lon'], '>')
+                ->where('lat', $locationBox['b']['lat'], '<')->where('lon', $locationBox['b']['lon'], '<')
+                ->where('lat', $locationBox['c']['lat'], '>')->where('lon', $locationBox['c']['lon'], '>')
+                ->where('lat', $locationBox['d']['lat'], '>')->where('lon', $locationBox['d']['lon'], '<');
+        }
+
+        $view->data['client'] = $mapper->executeGetArray();
 
         return $view;
     }
@@ -229,6 +242,22 @@ final class BackendController extends Controller
      * @param array            $data     Generic data
      *
      * @return RenderableInterface
+     *
+     * @feature In the supplier and client view you should be able to select multiple bills and click print for printing
+     *      https://github.com/Karaka-Management/oms-Billing/issues/35
+     *
+     * @feature The send bill as email should have a global settings where you can either define a global email or
+     *      empty = user specific email
+     *      https://github.com/Karaka-Management/oms-Billing/issues/33
+     *
+     * @feature Add list for top articles on profile page... important for customer calls
+     *      https://github.com/Karaka-Management/oms-ClientManagement/issues/12
+     *
+     * @feature Create easy way to create quick visitor reports (= maybe use notes for this with a type 'visit')
+     *      https://github.com/Karaka-Management/oms-Sales/issues/2
+     *
+     * @feature Allow to create visitor report on cell phone by using location matching (geolocation)
+     *      https://github.com/Karaka-Management/oms-Sales/issues/3
      *
      * @since 1.0.0
      * @codeCoverageIgnore
@@ -269,11 +298,6 @@ final class BackendController extends Controller
             ->where($pkType, $pkValue)
             ->where('attributes/type/l11n/language', $response->header->l11n->language)
             ->where('attributes/value/l11n/language', [$response->header->l11n->language, null])
-            /*
-            ->where('attributes/value/l11n', (new Where($this->app->dbPool->get()))
-                ->where(ClientAttributeValueL11nMapper::getColumnByMember('ref'), '=', null)
-                ->orWhere(ClientAttributeValueL11nMapper::getColumnByMember('language'), '=', $response->header->l11n->language))
-            */
             ->execute();
 
         $view->data['attributeView']                               = new \Modules\Attribute\Theme\Backend\Components\AttributeView($this->app->l11nManager, $request, $response);

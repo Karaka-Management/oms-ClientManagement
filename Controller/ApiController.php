@@ -31,6 +31,7 @@ use Modules\Media\Models\Collection;
 use Modules\Media\Models\CollectionMapper;
 use Modules\Media\Models\PathSettings;
 use Modules\Organization\Models\UnitMapper;
+use Modules\Sales\Models\NullSalesRep;
 use phpOMS\Account\PermissionType;
 use phpOMS\Api\EUVAT\EUVATVies;
 use phpOMS\Localization\BaseStringL11n;
@@ -372,6 +373,7 @@ final class ApiController extends Controller
         $client          = new Client();
         $client->number  = $request->getDataString('number') ?? '';
         $client->account = $account;
+        $client->rep     = $request->hasData('rep') ? new NullSalesRep((int) $request->getData('rep')) : null;
         $client->unit    = $request->getDataInt('unit') ?? $this->app->unitId;
 
         $request->setData('name', null, true);

@@ -22,7 +22,11 @@ echo $this->data['nav']->render(); ?>
 <div class="row">
     <div class="col-xs-12">
         <section class="portlet">
-            <div class="portlet-head"><?= $this->getHtml('Clients'); ?><i class="g-icon download btn end-xs">download</i></div>
+            <div class="portlet-head">
+                <?= $this->getHtml('Clients'); ?>
+                <i class="g-icon download btn end-xs">download</i>
+                <a class="button end-xs" href="<?= UriFactory::build('{%}?geo=\{°\}'); ?>"><i class="g-icon">location_on</i></a>
+            </div>
             <div class="slider">
             <table id="iSalesClientList" class="default sticky">
                 <thead>

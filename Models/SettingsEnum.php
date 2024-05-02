@@ -27,4 +27,6 @@ use phpOMS\Stdlib\Base\Enum;
 abstract class SettingsEnum extends Enum
 {
     public const DEFAULT_SEGMENTATION = '1003100001';
+
+    public const CLIENT_AREA = '1003100002';
 }

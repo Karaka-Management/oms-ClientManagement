@@ -16,4 +16,5 @@ return ['Navigation' => [
     'Client'   => 'Kunde',
     'Region'   => 'Region',
     'SalesRep' => 'Verkäufer',
+    'Attributes' => 'Attribute',
 ]];

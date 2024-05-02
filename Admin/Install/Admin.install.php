@@ -24,4 +24,12 @@ return [
         'pattern'     => '',
         'module'      => ApiController::NAME,
     ],
+    [
+        "description" => "Default item segmentation (segment, section, sales group, product group)",
+        'type'        => 'setting',
+        'name'        => SettingsEnum::CLIENT_AREA,
+        'content'     => '[]',
+        'pattern'     => '',
+        'module'      => ApiController::NAME,
+    ],
 ];

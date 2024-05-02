@@ -39,6 +39,14 @@
                 "type": "DATETIME",
                 "null": false
             },
+            "clientmgmt_client_rep": {
+                "name": "clientmgmt_client_rep",
+                "type": "INT",
+                "null": true,
+                "default": null,
+                "foreignTable": "sales_rep",
+                "foreignKey": "sales_rep_id"
+            },
             "clientmgmt_client_account": {
                 "name": "clientmgmt_client_account",
                 "type": "INT",

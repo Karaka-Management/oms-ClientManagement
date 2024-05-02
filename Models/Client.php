@@ -18,6 +18,7 @@ use Modules\Admin\Models\Account;
 use Modules\Editor\Models\EditorDoc;
 use Modules\Payment\Models\Payment;
 use Modules\Profile\Models\Profile;
+use Modules\Sales\Models\SalesRep;
 use phpOMS\Stdlib\Base\Address;
 use phpOMS\Stdlib\Base\NullAddress;
 
@@ -79,6 +80,8 @@ class Client
      */
     public string $info = '';
 
+    public ?SalesRep $rep = null;
+
     /**
      * Creation date and time.
      *
@@ -134,14 +137,6 @@ class Client
      * @since 1.0.0
      */
     public array $partners = [];
-
-    /**
-     * Sales representative.
-     *
-     * @var Profile|null
-     * @since 1.0.0
-     */
-    public ?Profile $salesRep = null;
 
     /**
      * Advertisement material.
