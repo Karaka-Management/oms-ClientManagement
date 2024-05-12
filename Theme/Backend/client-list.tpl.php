@@ -67,7 +67,7 @@ echo $this->data['nav']->render(); ?>
                         <label>
                             <i class="filter g-icon">filter_alt</i>
                         </label>
-                    <td><?= $this->getHtml('Zip'); ?>
+                    <td><?= $this->getHtml('Postal'); ?>
                         <label for="iSalesClientList-sort-7">
                             <input type="radio" name="iSalesClientList-sort" id="iSalesClientList-sort-7">
                             <i class="sort-asc g-icon">expand_less</i>
@@ -112,7 +112,7 @@ echo $this->data['nav']->render(); ?>
                     <td data-label="<?= $this->getHtml('ID', '0', '0'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->number); ?></a>
                     <td data-label="<?= $this->getHtml('Name'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->account->name1); ?> <?= $this->printHtml($value->account->name2); ?></a>
                     <td data-label="<?= $this->getHtml('City'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->mainAddress->city); ?></a>
-                    <td data-label="<?= $this->getHtml('Zip'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->mainAddress->postal); ?></a>
+                    <td data-label="<?= $this->getHtml('Postal'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->mainAddress->postal); ?></a>
                     <td data-label="<?= $this->getHtml('Address'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->mainAddress->address); ?></a>
                     <td data-label="<?= $this->getHtml('Country'); ?>"><a href="<?= $url; ?>"><?= $this->printHtml($value->mainAddress->country); ?></a>
                 <?php endforeach; ?>

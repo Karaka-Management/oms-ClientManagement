@@ -631,7 +631,7 @@ final class ApiController extends Controller
             basePath: __DIR__ . '/../../../Modules/Media/Files/Modules/ClientManagement/Clients/' . ($request->getData('client') ?? '0'),
             virtualPath: '/Modules/ClientManagement/Clients/' . ($request->getData('client') ?? '0'),
             pathSettings: PathSettings::FILE_PATH,
-            type: $request->getDataInt('type'),
+            tag: $request->getDataInt('tag'),
             rel: (int) $request->getData('client'),
             mapper: ClientMapper::class,
             field: 'files'

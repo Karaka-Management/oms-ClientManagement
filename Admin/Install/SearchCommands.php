@@ -23,6 +23,7 @@ return [
             'dest'       => '\Modules\ClientManagement\Controller\SearchController:searchGeneral',
             'verb'       => RouteVerb::ANY,
             'active'     => true,
+            'order'      => 4,
             'permission' => [
                 'module' => SearchController::NAME,
                 'type'   => PermissionType::READ,

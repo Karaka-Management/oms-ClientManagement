@@ -12,19 +12,5 @@
         "name": "Clients",
         "virtualPath": "/Modules/ClientManagement",
         "user": 1
-    },
-    {
-        "type": "type",
-        "name": "client_profile_image",
-        "l11n": [
-            {
-                "title": "Profile image",
-                "lang": "en"
-            },
-            {
-                "title": "Profilbild",
-                "lang": "de"
-            }
-        ]
     }
 ]

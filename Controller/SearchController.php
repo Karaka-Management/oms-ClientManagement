@@ -17,7 +17,7 @@ namespace Modules\ClientManagement\Controller;
 use Modules\Admin\Models\ContactType;
 use Modules\ClientManagement\Models\ClientMapper;
 use Modules\Media\Models\MediaMapper;
-use Modules\Media\Models\MediaTypeMapper;
+use Modules\Tag\Models\TagMapper;
 use phpOMS\DataStorage\Database\Query\Builder;
 use phpOMS\Message\RequestAbstract;
 use phpOMS\Message\ResponseAbstract;
@@ -79,12 +79,12 @@ final class SearchController extends Controller
                     ->on(ClientMapper::HAS_MANY['files']['table'] . '.' . ClientMapper::HAS_MANY['files']['self'], '=', ClientMapper::TABLE . '.' . ClientMapper::PRIMARYFIELD)
                 ->leftJoin(MediaMapper::TABLE)
                     ->on(ClientMapper::HAS_MANY['files']['table'] . '.' . ClientMapper::HAS_MANY['files']['external'], '=', MediaMapper::TABLE . '.' . MediaMapper::PRIMARYFIELD)
-                ->leftJoin(MediaMapper::HAS_MANY['types']['table'])
-                    ->on(MediaMapper::TABLE . '.' . MediaMapper::PRIMARYFIELD, '=', MediaMapper::HAS_MANY['types']['table'] . '.' . MediaMapper::HAS_MANY['types']['self'])
-                ->leftJoin(MediaTypeMapper::TABLE)
-                    ->on(MediaMapper::HAS_MANY['types']['table'] . '.' . MediaMapper::HAS_MANY['types']['external'], '=', MediaTypeMapper::TABLE . '.' . MediaTypeMapper::PRIMARYFIELD)
+                ->leftJoin(MediaMapper::HAS_MANY['tags']['table'])
+                    ->on(MediaMapper::TABLE . '.' . MediaMapper::PRIMARYFIELD, '=', MediaMapper::HAS_MANY['tags']['table'] . '.' . MediaMapper::HAS_MANY['tags']['self'])
+                ->leftJoin(TagMapper::TABLE)
+                    ->on(MediaMapper::HAS_MANY['tags']['table'] . '.' . MediaMapper::HAS_MANY['tags']['external'], '=', TagMapper::TABLE . '.' . TagMapper::PRIMARYFIELD)
                 ->where(ClientMapper::HAS_MANY['files']['self'], '=', $account->id)
-                ->where(MediaTypeMapper::TABLE . '.' . MediaTypeMapper::getColumnByMember('name'), '=', 'client_profile_image');
+                ->where(TagMapper::TABLE . '.' . TagMapper::getColumnByMember('name'), '=', 'profile_image');
 
             $image = MediaMapper::get()
                 ->where('id', $iResults)

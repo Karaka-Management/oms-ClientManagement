@@ -363,7 +363,7 @@ echo $this->data['nav']->render();
                                     foreach ($client->files as $file) :
                                         ++$count;
                                         $url = UriFactory::build('{/base}/media/view?{?}&id=' . $file->id);
-                                        $extensionType = FileUtils::getExtensionType($value->extension);
+                                        $extensionType = FileUtils::getExtensionType($file->extension);
                                     ?>
                                     <tr data-href="<?= $url; ?>"
                                         <?= \in_array($extensionType, [ExtensionType::IMAGE, ExtensionType::PDF]) ? 'data-preview="' . UriFactory::build('{/api}media/export?id=' . $file->id . '&type=html&csrf={$CSRF}') . '"' : ''; ?>>
