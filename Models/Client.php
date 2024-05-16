@@ -17,7 +17,6 @@ namespace Modules\ClientManagement\Models;
 use Modules\Admin\Models\Account;
 use Modules\Editor\Models\EditorDoc;
 use Modules\Payment\Models\Payment;
-use Modules\Profile\Models\Profile;
 use Modules\Sales\Models\SalesRep;
 use phpOMS\Stdlib\Base\Address;
 use phpOMS\Stdlib\Base\NullAddress;

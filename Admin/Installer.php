@@ -215,6 +215,10 @@ final class Installer extends InstallerAbstract
         $module = $app->moduleManager->get('ClientManagement', 'ApiAttribute');
 
         foreach ($attributes as $attribute) {
+            if (!isset($attribute['values'])) {
+                continue;
+            }
+
             $clientAttrValue[$attribute['name']] = [];
 
             /** @var array $value */

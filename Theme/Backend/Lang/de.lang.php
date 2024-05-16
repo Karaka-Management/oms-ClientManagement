@@ -92,7 +92,6 @@ return ['ClientManagement' => [
     'Website'              => 'Webseite',
     'Wire'                 => 'Kabel',
     'YTDSales'             => 'Ytd Sales',
-    'Postal'                  => 'Postleitzahl',
     'ItemProductGroup'     => 'Artikel Produktgruppe',
     'Promocode'            => 'Promocode',
     'Region'               => 'Region',

@@ -226,13 +226,13 @@
                 "null": false
             },
             "clientmgmt_attr_type_required": {
-                "description": "Every item must have this attribute type if set to true.",
+                "comment": "Every item must have this attribute type if set to true.",
                 "name": "clientmgmt_attr_type_required",
                 "type": "TINYINT(1)",
                 "null": false
             },
             "clientmgmt_attr_type_pattern": {
-                "description": "This is a regex validation pattern.",
+                "comment": "This is a regex validation pattern.",
                 "name": "clientmgmt_attr_type_pattern",
                 "type": "VARCHAR(255)",
                 "null": false
