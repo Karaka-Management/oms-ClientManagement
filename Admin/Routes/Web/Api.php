@@ -55,6 +55,57 @@ return [
             ],
         ],
     ],
+
+    '^.*/client/file(\?.*|$)$' => [
+        [
+            'dest'       => '\Modules\ClientManagement\Controller\ApiController:apiFileCreate',
+            'verb'       => RouteVerb::PUT,
+            'csrf'       => true,
+            'active'     => true,
+            'permission' => [
+                'module' => ApiController::NAME,
+                'type'   => PermissionType::CREATE,
+                'state'  => PermissionCategory::CLIENT,
+            ],
+        ],
+    ],
+
+    '^.*/client/note(\?.*|$)$' => [
+        [
+            'dest'       => '\Modules\ClientManagement\Controller\ApiController:apiNoteCreate',
+            'verb'       => RouteVerb::PUT,
+            'csrf'       => true,
+            'active'     => true,
+            'permission' => [
+                'module' => ApiController::NAME,
+                'type'   => PermissionType::CREATE,
+                'state'  => PermissionCategory::CLIENT,
+            ],
+        ],
+        [
+            'dest'       => '\Modules\ClientManagement\Controller\ApiController:apiNoteUpdate',
+            'verb'       => RouteVerb::SET,
+            'csrf'       => true,
+            'active'     => true,
+            'permission' => [
+                'module' => ApiController::NAME,
+                'type'   => PermissionType::MODIFY,
+                'state'  => PermissionCategory::CLIENT,
+            ],
+        ],
+        [
+            'dest'       => '\Modules\ClientManagement\Controller\ApiController:apiNoteDelete',
+            'verb'       => RouteVerb::DELETE,
+            'csrf'       => true,
+            'active'     => true,
+            'permission' => [
+                'module' => ApiController::NAME,
+                'type'   => PermissionType::DELETE,
+                'state'  => PermissionCategory::CLIENT,
+            ],
+        ],
+    ],
+
     '^.*/client/attribute(\?.*|$)$' => [
         [
             'dest'       => '\Modules\ClientManagement\Controller\ApiAttributeController:apiClientAttributeCreate',

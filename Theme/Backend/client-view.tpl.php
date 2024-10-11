@@ -1036,7 +1036,7 @@ echo $this->data['nav']->render();
 
         <input type="radio" id="c-tab-8" name="tabular-2"<?= $this->request->uri->fragment === 'c-tab-8' ? ' checked' : ''; ?>>
         <div class="tab col-simple">
-            <?= $this->data['media-upload']->render('client-file', 'files', '', $client->files); ?>
+            <?= $this->data['media-upload']->render('client-file', 'files', '', $client->files, '{/api}client/file?csrf={$CSRF}', (string) $client->id); ?>
         </div>
 
         <input type="radio" id="c-tab-9" name="tabular-2"<?= $this->request->uri->fragment === 'c-tab-9' ? ' checked' : ''; ?>>
@@ -1294,7 +1294,7 @@ echo $this->data['nav']->render();
 
         <input type="radio" id="c-tab-7" name="tabular-2" checked>
         <div class="tab col-simple">
-            <?= $this->data['note']->render('client-note', 'notes', $client->notes); ?>
+            <?= $this->data['note']->render('client-note', 'notes', $client->notes, '{/api}client/note?csrf={$CSRF}', (string) $client->id); ?>
         </div>
 
         <?php if (!empty($logs)) : ?>

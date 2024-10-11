@@ -507,10 +507,10 @@ final class ApiController extends Controller
     private function createClientL11nFromRequest(RequestAbstract $request) : BaseStringL11n
     {
         $clientL11n           = new BaseStringL11n();
-        $clientL11n->ref      = $request->getDataInt('client') ?? 0;
+        $clientL11n->ref      = $request->getDataInt('ref') ?? 0;
         $clientL11n->type     = new NullBaseStringL11nType($request->getDataInt('type') ?? 0);
         $clientL11n->language = ISO639x1Enum::tryFromValue($request->getDataString('language')) ?? $request->header->l11n->language;
-        $clientL11n->content  = $request->getDataString('description') ?? '';
+        $clientL11n->content  = $request->getDataString('content') ?? '';
 
         return $clientL11n;
     }
@@ -527,9 +527,9 @@ final class ApiController extends Controller
     private function validateClientL11nCreate(RequestAbstract $request) : array
     {
         $val = [];
-        if (($val['client'] = !$request->hasData('client'))
+        if (($val['ref'] = !$request->hasData('ref'))
             || ($val['type'] = !$request->hasData('type'))
-            || ($val['description'] = !$request->hasData('description'))
+            || ($val['content'] = !$request->hasData('content'))
         ) {
             return $val;
         }
@@ -629,10 +629,10 @@ final class ApiController extends Controller
             files: $request->files,
             account: $request->header->account,
             basePath: __DIR__ . '/../../../Modules/Media/Files/Modules/ClientManagement/Clients/' . ($request->getData('client') ?? '0'),
-            virtualPath: '/Modules/ClientManagement/Clients/' . ($request->getData('client') ?? '0'),
+            virtualPath: '/Modules/ClientManagement/Clients/' . ($request->getData('ref') ?? '0'),
             pathSettings: PathSettings::FILE_PATH,
             tag: $request->getDataInt('tag'),
-            rel: (int) $request->getData('client'),
+            rel: (int) $request->getData('ref'),
             mapper: ClientMapper::class,
             field: 'files'
         );
@@ -661,7 +661,7 @@ final class ApiController extends Controller
      */
     public function apiNoteCreate(RequestAbstract $request, ResponseAbstract $response, array $data = []) : void
     {
-        $request->setData('virtualpath', '/Modules/ClientManagement/Clients/' . ((int) $request->getData('id')), true);
+        $request->setData('virtualpath', '/Modules/ClientManagement/Clients/' . ((int) $request->getData('ref')), true);
         $this->app->moduleManager->get('Editor')->apiEditorCreate($request, $response, $data);
 
         $responseData = $response->getDataArray($request->uri->__toString());
@@ -670,7 +670,7 @@ final class ApiController extends Controller
         }
 
         $model = $responseData['response'];
-        $this->createModelRelation($request->header->account, (int) $request->getData('id'), $model->id, ClientMapper::class, 'notes', '', $request->getOrigin());
+        $this->createModelRelation($request->header->account, (int) $request->getData('ref'), $model->id, ClientMapper::class, 'notes', '', $request->getOrigin());
     }
 
     /**
@@ -692,7 +692,12 @@ final class ApiController extends Controller
         if (!$this->app->accountManager->get($accountId)->hasPermission(
             PermissionType::MODIFY, $this->app->unitId, $this->app->appId, self::NAME, PermissionCategory::CLIENT_NOTE, $request->getDataInt('id'))
         ) {
-            $this->fillJsonResponse($request, $response, NotificationLevel::HIDDEN, '', '', []);
+            $this->fillJsonResponse(
+                $request, $response,
+                NotificationLevel::ERROR, '',
+                $this->app->l11nManager->getText($response->header->l11n->language, '0', '0', 'InvalidPermission'),
+                []
+            );
             $response->header->status = RequestStatusCode::R_403;
 
             return;
@@ -720,7 +725,12 @@ final class ApiController extends Controller
         if (!$this->app->accountManager->get($accountId)->hasPermission(
             PermissionType::DELETE, $this->app->unitId, $this->app->appId, self::NAME, PermissionCategory::CLIENT_NOTE, $request->getDataInt('id'))
         ) {
-            $this->fillJsonResponse($request, $response, NotificationLevel::HIDDEN, '', '', []);
+            $this->fillJsonResponse(
+                $request, $response,
+                NotificationLevel::ERROR, '',
+                $this->app->l11nManager->getText($response->header->l11n->language, '0', '0', 'InvalidPermission'),
+                []
+            );
             $response->header->status = RequestStatusCode::R_403;
 
             return;

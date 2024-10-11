@@ -50,8 +50,8 @@ trait ApiControllerAttributeTrait
         $request  = new HttpRequest();
 
         $request->header->account = 1;
-        $request->setData('title', 'DE:2');
-        $request->setData('type', '1');
+        $request->setData('content', 'DE:2');
+        $request->setData('ref', '1');
         $request->setData('language', ISO639x1Enum::_DE);
 
         $this->attrModule->apiClientAttributeTypeL11nCreate($request, $response);
