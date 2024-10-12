@@ -1123,7 +1123,7 @@ echo $this->data['nav']->render();
             </div>
         </div>
 
-        <input type="radio" id="c-tab-10" name="tabular-2" checked>
+        <input type="radio" id="c-tab-10" name="tabular-2">
         <div class="tab col-simple">
             <?php $billElements = SalesBillMapper::getClientItem($client->id, SmartDateTime::startOfYear($this->data['business_start']), new SmartDateTime('now')); ?>
             <div class="row">
@@ -1292,13 +1292,13 @@ echo $this->data['nav']->render();
             </div>
         </div>
 
-        <input type="radio" id="c-tab-7" name="tabular-2" checked>
+        <input type="radio" id="c-tab-7" name="tabular-2">
         <div class="tab col-simple">
             <?= $this->data['note']->render('client-note', 'notes', $client->notes, '{/api}client/note?csrf={$CSRF}', (string) $client->id); ?>
         </div>
 
         <?php if (!empty($logs)) : ?>
-        <input type="radio" id="c-tab-17" name="tabular-2" checked>
+        <input type="radio" id="c-tab-17" name="tabular-2">
         <div class="tab">
             <div class="row">
                 <div class="col-xs-12">
