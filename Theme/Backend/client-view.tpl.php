@@ -250,7 +250,7 @@ echo $this->data['nav']->render();
 
                     <section class="portlet hl-4">
                         <div class="portlet-body">
-                            <textarea class="undecorated"><?= $this->printTextarea($client->info); ?></textarea>
+                            <textarea class="undecorated" aria-label="Info"><?= $this->printTextarea($client->info); ?></textarea>
                         </div>
                     </section>
                     <?php endif; ?>
@@ -682,7 +682,7 @@ echo $this->data['nav']->render();
                             <div class="portlet-body">
                                 <input id="iPriceId" class="vh" name="id" type="number" data-tpl-text="/id" data-tpl-value="/id">
                                 <input id="iPriceClientId" class="vh" name="client" type="text" value="<?= $client->id; ?>">
-                                <input id="iPriceItemType" class="vh" name="type" type="text" value="<?= PriceType::SALES; ?>">
+                                <input id="iPriceType" class="vh" name="type" type="text" value="<?= PriceType::SALES; ?>">
 
                                 <div class="form-group">
                                     <label for="iPriceName"><?= $this->getHtml('Name'); ?></label>

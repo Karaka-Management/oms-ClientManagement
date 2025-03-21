@@ -1,11 +1,11 @@
 {
     "triggers": [
-        "PRE:Module:client-create",
-        "POST:Module:client-create",
-        "PRE:Module:client-update",
-        "POST:Module:client-update",
-        "PRE:Module:client-delete",
-        "POST:Module:client-delete"
+        "PRE:client-create",
+        "POST:client-create",
+        "PRE:client-update",
+        "POST:client-update",
+        "PRE:client-delete",
+        "POST:client-delete"
     ],
     "actions": {
         "1003100001": {

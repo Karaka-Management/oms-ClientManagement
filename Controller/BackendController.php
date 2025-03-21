@@ -124,7 +124,7 @@ final class BackendController extends Controller
             ->with('l11n')
             ->with('defaults')
             ->with('defaults/l11n')
-            ->where('id', (int) $request->getData('id'))
+            ->where('id', $request->getDataInt('id') ?? 0)
             ->where('l11n/language', $response->header->l11n->language)
             ->where('defaults/l11n/language', [$response->header->l11n->language, null])
             ->execute();
@@ -157,7 +157,7 @@ final class BackendController extends Controller
 
         $view->attribute = ClientAttributeValueMapper::get()
             ->with('l11n')
-            ->where('id', (int) $request->getData('id'))
+            ->where('id', $request->getDataInt('id') ?? 0)
             ->where('l11n/language', [$response->header->l11n->language, null])
             ->execute();
 
